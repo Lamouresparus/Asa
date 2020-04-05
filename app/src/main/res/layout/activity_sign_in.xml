@@ -80,11 +80,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginLeft="24dp"
+                android:contentDescription="@string/text_google"
                 android:src="@drawable/ic_google"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/text_google" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -144,35 +144,23 @@
 
     <EditText
         android:id="@+id/editText2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:background="@drawable/ic_input_field_background"
         android:hint="@string/text_email"
-        android:paddingStart="8dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
+        android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
         app:layout_constraintStart_toStartOf="@+id/relativeLayout"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-        android:inputType="textEmailAddress"
-        android:autofillHints="" />
+        style="@style/signInTextInputStyle"
+        />
 
     <EditText
         android:id="@+id/editText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
         android:background="@drawable/ic_input_field_background"
         android:hint="@string/text_password"
-        android:paddingStart="8dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
+        style="@style/signInTextInputStyle"
+        android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@+id/editText2"
         app:layout_constraintStart_toStartOf="@+id/editText2"
-        app:layout_constraintTop_toBottomOf="@+id/editText2"
-        android:autofillHints=""
-        android:inputType="textPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/editText2" />
 
     <TextView
         android:id="@+id/textViewResetPassword"
