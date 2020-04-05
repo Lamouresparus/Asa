@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Asa</string>
+    <string name="text_asa_logo">Asa Logo</string>
+    <string name="text_sign_in">Sign in</string>
+    <string name="text_google">Google</string>
+    <string name="text_or">or</string>
+    <string name="text_email">Email</string>
+    <string name="text_password">Password</string>
+    <string name="text_forgot_password_reset">Forgot password? Reset</string>
+    <string name="text_not_yet_registered">Not yet registered? Sign up</string>
+</resources>
