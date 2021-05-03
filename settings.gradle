@@ -1,2 +1,5 @@
+include ':remote'
+include ':data'
+include ':domain'
 rootProject.name='Asa'
 include ':app'
