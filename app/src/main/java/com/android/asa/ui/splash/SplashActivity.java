@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.android.asa.R;
-import com.android.asa.ui.signin.SignInActivity;
+import com.android.asa.ui.auth.AuthenticationActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -26,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void navigateToLogin() {
-        Intent intent = new Intent(this, SignInActivity.class);
+        Intent intent = new Intent(this, AuthenticationActivity.class);
         startActivity(intent);
         finish();
     }

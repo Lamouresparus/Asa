@@ -21,11 +21,8 @@
         <item name="android:autofillHints" tools:targetApi="o">""</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">18dp</item>
-        <item name="android:background">@drawable/ic_input_field_background</item>
-        <item name="android:paddingStart">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
+        <item name="android:background">@drawable/input_field_background</item>
+        <item name="android:padding">12dp</item>
     </style>
 
 </resources>
