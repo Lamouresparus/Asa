@@ -10,7 +10,7 @@ class GetCoursesForCurrentDayUseCase @Inject constructor(private val courseRepos
 
     override fun execute(param: Params?): Single<List<CourseDomain>> {
         param ?: throw UnsupportedOperationException("login params not provided")
-        return courseRepository.getCoursesForToday(param)
+        return courseRepository.getCoursesForToday()
     }
 
     data class Params(
