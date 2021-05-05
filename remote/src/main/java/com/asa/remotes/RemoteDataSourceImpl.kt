@@ -3,11 +3,12 @@ package com.asa.remotes
 import com.asa.data.sources.RemoteDataSource
 import com.asa.domain.AddCoursesUseCase
 import com.asa.domain.LogInUseCase
+import com.asa.domain.model.CourseDomain
 import com.asa.domain.model.UserDomain
 import com.asa.domain.repository.RegisterUseCase
 import com.google.firebase.auth.FirebaseAuth
-import io.reactivex.Completable
 import com.google.firebase.firestore.FirebaseFirestore
+import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -109,7 +110,70 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
         }
     }
 
+    override fun saveCourses(params: AddCoursesUseCase.Params): Completable {
+        return Completable.create { emitter ->
+
+            val user = firebaseAuth.currentUser
+            if (user == null) {
+                emitter.onError(Throwable("Invalid user"))
+                return@create
+            }
+            firestore
+                    .collection(COURSES_COLLECTION_PATH)
+                    .document(user.uid)
+                    .set(CourseAndLectureDaysWrapper(params.courses))
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            emitter.onComplete()
+                        } else {
+                            emitter.onError(task.exception ?: Throwable("Error adding courses"))
+                        }
+                    }
+        }
+    }
+
+
+    override fun getCoursesForToday(): Single<List<CourseDomain>> {
+        return Single.create { emitter ->
+            val user = firebaseAuth.currentUser
+            if (user == null) {
+                emitter.onError(Throwable("Invalid user"))
+                return@create
+            }
+
+            firestore.collection(COURSES_COLLECTION_PATH)
+                    .document(user.uid)
+                    .get()
+                    .addOnCompleteListener { task ->
+
+                        if (task.isSuccessful) {
+
+                            val dataWrapper = task.result?.toObject(CourseAndLectureDaysWrapper::class.java)
+
+                            if (dataWrapper != null) {
+
+                                emitter.onSuccess(dataWrapper.course)
+                            } else {
+                                emitter.onError(task.exception
+                                        ?: Throwable("Error fetching courses"))
+                            }
+
+                        } else {
+                            emitter.onError(task.exception ?: Throwable("Error fetching courses"))
+                        }
+
+                    }
+
+        }
+    }
+
+    data class CourseAndLectureDaysWrapper(
+            val course: List<CourseDomain>
+    )
+
     companion object {
         private const val USERS_COLLECTION_PATH = "users"
+        private const val COURSES_COLLECTION_PATH = "courses"
+
     }
 }
