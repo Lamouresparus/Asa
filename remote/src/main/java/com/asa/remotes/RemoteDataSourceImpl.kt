@@ -1,9 +1,11 @@
 package com.asa.remotes
 
 import com.asa.data.sources.RemoteDataSource
+import com.asa.domain.AddCoursesUseCase
 import com.asa.domain.LogInUseCase
 import com.asa.domain.model.UserDomain
 import com.google.firebase.auth.FirebaseAuth
+import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -31,6 +33,14 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
                         }
 
                     }
+        }
+    }
+
+
+    override fun saveCourses(params: AddCoursesUseCase.Params): Completable {
+        return Completable.create { emitter ->
+
+
         }
     }
 }
