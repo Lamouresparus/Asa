@@ -120,7 +120,7 @@
             app:layout_constraintTop_toBottomOf="@+id/email_et" />
 
         <Button
-            android:id="@+id/button_sign_up"
+            android:id="@+id/student_sign_up_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="80dp"
@@ -149,7 +149,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@+id/guideline7"
-            app:layout_constraintTop_toBottomOf="@+id/button_sign_up" />
+            app:layout_constraintTop_toBottomOf="@+id/student_sign_up_button" />
 
         <TextView
             android:id="@+id/move_to_sign_in_screen"

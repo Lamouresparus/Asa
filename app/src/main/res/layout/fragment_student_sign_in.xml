@@ -154,14 +154,14 @@
             android:textColor="@color/colorTextPrimary"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/guideline5"
-            app:layout_constraintEnd_toStartOf="@+id/move_to_sign_up_screen"
+            app:layout_constraintEnd_toStartOf="@+id/move_to_student_sign_up_screen"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@+id/guideline7"
             app:layout_constraintTop_toBottomOf="@+id/button_sign_in" />
 
         <TextView
-            android:id="@+id/move_to_sign_up_screen"
+            android:id="@+id/move_to_student_sign_up_screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/_sign_up"
