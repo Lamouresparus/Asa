@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_nav_graph"
+    app:startDestination="@id/selectUserTypeFragment">
+
+    <fragment
+        android:id="@+id/selectUserTypeFragment"
+        android:name="com.android.asa.ui.auth.SelectUserTypeFragment"
+        android:label="SelectUserTypeFragment"
+        tools:layout="@layout/fragment_select_user_type">
+        <action
+            android:id="@+id/action_selectUserTypeFragment_to_staffAdviserSignInFragment"
+            app:destination="@id/staffAdviserSignInFragment" />
+        <action
+            android:id="@+id/action_selectUserTypeFragment_to_studentSignInFragment"
+            app:destination="@id/studentSignInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/studentSignInFragment"
+        android:name="com.android.asa.ui.auth.StudentSignInFragment"
+        android:label="StudentSignInFragment"
+        tools:layout="@layout/fragment_student_sign_in">
+        <action
+            android:id="@+id/action_studentSignInFragment_to_studentSignUpFragment"
+            app:destination="@id/studentSignUpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/staffAdviserSignInFragment"
+        android:name="com.android.asa.ui.auth.StaffAdviserSignInFragment"
+        android:label="StaffAdviserSignInFragment"
+        tools:layout="@layout/fragment_staff_adviser_sign_in">
+        <action
+            android:id="@+id/action_staffAdviserSignInFragment_to_staffAdviserSignUpFragment"
+            app:destination="@id/staffAdviserSignUpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/studentSignUpFragment"
+        android:name="com.android.asa.ui.auth.StudentSignUpFragment"
+        android:label="fragment_student_sign_up"
+        tools:layout="@layout/fragment_student_sign_up">
+        <action
+            android:id="@+id/action_studentSignUpFragment_to_studentSignInFragment"
+            app:destination="@id/studentSignInFragment" />
+        <action
+            android:id="@+id/action_studentSignUpFragment_to_signUpSuccessFragment"
+            app:destination="@id/signUpSuccessFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpSuccessFragment"
+        android:name="com.android.asa.ui.auth.SignUpSuccessFragment"
+        android:label="fragment_sign_up_success"
+        tools:layout="@layout/fragment_sign_up_success" />
+    <fragment
+        android:id="@+id/staffAdviserSignUpFragment"
+        android:name="com.android.asa.ui.auth.StaffAdviserSignUpFragment"
+        android:label="fragment_staff_adviser_sign_up"
+        tools:layout="@layout/fragment_staff_adviser_sign_up">
+        <action
+            android:id="@+id/action_staffAdviserSignUpFragment_to_signUpSuccessFragment"
+            app:destination="@id/signUpSuccessFragment" />
+        <action
+            android:id="@+id/action_staffAdviserSignUpFragment_to_staffAdviserSignInFragment"
+            app:destination="@id/staffAdviserSignInFragment" />
+    </fragment>
+</navigation>
