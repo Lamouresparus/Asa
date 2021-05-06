@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.android.asa.databinding.FragmentSetTimeOfDayBinding
 
 class SetTimeOfDayFragment : Fragment() {
@@ -21,16 +21,16 @@ class SetTimeOfDayFragment : Fragment() {
 
     private fun setUpOnClickListeners() {
         binding.buttonMorning.setOnClickListener {
-            view?.findNavController()?.navigate(SetTimeOfDayFragmentDirections.actionSetTimeOfDayFragmentToSetReaderTypeFragment())
+            findNavController().navigate(SetTimeOfDayFragmentDirections.actionSetTimeOfDayFragmentToSetReaderTypeFragment())
         }
 
         binding.buttonAfternoon.setOnClickListener {
-            view?.findNavController()?.navigate(SetTimeOfDayFragmentDirections.actionSetTimeOfDayFragmentToSetReaderTypeFragment())
+            findNavController().navigate(SetTimeOfDayFragmentDirections.actionSetTimeOfDayFragmentToSetReaderTypeFragment())
 
         }
 
         binding.buttonNight.setOnClickListener {
-            view?.findNavController()?.navigate(SetTimeOfDayFragmentDirections.actionSetTimeOfDayFragmentToSetReaderTypeFragment())
+            findNavController().navigate(SetTimeOfDayFragmentDirections.actionSetTimeOfDayFragmentToSetReaderTypeFragment())
         }
     }
 

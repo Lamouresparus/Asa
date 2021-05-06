@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.android.asa.databinding.FragmentSelectUserTypeBinding
 
 class SelectUserTypeFragment : Fragment() {
@@ -21,11 +21,11 @@ class SelectUserTypeFragment : Fragment() {
 
     private fun setupOnClick() {
         binding.signInAsStaffAdviserTv.setOnClickListener {
-            view?.findNavController()?.navigate(SelectUserTypeFragmentDirections.actionSelectUserTypeFragmentToStaffAdviserSignInFragment())
+            findNavController().navigate(SelectUserTypeFragmentDirections.actionSelectUserTypeFragmentToStaffAdviserSignInFragment())
 
         }
         binding.signInAsStudentTv.setOnClickListener {
-            view?.findNavController()?.navigate(SelectUserTypeFragmentDirections.actionSelectUserTypeFragmentToStudentSignInFragment())
+            findNavController().navigate(SelectUserTypeFragmentDirections.actionSelectUserTypeFragmentToStudentSignInFragment())
         }
     }
 

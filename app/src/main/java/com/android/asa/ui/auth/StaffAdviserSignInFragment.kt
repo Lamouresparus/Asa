@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.android.asa.MainActivity
 import com.android.asa.databinding.FragmentStaffAdviserSignInBinding
 
@@ -25,7 +25,7 @@ class StaffAdviserSignInFragment : Fragment() {
 
     private fun setUpOnClicks() {
         binding.moveToSignUpScreen.setOnClickListener {
-            view?.findNavController()?.navigate(StaffAdviserSignInFragmentDirections.actionStaffAdviserSignInFragmentToStaffAdviserSignUpFragment())
+            findNavController().navigate(StaffAdviserSignInFragmentDirections.actionStaffAdviserSignInFragmentToStaffAdviserSignUpFragment())
         }
         binding.buttonSignIn.setOnClickListener {
             startActivity(Intent(requireActivity(), MainActivity::class.java))

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.android.asa.databinding.FragmentSetReaderTypeBinding
 
 
@@ -22,15 +22,15 @@ class SetReaderTypeFragment : Fragment() {
 
     private fun setUpOnClicks() {
         binding.beforeLectures.setOnClickListener {
-            view?.findNavController()?.navigate(SetReaderTypeFragmentDirections.actionSetReaderTypeFragmentToAverageReadingTimeFragment())
+            findNavController().navigate(SetReaderTypeFragmentDirections.actionSetReaderTypeFragmentToAverageReadingTimeFragment())
         }
 
         binding.betweenLectures.setOnClickListener {
-            view?.findNavController()?.navigate(SetReaderTypeFragmentDirections.actionSetReaderTypeFragmentToAverageReadingTimeFragment())
+            findNavController().navigate(SetReaderTypeFragmentDirections.actionSetReaderTypeFragmentToAverageReadingTimeFragment())
 
         }
         binding.buttonAfterLectures.setOnClickListener {
-            view?.findNavController()?.navigate(SetReaderTypeFragmentDirections.actionSetReaderTypeFragmentToAverageReadingTimeFragment())
+            findNavController().navigate(SetReaderTypeFragmentDirections.actionSetReaderTypeFragmentToAverageReadingTimeFragment())
         }
     }
 

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.android.asa.databinding.FragmentAverageReadingTimeBinding
 
 class AverageReadingTimeFragment : Fragment() {
@@ -21,14 +21,14 @@ class AverageReadingTimeFragment : Fragment() {
 
     private fun setUpOnclick() {
         binding.halfToOneHour.setOnClickListener {
-            view?.findNavController()?.navigate(AverageReadingTimeFragmentDirections.actionAverageReadingTimeFragmentToAllSetFragment())
+            findNavController().navigate(AverageReadingTimeFragmentDirections.actionAverageReadingTimeFragmentToAllSetFragment())
         }
         binding.oneToTwoHours.setOnClickListener {
-            view?.findNavController()?.navigate(AverageReadingTimeFragmentDirections.actionAverageReadingTimeFragmentToAllSetFragment())
+            findNavController().navigate(AverageReadingTimeFragmentDirections.actionAverageReadingTimeFragmentToAllSetFragment())
 
         }
         binding.twoToFourHours.setOnClickListener {
-            view?.findNavController()?.navigate(AverageReadingTimeFragmentDirections.actionAverageReadingTimeFragmentToAllSetFragment())
+            findNavController().navigate(AverageReadingTimeFragmentDirections.actionAverageReadingTimeFragmentToAllSetFragment())
 
         }
 

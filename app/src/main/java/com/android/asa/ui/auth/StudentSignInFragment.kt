@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.android.asa.MainActivity
 import com.android.asa.databinding.FragmentStudentSignInBinding
 
@@ -29,7 +29,7 @@ class StudentSignInFragment : Fragment() {
             startActivity(Intent(requireActivity(), MainActivity::class.java))
         }
         binding.moveToStudentSignUpScreen.setOnClickListener {
-            view?.findNavController()?.navigate(StudentSignInFragmentDirections.actionStudentSignInFragmentToStudentSignUpFragment())
+            findNavController().navigate(StudentSignInFragmentDirections.actionStudentSignInFragmentToStudentSignUpFragment())
         }
     }
 
