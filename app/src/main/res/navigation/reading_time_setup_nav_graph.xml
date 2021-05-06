@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/reading_time_setup_nav_graph"
+    app:startDestination="@id/setTimeOfDayFragment">
+
+    <fragment
+        android:id="@+id/setTimeOfDayFragment"
+        android:name="com.android.asa.ui.reading_time_set_up.SetTimeOfDayFragment"
+        android:label="fragment_set_time_of_day"
+        tools:layout="@layout/fragment_set_time_of_day">
+        <action
+            android:id="@+id/action_setTimeOfDayFragment_to_setReaderTypeFragment"
+            app:destination="@id/setReaderTypeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/setReaderTypeFragment"
+        android:name="com.android.asa.ui.reading_time_set_up.SetReaderTypeFragment"
+        android:label="fragment_set_reader_type"
+        tools:layout="@layout/fragment_set_reader_type">
+        <action
+            android:id="@+id/action_setReaderTypeFragment_to_averageReadingTimeFragment"
+            app:destination="@id/averageReadingTimeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/allSetFragment"
+        android:name="com.android.asa.ui.reading_time_set_up.AllSetFragment"
+        android:label="fragment_all_set"
+        tools:layout="@layout/fragment_all_set" />
+    <fragment
+        android:id="@+id/averageReadingTimeFragment"
+        android:name="com.android.asa.ui.reading_time_set_up.AverageReadingTimeFragment"
+        android:label="fragment_average_reading_time"
+        tools:layout="@layout/fragment_average_reading_time">
+        <action
+            android:id="@+id/action_averageReadingTimeFragment_to_allSetFragment"
+            app:destination="@id/allSetFragment" />
+    </fragment>
+</navigation>
