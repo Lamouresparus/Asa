@@ -28,7 +28,7 @@ class StaffAdviserSignInFragment : Fragment() {
             findNavController().navigate(StaffAdviserSignInFragmentDirections.actionStaffAdviserSignInFragmentToStaffAdviserSignUpFragment())
         }
         binding.buttonSignIn.setOnClickListener {
-            startActivity(Intent(requireActivity(), MainActivity::class.java))
+            //move to staff adviser home
 
         }
 

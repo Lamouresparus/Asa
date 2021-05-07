@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/icon_home_selector"
+        android:title="" />
+
+    <item
+        android:id="@+id/navigation_reading_progress"
+        android:icon="@drawable/icon_reading_progress_selector"
+        android:title="" />
+
+    <item
+        android:id="@+id/navigation_reading_timetable"
+        android:icon="@drawable/icon_reading_timetable_selector"
+        android:title="" />
+
+    <item
+        android:id="@+id/navigation_cgpa_projector"
+        android:icon="@drawable/icon_cgpa_projector_selector"
+        android:title="" />
+    <item
+        android:id="@+id/navigation_assignments_and_tests"
+        android:icon="@drawable/icon_assignments_selector"
+        android:title="" />
+
+</menu>

@@ -1,11 +1,13 @@
 package com.android.asa.ui.reading_time_set_up
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import com.android.asa.MainActivity
 import com.android.asa.R
 import com.android.asa.databinding.FragmentAllSetBinding
 import com.android.asa.extensions.makeSpannable
@@ -18,8 +20,15 @@ class AllSetFragment : Fragment() {
                               savedInstanceState: Bundle?): View {
         binding = FragmentAllSetBinding.inflate(layoutInflater)
         setUpViews()
+        setUpOnclick()
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    private fun setUpOnclick() {
+        binding.button.setOnClickListener {
+            startActivity(Intent(requireActivity(), MainActivity::class.java))
+        }
     }
 
     private fun setUpViews() {
