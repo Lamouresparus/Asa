@@ -21,7 +21,7 @@
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
+        android:background="@drawable/bottom_navigation_view_background"
         android:elevation="8dp"
         android:foreground="?attr/selectableItemBackground"
         app:itemIconTint="@color/nav_icon_color_state"
