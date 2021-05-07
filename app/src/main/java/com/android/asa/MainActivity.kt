@@ -1,7 +1,6 @@
 package com.android.asa
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.android.asa.databinding.ActivityMainBinding
@@ -15,7 +14,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var bottomNavigation: BottomNavigationView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,61 +23,32 @@ class MainActivity : AppCompatActivity() {
             val fragment = HomeFragment()
             openFragment(fragment)
         }
-        setupBottoNav()
+        setupBottomNav()
 
         setContentView(binding.root)
 
 
     }
 
-    private fun setupBottoNav() {
+    private fun setupBottomNav() {
 
         val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_home -> {
-                    Log.d("nav clicked", "home")
-                    val homeFragment = HomeFragment()
-                    openFragment(homeFragment)
+            val fragment = when (item.itemId) {
+                R.id.navigation_home -> HomeFragment()
+                R.id.navigation_reading_progress -> ReadingProgressFragment()
+                R.id.navigation_reading_timetable -> ReadingTimetableFragment()
+                R.id.navigation_cgpa_projector -> CgpaProjectorFragment()
+                R.id.navigation_assignments_and_tests -> AssignmentsFragment()
+                else -> return@OnNavigationItemSelectedListener false
 
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navigation_reading_progress -> {
-                    Log.d("nav clicked", "redaing progress")
-
-                    val readingProgressFragment = ReadingProgressFragment()
-                    openFragment(readingProgressFragment)
-
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navigation_reading_timetable -> {
-                    Log.d("nav clicked", "reading timetable")
-
-                    val readingTimetableFragment = ReadingTimetableFragment()
-                    openFragment(readingTimetableFragment)
-
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navigation_cgpa_projector -> {
-
-                    val cgpaProjectorFragment = CgpaProjectorFragment()
-                    openFragment(cgpaProjectorFragment)
-
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navigation_assignments_and_tests -> {
-
-                    val assignmentsFragment = AssignmentsFragment()
-                    openFragment(assignmentsFragment)
-
-                    return@OnNavigationItemSelectedListener true
-                }
             }
-            false
+            openFragment(fragment)
+            return@OnNavigationItemSelectedListener true
+
         }
 
         binding.navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        //bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
     }
 
