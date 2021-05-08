@@ -21,18 +21,27 @@ class AverageReadingTimeFragment : Fragment() {
 
     private fun setUpOnclick() {
         binding.halfToOneHour.setOnClickListener {
-            findNavController().navigate(AverageReadingTimeFragmentDirections.actionAverageReadingTimeFragmentToAllSetFragment())
+            ReadingTimeActivity.averageReadingTime = "0.5-1"
+            navigateToNextScreen()
         }
+
         binding.oneToTwoHours.setOnClickListener {
-            findNavController().navigate(AverageReadingTimeFragmentDirections.actionAverageReadingTimeFragmentToAllSetFragment())
-
+            ReadingTimeActivity.averageReadingTime = "1-2"
+            navigateToNextScreen()
         }
-        binding.twoToFourHours.setOnClickListener {
-            findNavController().navigate(AverageReadingTimeFragmentDirections.actionAverageReadingTimeFragmentToAllSetFragment())
 
+        binding.twoToFourHours.setOnClickListener {
+            ReadingTimeActivity.averageReadingTime = "2-4"
+            navigateToNextScreen()
         }
 
     }
 
+
+    private fun navigateToNextScreen() {
+
+        findNavController().navigate(AverageReadingTimeFragmentDirections.actionAverageReadingTimeFragmentToAllSetFragment())
+
+    }
 
 }

@@ -16,23 +16,29 @@ class SetReaderTypeFragment : Fragment() {
                               savedInstanceState: Bundle?): View {
         binding = FragmentSetReaderTypeBinding.inflate(layoutInflater)
         setUpOnClicks()
-        // Inflate the layout for this fragment
         return binding.root
     }
 
     private fun setUpOnClicks() {
         binding.beforeLectures.setOnClickListener {
-            findNavController().navigate(SetReaderTypeFragmentDirections.actionSetReaderTypeFragmentToAverageReadingTimeFragment())
+            ReadingTimeActivity.preferredReadingPeriod = "before lectures"
+            navigateToNextScreen()
         }
 
         binding.betweenLectures.setOnClickListener {
-            findNavController().navigate(SetReaderTypeFragmentDirections.actionSetReaderTypeFragmentToAverageReadingTimeFragment())
-
+            ReadingTimeActivity.preferredReadingPeriod = "between lectures"
+            navigateToNextScreen()
         }
+
         binding.buttonAfterLectures.setOnClickListener {
-            findNavController().navigate(SetReaderTypeFragmentDirections.actionSetReaderTypeFragmentToAverageReadingTimeFragment())
+            ReadingTimeActivity.preferredReadingPeriod = "after lectures"
+            navigateToNextScreen()
         }
     }
 
+
+    private fun navigateToNextScreen() {
+        findNavController().navigate(SetReaderTypeFragmentDirections.actionSetReaderTypeFragmentToAverageReadingTimeFragment())
+    }
 
 }

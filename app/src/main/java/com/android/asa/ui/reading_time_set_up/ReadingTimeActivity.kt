@@ -12,4 +12,11 @@ class ReadingTimeActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     }
+
+
+    companion object {
+        var preferredReadingPeriod = ""
+        var kindOfReader = ""
+        var averageReadingTime = ""
+    }
 }
