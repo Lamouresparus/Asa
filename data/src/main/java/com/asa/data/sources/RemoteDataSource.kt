@@ -1,8 +1,8 @@
 package com.asa.data.sources
 
 import com.asa.domain.LogInUseCase
+import com.asa.domain.RegisterUseCase
 import com.asa.domain.model.UserDomain
-import com.asa.domain.repository.RegisterUseCase
 import io.reactivex.Completable
 import io.reactivex.Single
 

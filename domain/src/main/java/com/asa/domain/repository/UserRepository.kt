@@ -1,6 +1,7 @@
 package com.asa.domain.repository
 
 import com.asa.domain.LogInUseCase
+import com.asa.domain.RegisterUseCase
 import io.reactivex.Completable
 
 interface UserRepository {

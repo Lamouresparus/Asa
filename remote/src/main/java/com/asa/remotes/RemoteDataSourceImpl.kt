@@ -2,8 +2,8 @@ package com.asa.remotes
 
 import com.asa.data.sources.RemoteDataSource
 import com.asa.domain.LogInUseCase
+import com.asa.domain.RegisterUseCase
 import com.asa.domain.model.UserDomain
-import com.asa.domain.repository.RegisterUseCase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import io.reactivex.Completable

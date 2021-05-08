@@ -1,6 +1,6 @@
-package com.asa.domain.repository
+package com.asa.domain
 
-import com.asa.domain.BaseUseCase
+import com.asa.domain.repository.UserRepository
 import io.reactivex.Completable
 import javax.inject.Inject
 
