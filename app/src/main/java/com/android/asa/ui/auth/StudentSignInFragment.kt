@@ -52,6 +52,7 @@ class StudentSignInFragment : BaseFragment() {
                 is com.android.asa.utils.Result.Loading -> {
                     progressDialog.apply {
                         setMessage("logging in...")
+                        show()
                     }
                 }
 

@@ -6,4 +6,6 @@ data class UserDomain(
         val userType: Int,
         val regNumber: String? = null,
         val staffId: String? = null
-)
+) {
+    constructor() : this("", "", -1, "", "")
+}

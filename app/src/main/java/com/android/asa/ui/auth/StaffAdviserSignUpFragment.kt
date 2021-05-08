@@ -48,7 +48,7 @@ class StaffAdviserSignUpFragment : BaseFragment() {
             when (result) {
                 is Result.Loading -> {
                     progressDialog.apply {
-                        setMessage("Registering user...")
+                        setMessage("Creating staff account...")
                         show()
                     }
                 }

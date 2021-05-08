@@ -16,8 +16,7 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
         private val registerUser: RegisterUseCase,
         private val logInUseCase: LogInUseCase,
-) :
-        BaseViewModel() {
+) : BaseViewModel() {
 
     private var _registerResponse = MutableLiveData<Event<Result<Unit>>>()
     val registerResponse = _registerResponse.asLiveData()

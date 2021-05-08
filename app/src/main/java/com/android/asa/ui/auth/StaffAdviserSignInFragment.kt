@@ -49,6 +49,7 @@ class StaffAdviserSignInFragment : BaseFragment() {
                 is Result.Loading -> {
                     progressDialog.apply {
                         setMessage("logging in...")
+                        show()
                     }
                 }
 
