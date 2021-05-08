@@ -28,7 +28,7 @@ class StaffAdviserSignUpFragment : Fragment() {
         }
 
         binding.staffButtonSignUp.setOnClickListener {
-            findNavController().navigate(StaffAdviserSignUpFragmentDirections.actionStaffAdviserSignUpFragmentToSignUpSuccessFragment())
+            //move to staff adviser home
         }
     }
 }

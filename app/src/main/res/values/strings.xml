@@ -46,4 +46,9 @@
     <string name="title_activity_authentication">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="reading_timetable">Reading Timetable</string>
+    <string name="reading_progress">Reading Progress</string>
+    <string name="home_fragment">Home Fragment</string>
+    <string name="cgpa_projector">CGPA projector</string>
+    <string name="assignments">Assignments</string>
 </resources>
