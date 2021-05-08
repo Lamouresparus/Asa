@@ -35,18 +35,23 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
                                         if (it.isSuccessful) {
                                             val user = it.result?.toObject(UserDomain::class.java)
 
-                                            if (user != null) emitter.onSuccess(user)
-                                            else emitter.onError(it.exception
-                                                    ?: Throwable("Error loggin in"))
+                                            if (user != null) {
+                                                if (user.userType == params.userType) {
+                                                    emitter.onSuccess(user)
+                                                } else {
+                                                    emitter.onError(Throwable("Invalid login details"))
+                                                }
+                                            } else emitter.onError(it.exception
+                                                    ?: Throwable("Error logging in"))
 
 
                                         } else {
                                             emitter.onError(it.exception
-                                                    ?: Throwable("Error loggin in"))
+                                                    ?: Throwable("Error logging in"))
                                         }
                                     }
                         } else {
-                            emitter.onError(task.exception ?: Throwable("Error loggin in"))
+                            emitter.onError(task.exception ?: Throwable("Error logging in"))
                         }
 
                     }
