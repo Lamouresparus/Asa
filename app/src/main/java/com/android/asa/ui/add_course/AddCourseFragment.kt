@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.databinding.FragmentAddCourseBinding
@@ -25,8 +26,15 @@ class AddCourseFragment : Fragment(), LectureDayListener {
     ): View {
         binding = FragmentAddCourseBinding.inflate(layoutInflater)
         setUpRv()
+        setUpClickListeners()
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    private fun setUpClickListeners() {
+        binding.saveButton.setOnClickListener {
+            findNavController().navigate(AddCourseFragmentDirections.actionAddCourseFragmentToAddAllCoursesFragment2())
+        }
     }
 
     private fun setUpRv() {

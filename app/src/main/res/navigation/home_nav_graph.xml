@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_nav_graph"
+    app:startDestination="@id/beginSemesterFragment">
+
+    <fragment
+        android:id="@+id/beginSemesterFragment"
+        android:name="com.android.asa.ui.home.BeginSemesterFragment"
+        android:label="fragment_begin_semester"
+        tools:layout="@layout/fragment_begin_semester" >
+        <action
+            android:id="@+id/action_beginSemesterFragment_to_addSemesterCoursesFragment"
+            app:destination="@id/addSemesterCoursesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addSemesterCoursesFragment"
+        android:name="com.android.asa.ui.home.AddSemesterCoursesFragment"
+        android:label="fragment_add_semester_courses"
+        tools:layout="@layout/fragment_add_semester_courses" >
+        <action
+            android:id="@+id/action_addSemesterCoursesFragment_to_addCourseFragment"
+            app:destination="@id/addCourseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addCourseFragment"
+        android:name="com.android.asa.ui.add_course.AddCourseFragment"
+        android:label="fragment_add_course"
+        tools:layout="@layout/fragment_add_course" >
+        <action
+            android:id="@+id/action_addCourseFragment_to_addAllCoursesFragment2"
+            app:destination="@id/addAllCoursesFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/addAllCoursesFragment2"
+        android:name="com.android.asa.ui.add_course.AddAllCoursesFragment"
+        android:label="fragment_add_all_courses"
+        tools:layout="@layout/fragment_add_all_courses" >
+        <action
+            android:id="@+id/action_addAllCoursesFragment2_to_addCourseFragment"
+            app:destination="@id/addCourseFragment" />
+        <action
+            android:id="@+id/action_addAllCoursesFragment2_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.android.asa.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_beginSemesterFragment"
+            app:destination="@id/beginSemesterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/readingProgressFragment"
+        android:name="com.android.asa.ui.reading_progress.ReadingProgressFragment"
+        android:label="fragment_reading_progress"
+        tools:layout="@layout/fragment_reading_progress" />
+    <fragment
+        android:id="@+id/readingTimetableFragment"
+        android:name="com.android.asa.ui.reading_timetable.ReadingTimetableFragment"
+        android:label="fragment_reading_timetable"
+        tools:layout="@layout/fragment_reading_timetable" />
+    <fragment
+        android:id="@+id/cgpaProjectorFragment"
+        android:name="com.android.asa.ui.cgpa_projector.CgpaProjectorFragment"
+        android:label="fragment_cgpa_projector"
+        tools:layout="@layout/fragment_cgpa_projector" />
+    <fragment
+        android:id="@+id/assignmentsFragment"
+        android:name="com.android.asa.ui.assignments_and_tests.AssignmentsFragment"
+        android:label="fragment_assignments"
+        tools:layout="@layout/fragment_assignments" />
+</navigation>
