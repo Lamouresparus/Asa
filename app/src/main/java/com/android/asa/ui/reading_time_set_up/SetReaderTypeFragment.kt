@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.asa.databinding.FragmentSetReaderTypeBinding
 
-
 class SetReaderTypeFragment : Fragment() {
+
 
     private lateinit var binding: FragmentSetReaderTypeBinding
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -18,21 +18,22 @@ class SetReaderTypeFragment : Fragment() {
         setUpOnClicks()
         return binding.root
     }
-
     private fun setUpOnClicks() {
         binding.beforeLectures.setOnClickListener {
-            ReadingTimeActivity.preferredReadingPeriod = "before lectures"
+            ReadingTimeViewModel.kindOfReader = "before lectures"
             navigateToNextScreen()
         }
 
         binding.betweenLectures.setOnClickListener {
-            ReadingTimeActivity.preferredReadingPeriod = "between lectures"
+            ReadingTimeViewModel.kindOfReader = "between lectures"
             navigateToNextScreen()
+
         }
 
         binding.buttonAfterLectures.setOnClickListener {
-            ReadingTimeActivity.preferredReadingPeriod = "after lectures"
+            ReadingTimeViewModel.kindOfReader = "after lectures"
             navigateToNextScreen()
+
         }
     }
 

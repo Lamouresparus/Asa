@@ -2,6 +2,7 @@ package com.asa.remotes
 
 import com.asa.data.sources.RemoteDataSource
 import com.asa.domain.LogInUseCase
+import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
 import com.asa.domain.model.UserDomain
 import com.google.firebase.auth.FirebaseAuth
@@ -107,6 +108,32 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
         }
     }
 
+
+    override fun saveReadingTime(params: ReadingTimeSetUpUseCase.Params): Completable {
+        return Completable.create { emitter ->
+            val user = firebaseAuth.currentUser
+            if (user == null) {
+                emitter.onError(Throwable("user not found"))
+                return@create
+            }
+
+            firestore
+                    .collection(USERS_READING_TIME_COLLECTION_PATH)
+                    .document(user.uid)
+                    .set(params)
+                    .addOnCompleteListener { dbTask ->
+
+                        if (dbTask.isSuccessful) {
+                            emitter.onComplete()
+                        } else {
+                            emitter.onError(dbTask.exception
+                                    ?: Throwable("Error creating user"))
+                        }
+                    }
+
+        }
+    }
+
     override fun logOut(): Completable {
         return Completable.fromAction {
 
@@ -115,5 +142,8 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
 
     companion object {
         private const val USERS_COLLECTION_PATH = "users"
+        private const val USERS_READING_TIME_COLLECTION_PATH = "users_reading_time"
+
     }
+
 }
