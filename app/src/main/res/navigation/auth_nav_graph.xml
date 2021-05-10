@@ -58,9 +58,6 @@
         android:label="fragment_staff_adviser_sign_up"
         tools:layout="@layout/fragment_staff_adviser_sign_up">
         <action
-            android:id="@+id/action_staffAdviserSignUpFragment_to_signUpSuccessFragment"
-            app:destination="@id/signUpSuccessFragment" />
-        <action
             android:id="@+id/action_staffAdviserSignUpFragment_to_staffAdviserSignInFragment"
             app:destination="@id/staffAdviserSignInFragment" />
     </fragment>

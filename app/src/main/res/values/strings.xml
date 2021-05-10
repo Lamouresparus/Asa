@@ -20,7 +20,6 @@
     <string name="you_re_all_set">you’re all set</string>
     <string name="just_a_few_more_steps_and">Just a few more steps and</string>
     <string name="almost_done">Almost done</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="youre_all_set">You’re all set. ASA will now be your student assistant.</string>
     <string name="done">Done</string>
@@ -49,4 +48,9 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="_50percent">50%</string>
+    <string name="reading_timetable">Reading Timetable</string>
+    <string name="reading_progress">Reading Progress</string>
+    <string name="home_fragment">Home Fragment</string>
+    <string name="cgpa_projector">CGPA projector</string>
+    <string name="assignments">Assignments</string>
 </resources>
