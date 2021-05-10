@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.databinding.FragmentAddCourseBinding
@@ -76,7 +77,7 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
                 is Result.Success -> {
                     lectureDays.clear()
                     lectureVenueDetailsAdapter.notifyDataSetChanged()
-                    // TODO navigate to show all screens
+                    findNavController().navigate(AddCourseFragmentDirections.actionAddCourseFragmentToAddAllCoursesFragment2())
 
                     hideProgressDialog()
                 }
