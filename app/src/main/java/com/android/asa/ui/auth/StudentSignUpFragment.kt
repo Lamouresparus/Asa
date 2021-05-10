@@ -67,6 +67,8 @@ class StudentSignUpFragment : BaseFragment() {
         val password = binding.passwordEt.text.toString().trim()
         val email = binding.emailEt.text.toString().trim()
         val regNo = binding.regNoEt.text.toString().trim()
-        return RegisterUseCase.StudentParams(email, password, regNo)
+        val firstName = binding.firstNameEt.text.toString().trim()
+        val lastName = binding.lastNameEt.text.toString().trim()
+        return RegisterUseCase.StudentParams(email, password, regNo, firstName, lastName)
     }
 }

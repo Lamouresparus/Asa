@@ -16,6 +16,8 @@ class RegisterUseCase @Inject constructor(private val userRepository: UserReposi
             override val email: String,
             override val password: String,
             val studentRegistrationNumber: String,
+            val firstName: String,
+            val lastName: String,
             val isRegistrationComplete: Boolean = false
     ) : Params
 

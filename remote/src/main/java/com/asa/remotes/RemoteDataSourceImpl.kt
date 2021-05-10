@@ -84,7 +84,7 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
 
                                             val user = when (param) {
                                                 is RegisterUseCase.StudentParams -> {
-                                                    UserDomain(fireBaseUser.uid, email, 0, regNumber = param.studentRegistrationNumber)
+                                                    UserDomain(fireBaseUser.uid, email, 0, regNumber = param.studentRegistrationNumber, firstName = param.firstName, lastName = param.lastName)
                                                 }
                                                 is RegisterUseCase.StaffParams -> {
                                                     UserDomain(fireBaseUser.uid, email, 1, staffId = param.staffIdentificationNumber)
