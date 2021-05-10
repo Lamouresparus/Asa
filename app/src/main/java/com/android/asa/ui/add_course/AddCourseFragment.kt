@@ -4,12 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.databinding.FragmentAddCourseBinding
 import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
+import com.android.asa.utils.Result
+import com.asa.domain.AddCourseUseCase
+import com.asa.domain.model.CourseDomain
 import com.asa.domain.model.LectureDayDomain
+import com.classic.chatapp.utils.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -21,7 +26,7 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
     private var lectureDays = mutableListOf<LectureDayDomain>()
     private var lectureVenueDetailsAdapter = LectureVenueDetailsAdapter(lectureDays, this@AddCourseFragment)
 
-//    private val viewModel by activityViewModels<AddCoursesViewModel>()
+    private val viewModel by activityViewModels<AddCoursesViewModel>()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +35,11 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
         binding = FragmentAddCourseBinding.inflate(layoutInflater)
         setUpViews()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeData()
     }
 
     private fun setUpViews() {
@@ -45,14 +55,41 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
 
         binding.saveButton.setOnClickListener {
 
+            // TODO add more input validations here
             if (lectureDays.isEmpty()) {
                 showToast("pls set up a lecture days")
                 return@setOnClickListener
             }
 
-            showToast(lectureDays.toString())
-            println(lectureDays.toString())
+            viewModel.saveCourses(getAddCourseParams())
         }
+    }
+
+    private fun observeData() {
+
+        viewModel.addCourse.observe(viewLifecycleOwner, EventObserver { result ->
+            when (result) {
+                is Result.Loading -> {
+                    showProgressDialog("Adding ${binding.courseTitleEt.text.trim()}...")
+                }
+
+                is Result.Success -> {
+                    lectureDays.clear()
+                    lectureVenueDetailsAdapter.notifyDataSetChanged()
+                    // TODO navigate to show all screens
+
+                    hideProgressDialog()
+                }
+
+                is Result.Error -> {
+                    showToast(result.errorMessage)
+                    hideProgressDialog()
+
+                }
+            }
+
+        })
+
     }
 
     override fun isChecked(day: LectureDayDomain) {
@@ -69,18 +106,17 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
     }
 
 
-//    private fun getAddCourseParams() {
-//
-//        val course = CourseDomain(
-//                title = binding.courseTitleEt.text.trim().toString(),
-//                courseCode = binding.courseCodeEt.text.trim().toString(),
-//                creditUnit = binding.creditUnitEt.text.trim().toString().toInt(),
-//                description = binding.courseDescriptionEt.text.trim().toString(),
-//                lecturer = binding.lecturerNameEt.text.trim().toString(),
-//                lectureDays =
-//
-//        )
-//        return AddCourseUseCase.Params()
-//    }
+    private fun getAddCourseParams(): AddCourseUseCase.Params {
+        val course = CourseDomain(
+                title = binding.courseTitleEt.text.trim().toString(),
+                courseCode = binding.courseCodeEt.text.trim().toString(),
+                creditUnit = binding.creditUnitEt.text.trim().toString().toInt(),
+                description = binding.courseDescriptionEt.text.trim().toString(),
+                lecturer = binding.lecturerNameEt.text.trim().toString(),
+                lectureDays = lectureDays
+
+        )
+        return AddCourseUseCase.Params(course)
+    }
 
 }
