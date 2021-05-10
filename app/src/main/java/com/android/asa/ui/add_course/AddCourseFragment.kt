@@ -1,43 +1,49 @@
 package com.android.asa.ui.add_course
 
-import android.app.TimePickerDialog
-import android.icu.util.Calendar
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.databinding.FragmentAddCourseBinding
+import com.android.asa.extensions.showToast
+import com.android.asa.ui.common.BaseFragment
+import com.android.asa.utils.Result
+import com.asa.domain.AddCourseUseCase
+import com.asa.domain.model.CourseDomain
+import com.asa.domain.model.LectureDayDomain
+import com.classic.chatapp.utils.EventObserver
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 
-class AddCourseFragment : Fragment(), LectureDayListener {
+@AndroidEntryPoint
+class AddCourseFragment : BaseFragment(), LectureDayListener {
     private lateinit var binding: FragmentAddCourseBinding
-    private var lectureDays: ArrayList<String> = ArrayList()
+
+    private var lectureDays = mutableListOf<LectureDayDomain>()
     private var lectureVenueDetailsAdapter = LectureVenueDetailsAdapter(lectureDays, this@AddCourseFragment)
+
+    private val viewModel by activityViewModels<AddCoursesViewModel>()
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?,
     ): View {
         binding = FragmentAddCourseBinding.inflate(layoutInflater)
-        setUpRv()
-        setUpClickListeners()
-        // Inflate the layout for this fragment
+        setUpViews()
         return binding.root
     }
 
-    private fun setUpClickListeners() {
-        binding.saveButton.setOnClickListener {
-            findNavController().navigate(AddCourseFragmentDirections.actionAddCourseFragmentToAddAllCoursesFragment2())
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeData()
     }
 
-    private fun setUpRv() {
+    private fun setUpViews() {
         binding.lectureDayRv.apply {
             layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             adapter = LectureDaysAdapter(this@AddCourseFragment)
@@ -48,30 +54,70 @@ class AddCourseFragment : Fragment(), LectureDayListener {
             adapter = lectureVenueDetailsAdapter
         }
 
+        binding.saveButton.setOnClickListener {
+
+            // TODO add more input validations here
+            if (lectureDays.isEmpty()) {
+                showToast("pls set up a lecture days")
+                return@setOnClickListener
+            }
+
+            viewModel.saveCourses(getAddCourseParams())
+        }
     }
 
-    override fun isChecked(day: String) {
+    private fun observeData() {
+
+        viewModel.addCourse.observe(viewLifecycleOwner, EventObserver { result ->
+            when (result) {
+                is Result.Loading -> {
+                    showProgressDialog("Adding ${binding.courseTitleEt.text.trim()}...")
+                }
+
+                is Result.Success -> {
+                    lectureDays.clear()
+                    lectureVenueDetailsAdapter.notifyDataSetChanged()
+                    findNavController().navigate(AddCourseFragmentDirections.actionAddCourseFragmentToAddAllCoursesFragment2())
+
+                    hideProgressDialog()
+                }
+
+                is Result.Error -> {
+                    showToast(result.errorMessage)
+                    hideProgressDialog()
+
+                }
+            }
+
+        })
+
+    }
+
+    override fun isChecked(day: LectureDayDomain) {
         lectureDays.add(day)
-        lectureVenueDetailsAdapter.notifyDataSetChanged()
+        lectureVenueDetailsAdapter.notifyItemInserted(lectureDays.size - 1)
     }
 
-    override fun isUnchecked(day: String) {
-        lectureDays.remove(day)
-        lectureVenueDetailsAdapter.notifyDataSetChanged()
+    override fun isUnchecked(dayOfWeek: String) {
+        val dayToRemove = lectureDays.find { it.dayOfWeek == dayOfWeek }
+        val position = lectureDays.indexOf(dayToRemove)
+        lectureDays.removeAt(position)
 
-
+        lectureVenueDetailsAdapter.notifyItemRemoved(position)
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    override fun setLectureTime(tv: TextView, text: String) {
-        val mcurrentTime: Calendar = Calendar.getInstance()
-        val hour: Int = mcurrentTime.get(Calendar.HOUR_OF_DAY)
-        val minute: Int = mcurrentTime.get(Calendar.MINUTE)
-        val mTimePicker = TimePickerDialog(context, { _, selectedHour, selectedMinute -> "$selectedHour:$selectedMinute".also { tv.text = it } }, hour, minute, true) //Yes 24 hour time
 
-        mTimePicker.setTitle(text)
-        mTimePicker.show()
+    private fun getAddCourseParams(): AddCourseUseCase.Params {
+        val course = CourseDomain(
+                title = binding.courseTitleEt.text.trim().toString(),
+                courseCode = binding.courseCodeEt.text.trim().toString(),
+                creditUnit = binding.creditUnitEt.text.trim().toString().toInt(),
+                description = binding.courseDescriptionEt.text.trim().toString(),
+                lecturer = binding.lecturerNameEt.text.trim().toString(),
+                lectureDays = lectureDays
 
+        )
+        return AddCourseUseCase.Params(course)
     }
 
 }

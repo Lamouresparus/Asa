@@ -1,9 +1,8 @@
 package com.android.asa.ui.add_course
 
-import android.widget.TextView
+import com.asa.domain.model.LectureDayDomain
 
 interface LectureDayListener {
-    fun isChecked(day: String)
-    fun isUnchecked(day: String)
-    fun setLectureTime(tv: TextView, text: String)
+    fun isChecked(day: LectureDayDomain)
+    fun isUnchecked(dayOfWeek: String)
 }

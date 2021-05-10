@@ -16,6 +16,15 @@ abstract class BaseFragment : Fragment() {
         }
     }
 
+    fun showProgressDialog(message: String) {
+        progressDialog.apply {
+            setMessage(message)
+            show()
+        }
+    }
+
+    fun hideProgressDialog() = progressDialog.dismiss()
+
 
     fun Disposable.addToContainer() = disposableContainer.add(this)
 }
