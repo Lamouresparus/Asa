@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.auth.StaffAdviserSignUpFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <ImageView
+            android:id="@+id/view2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="74dp"
+            android:background="@drawable/ic_logo"
+            android:contentDescription="@string/text_asa_logo"
+            app:layout_constraintEnd_toStartOf="@+id/guideline6"
+            app:layout_constraintStart_toStartOf="@+id/guideline7"
+            app:layout_constraintTop_toTopOf="@+id/guideline9" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/_sign_up"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/view2"
+            app:layout_constraintStart_toStartOf="@+id/view2"
+            app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+        <TextView
+            android:id="@+id/sign_up_as_staff_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:background="@drawable/primary_colored_background"
+            android:drawablePadding="4dp"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:text="@string/staff_adviser"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            app:drawableLeftCompat="@drawable/ic_staff_adviser_icon_colored"
+            app:drawableStartCompat="@drawable/ic_staff_adviser_icon_colored"
+            app:layout_constraintEnd_toStartOf="@+id/guideline6"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="@+id/guideline7"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+        <EditText
+            android:id="@+id/staff_no_et"
+            style="@style/signInTextInputStyle"
+            android:layout_marginStart="72dp"
+            android:layout_marginTop="44dp"
+            android:layout_marginEnd="72dp"
+            android:autofillHints="SS/ED/8990"
+            android:hint="@string/staff_no"
+            android:inputType="textCapCharacters"
+            app:layout_constraintEnd_toStartOf="@+id/guideline6"
+            app:layout_constraintStart_toStartOf="@+id/guideline7"
+            app:layout_constraintTop_toBottomOf="@+id/sign_up_as_staff_tv" />
+
+        <EditText
+            android:id="@+id/email_et"
+            style="@style/signInTextInputStyle"
+            android:layout_marginTop="24dp"
+            android:autofillHints="myname@gmail.com"
+            android:hint="@string/text_email"
+            android:inputType="textEmailAddress"
+            app:layout_constraintEnd_toEndOf="@+id/staff_no_et"
+            app:layout_constraintStart_toStartOf="@+id/staff_no_et"
+            app:layout_constraintTop_toBottomOf="@+id/staff_no_et" />
+
+        <EditText
+            android:id="@+id/password_et"
+            style="@style/signInTextInputStyle"
+            android:layout_marginTop="24dp"
+            android:autofillHints="input strong password"
+            android:hint="@string/text_password"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="@+id/email_et"
+            app:layout_constraintStart_toStartOf="@+id/email_et"
+            app:layout_constraintTop_toBottomOf="@+id/email_et" />
+
+        <Button
+            android:id="@+id/staff_button_sign_up"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:background="@drawable/button_background"
+            android:text="@string/_sign_up"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/password_et"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/password_et"
+            app:layout_constraintTop_toBottomOf="@+id/password_et" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="80dp"
+            android:text="@string/already_registered"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/guideline5"
+            app:layout_constraintEnd_toStartOf="@+id/move_to_sign_in_screen"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/guideline7"
+            app:layout_constraintTop_toBottomOf="@+id/staff_button_sign_up" />
+
+        <TextView
+            android:id="@+id/move_to_sign_in_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_sign_in"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView6"
+            app:layout_constraintEnd_toStartOf="@+id/guideline6"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView6" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+

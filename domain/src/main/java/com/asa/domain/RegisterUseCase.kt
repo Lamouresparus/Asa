@@ -1,6 +1,6 @@
-package com.asa.domain.repository
+package com.asa.domain
 
-import com.asa.domain.BaseUseCase
+import com.asa.domain.repository.UserRepository
 import io.reactivex.Completable
 import javax.inject.Inject
 
@@ -15,7 +15,10 @@ class RegisterUseCase @Inject constructor(private val userRepository: UserReposi
     data class StudentParams(
             override val email: String,
             override val password: String,
-            val studentRegistrationNumber: String
+            val studentRegistrationNumber: String,
+            val firstName: String,
+            val lastName: String,
+            val isRegistrationComplete: Boolean = false
     ) : Params
 
     data class StaffParams(

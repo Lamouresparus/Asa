@@ -3,9 +3,10 @@ package com.asa.remotes
 import com.asa.data.sources.RemoteDataSource
 import com.asa.domain.AddCoursesUseCase
 import com.asa.domain.LogInUseCase
+import com.asa.domain.ReadingTimeSetUpUseCase
+import com.asa.domain.RegisterUseCase
 import com.asa.domain.model.CourseDomain
 import com.asa.domain.model.UserDomain
-import com.asa.domain.repository.RegisterUseCase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import io.reactivex.Completable
@@ -37,18 +38,23 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
                                         if (it.isSuccessful) {
                                             val user = it.result?.toObject(UserDomain::class.java)
 
-                                            if (user != null) emitter.onSuccess(user)
-                                            else emitter.onError(it.exception
-                                                    ?: Throwable("Error loggin in"))
+                                            if (user != null) {
+                                                if (user.userType == params.userType) {
+                                                    emitter.onSuccess(user)
+                                                } else {
+                                                    emitter.onError(Throwable("Invalid login details"))
+                                                }
+                                            } else emitter.onError(it.exception
+                                                    ?: Throwable("Error logging in"))
 
 
                                         } else {
                                             emitter.onError(it.exception
-                                                    ?: Throwable("Error loggin in"))
+                                                    ?: Throwable("Error logging in"))
                                         }
                                     }
                         } else {
-                            emitter.onError(task.exception ?: Throwable("Error loggin in"))
+                            emitter.onError(task.exception ?: Throwable("Error logging in"))
                         }
 
                     }
@@ -80,7 +86,7 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
 
                                             val user = when (param) {
                                                 is RegisterUseCase.StudentParams -> {
-                                                    UserDomain(fireBaseUser.uid, email, 0, regNumber = param.studentRegistrationNumber)
+                                                    UserDomain(fireBaseUser.uid, email, 0, regNumber = param.studentRegistrationNumber, firstName = param.firstName, lastName = param.lastName)
                                                 }
                                                 is RegisterUseCase.StaffParams -> {
                                                     UserDomain(fireBaseUser.uid, email, 1, staffId = param.staffIdentificationNumber)
@@ -99,6 +105,46 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
                             emitter.onError(task.exception ?: Throwable("Error login in"))
                         }
 
+                    }
+
+        }
+    }
+
+
+    override fun saveReadingTime(params: ReadingTimeSetUpUseCase.Params): Completable {
+        return Completable.create { emitter ->
+            val user = firebaseAuth.currentUser
+            if (user == null) {
+                emitter.onError(Throwable("user not found"))
+                return@create
+            }
+
+            firestore
+                    .collection(USERS_READING_TIME_COLLECTION_PATH)
+                    .document(user.uid)
+                    .set(params)
+                    .addOnCompleteListener { dbTask ->
+
+                        if (dbTask.isSuccessful) {
+
+                            firestore
+                                    .collection(USERS_COLLECTION_PATH)
+                                    .document(user.uid)
+                                    .update("registrationComplete", true)
+                                    .addOnCompleteListener {
+                                        if (it.isSuccessful) {
+                                            emitter.onComplete()
+
+                                        } else {
+                                            emitter.onError(it.exception
+                                                    ?: Throwable("Error creating user"))
+                                        }
+                                    }
+
+                        } else {
+                            emitter.onError(dbTask.exception
+                                    ?: Throwable("Error creating user"))
+                        }
                     }
 
         }
@@ -173,7 +219,10 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
 
     companion object {
         private const val USERS_COLLECTION_PATH = "users"
+        private const val USERS_READING_TIME_COLLECTION_PATH = "users_reading_time"
+
         private const val COURSES_COLLECTION_PATH = "courses"
 
     }
+
 }

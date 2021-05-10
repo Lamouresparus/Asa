@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/lecture_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text=""
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/venue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/ash"
+        android:hint="@string/venue"
+        android:inputType="textPersonName"
+        android:maxLines="1"
+        android:textColor="@color/colorTextPrimary"
+        android:textCursorDrawable="@null"
+        app:layout_constraintEnd_toStartOf="@+id/start_time"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lecture_day"
+        android:importantForAutofill="no" />
+
+    <EditText
+        android:id="@+id/start_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:backgroundTint="@color/ash"
+        android:focusable="false"
+        android:hint="@string/start_time"
+        android:inputType="none"
+        android:maxLines="1"
+        android:textColor="@color/colorTextPrimary"
+        android:textCursorDrawable="@null"
+        app:layout_constraintEnd_toStartOf="@+id/end_time"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/venue"
+        app:layout_constraintTop_toTopOf="@id/venue"
+        android:importantForAutofill="no" />
+
+    <EditText
+        android:id="@+id/end_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:inputType="none"
+        android:focusable="false"
+        android:backgroundTint="@color/ash"
+        android:hint="@string/end_time"
+        android:maxLines="1"
+        android:textColor="@color/colorTextPrimary"
+        android:textCursorDrawable="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/start_time"
+        app:layout_constraintTop_toTopOf="@id/venue"
+        android:importantForAutofill="no" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

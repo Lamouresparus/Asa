@@ -14,6 +14,7 @@ class LogInUseCase @Inject constructor(private val userRepository: UserRepositor
 
     data class Params(
             val email: String,
-            val password: String
+            val password: String,
+            val userType: Int
     )
 }
