@@ -2,26 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/icon_home_selector"
         android:title="" />
 
     <item
-        android:id="@+id/navigation_reading_progress"
+        android:id="@+id/readingProgressFragment"
         android:icon="@drawable/icon_reading_progress_selector"
         android:title="" />
 
     <item
-        android:id="@+id/navigation_reading_timetable"
+        android:id="@+id/readingTimetableFragment"
         android:icon="@drawable/icon_reading_timetable_selector"
         android:title="" />
 
     <item
-        android:id="@+id/navigation_cgpa_projector"
+        android:id="@+id/cgpaProjectorFragment"
         android:icon="@drawable/icon_cgpa_projector_selector"
         android:title="" />
     <item
-        android:id="@+id/navigation_assignments_and_tests"
+        android:id="@+id/assignmentsFragment"
         android:icon="@drawable/icon_assignments_selector"
         android:title="" />
 
