@@ -2,7 +2,8 @@ package com.asa.data.repository
 
 import com.asa.data.sources.DataSourceFactory
 import com.asa.domain.LogInUseCase
-import com.asa.domain.repository.RegisterUseCase
+import com.asa.domain.ReadingTimeSetUpUseCase
+import com.asa.domain.RegisterUseCase
 import com.asa.domain.repository.UserRepository
 import io.reactivex.Completable
 import javax.inject.Inject
@@ -27,5 +28,11 @@ class UserRepositoryImpl @Inject constructor(
             dataSource.remote().logOut().subscribe()
 //          dataSource.local().logOut().subscribe()
         }
+    }
+
+
+    override fun saveReadingTime(params: ReadingTimeSetUpUseCase.Params): Completable {
+
+        return dataSource.remote().saveReadingTime(params)
     }
 }

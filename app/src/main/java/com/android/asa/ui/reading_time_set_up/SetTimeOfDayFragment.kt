@@ -21,18 +21,26 @@ class SetTimeOfDayFragment : Fragment() {
 
     private fun setUpOnClickListeners() {
         binding.buttonMorning.setOnClickListener {
-            findNavController().navigate(SetTimeOfDayFragmentDirections.actionSetTimeOfDayFragmentToSetReaderTypeFragment())
+            ReadingTimeViewModel.preferredReadingPeriod = "morning"
+            navigateToNextScreen()
         }
 
         binding.buttonAfternoon.setOnClickListener {
-            findNavController().navigate(SetTimeOfDayFragmentDirections.actionSetTimeOfDayFragmentToSetReaderTypeFragment())
-
+            ReadingTimeViewModel.preferredReadingPeriod = "afternoon"
+            navigateToNextScreen()
         }
 
         binding.buttonNight.setOnClickListener {
-            findNavController().navigate(SetTimeOfDayFragmentDirections.actionSetTimeOfDayFragmentToSetReaderTypeFragment())
+            ReadingTimeViewModel.preferredReadingPeriod = "night"
+            navigateToNextScreen()
+
         }
     }
 
+    fun navigateToNextScreen() {
+        findNavController()
+                .navigate(SetTimeOfDayFragmentDirections
+                        .actionSetTimeOfDayFragmentToSetReaderTypeFragment())
+    }
 
 }
