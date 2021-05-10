@@ -4,13 +4,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.android.asa.databinding.ActivityMainBinding
+import com.android.asa.ui.add_course.AddCourseFragment
 import com.android.asa.ui.assignments_and_tests.AssignmentsFragment
 import com.android.asa.ui.cgpa_projector.CgpaProjectorFragment
-import com.android.asa.ui.add_course.AddCourseFragment
 import com.android.asa.ui.home.HomeFragment
 import com.android.asa.ui.reading_timetable.ReadingTimetableFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding

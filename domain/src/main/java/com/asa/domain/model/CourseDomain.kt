@@ -10,8 +10,8 @@ class CourseDomain(
 )
 
 data class LectureDayDomain(
-        val courseId: String,
-        val dayOfWeek: String,
-        val venue: String,
-        val startTime: Long,
-        val endTime: Long)
+        var courseId: String = "",
+        var dayOfWeek: String = "",
+        var venue: String = "",
+        var startTime: String = "",
+        var endTime: String = "")

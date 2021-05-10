@@ -1,6 +1,6 @@
 package com.asa.data.sources
 
-import com.asa.domain.AddCoursesUseCase
+import com.asa.domain.AddCourseUseCase
 import com.asa.domain.LogInUseCase
 import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
@@ -14,6 +14,6 @@ interface RemoteDataSource {
     fun register(param: RegisterUseCase.Params): Single<UserDomain>
     fun logOut(): Completable
     fun saveReadingTime(params: ReadingTimeSetUpUseCase.Params): Completable
-    fun saveCourses(params: AddCoursesUseCase.Params): Completable
+    fun saveCourses(params: AddCourseUseCase.Params): Completable
     fun getCoursesForToday(): Single<List<CourseDomain>>
 }

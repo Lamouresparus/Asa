@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.CheckedTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.R
+import com.asa.domain.model.LectureDayDomain
 
 class LectureDaysAdapter(private val lectureDayListener: LectureDayListener) : RecyclerView.Adapter<LectureDaysAdapter.ViewHolder>() {
 
@@ -21,14 +22,14 @@ class LectureDaysAdapter(private val lectureDayListener: LectureDayListener) : R
 
             checkedTv.setOnClickListener {
                 if (checkedTv.isChecked) {
-                    lectureDayListener.isUnchecked(day)
+                    lectureDayListener.isUnchecked(dayOfWeek = day)
                     checkedTv.setTextColor(Color.parseColor("#838383"))
                     checkedTv.setBackgroundResource(R.drawable.ic_circle_grey)
 
                     checkedTv.isChecked = false
 
                 } else {
-                    lectureDayListener.isChecked(day)
+                    lectureDayListener.isChecked(LectureDayDomain(dayOfWeek = day))
                     checkedTv.setTextColor(Color.parseColor("#FC8F2F"))
                     checkedTv.setBackgroundResource(R.drawable.ic_circle_color_accent)
                     checkedTv.isChecked = true

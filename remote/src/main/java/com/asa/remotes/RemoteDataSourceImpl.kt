@@ -1,7 +1,7 @@
 package com.asa.remotes
 
 import com.asa.data.sources.RemoteDataSource
-import com.asa.domain.AddCoursesUseCase
+import com.asa.domain.AddCourseUseCase
 import com.asa.domain.LogInUseCase
 import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
@@ -156,7 +156,7 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
         }
     }
 
-    override fun saveCourses(params: AddCoursesUseCase.Params): Completable {
+    override fun saveCourses(params: AddCourseUseCase.Params): Completable {
         return Completable.create { emitter ->
 
             val user = firebaseAuth.currentUser
@@ -167,7 +167,9 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
             firestore
                     .collection(COURSES_COLLECTION_PATH)
                     .document(user.uid)
-                    .set(CourseAndLectureDaysWrapper(params.courses))
+                    .collection(USER_COURSES_COLLECTION_PATH)
+                    .document()
+                    .set(params)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             emitter.onComplete()
@@ -221,7 +223,8 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
         private const val USERS_COLLECTION_PATH = "users"
         private const val USERS_READING_TIME_COLLECTION_PATH = "users_reading_time"
 
-        private const val COURSES_COLLECTION_PATH = "courses"
+        private const val COURSES_COLLECTION_PATH = "users_courses"
+        private const val USER_COURSES_COLLECTION_PATH = "user_courses"
 
     }
 
