@@ -27,6 +27,7 @@
             android:src="@drawable/ic_notification" />
 
         <FrameLayout
+            android:id="@+id/profile_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="42dp"
