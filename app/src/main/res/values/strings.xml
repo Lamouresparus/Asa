@@ -51,4 +51,18 @@
     <string name="home_fragment">Home Fragment</string>
     <string name="cgpa_projector">CGPA projector</string>
     <string name="assignments">Assignments</string>
+    <string name="save_course">Save Course</string>
+    <string name="lecture_days">Lecture days</string>
+    <string name="lecturer">Lecturer</string>
+    <string name="description">Description</string>
+    <string name="credit_unit">Credit unit</string>
+    <string name="course_code">Course code</string>
+    <string name="add_course">Add course</string>
+    <string name="course_title">Course title</string>
+    <string name="notifications">notifications</string>
+    <string name="venue">Venue</string>
+    <string name="start_time">Start time</string>
+    <string name="end_time">End time</string>
+    <string name="courses_offered">Courses offered</string>
+    <string name="_0percent">0%</string>
 </resources>

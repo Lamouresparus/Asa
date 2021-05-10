@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 import com.android.asa.databinding.ActivityMainBinding
 import com.android.asa.ui.assignments_and_tests.AssignmentsFragment
 import com.android.asa.ui.cgpa_projector.CgpaProjectorFragment
+import com.android.asa.ui.add_course.AddCourseFragment
 import com.android.asa.ui.home.HomeFragment
-import com.android.asa.ui.reading_progress.ReadingProgressFragment
 import com.android.asa.ui.reading_timetable.ReadingTimetableFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
             val fragment = when (item.itemId) {
                 R.id.navigation_home -> HomeFragment()
-                R.id.navigation_reading_progress -> ReadingProgressFragment()
+                R.id.navigation_reading_progress -> AddCourseFragment()
                 R.id.navigation_reading_timetable -> ReadingTimetableFragment()
                 R.id.navigation_cgpa_projector -> CgpaProjectorFragment()
                 R.id.navigation_assignments_and_tests -> AssignmentsFragment()
