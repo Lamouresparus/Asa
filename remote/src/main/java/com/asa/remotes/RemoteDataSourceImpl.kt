@@ -124,7 +124,21 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
                     .addOnCompleteListener { dbTask ->
 
                         if (dbTask.isSuccessful) {
-                            emitter.onComplete()
+
+                            firestore
+                                    .collection(USERS_COLLECTION_PATH)
+                                    .document(user.uid)
+                                    .update("registrationComplete", true)
+                                    .addOnCompleteListener {
+                                        if (it.isSuccessful) {
+                                            emitter.onComplete()
+
+                                        } else {
+                                            emitter.onError(it.exception
+                                                    ?: Throwable("Error creating user"))
+                                        }
+                                    }
+
                         } else {
                             emitter.onError(dbTask.exception
                                     ?: Throwable("Error creating user"))
