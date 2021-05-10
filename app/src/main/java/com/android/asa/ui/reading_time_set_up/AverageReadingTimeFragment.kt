@@ -71,7 +71,7 @@ class AverageReadingTimeFragment : BaseFragment() {
 
                 is Result.Loading -> {
                     progressDialog.apply {
-                        setMessage("Fina")
+                        setMessage("Finalising set up...")
                         show()
                     }
                 }
