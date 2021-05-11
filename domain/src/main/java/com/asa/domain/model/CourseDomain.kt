@@ -7,7 +7,9 @@ class CourseDomain(
         val description: String,
         val lecturer: String,
         val lectureDays: List<LectureDayDomain>
-)
+) {
+    constructor() : this("", "", 0, "", "", emptyList())
+}
 
 data class LectureDayDomain(
         var courseId: String = "",

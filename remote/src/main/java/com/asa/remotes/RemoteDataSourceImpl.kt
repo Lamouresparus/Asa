@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.SingleEmitter
 import javax.inject.Inject
 
 class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: FirebaseAuth,
@@ -168,8 +169,8 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
                     .collection(COURSES_COLLECTION_PATH)
                     .document(user.uid)
                     .collection(USER_COURSES_COLLECTION_PATH)
-                    .document()
-                    .set(params)
+                    .document(params.course.courseCode)
+                    .set(params.course)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             emitter.onComplete()
@@ -189,7 +190,7 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
                 return@create
             }
 
-            firestore.collection(COURSES_COLLECTION_PATH)
+            firestore.collection(USER_COURSES_COLLECTION_PATH)
                     .document(user.uid)
                     .get()
                     .addOnCompleteListener { task ->
@@ -215,6 +216,47 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
         }
     }
 
+
+    override fun getUserCourses(): Single<List<CourseDomain>> {
+
+        return Single.create { emitter ->
+
+            val user = firebaseAuth.currentUser
+            if (user == null) {
+                emitter.onError(Throwable("Invalid user"))
+                return@create
+            }
+
+            getCourses(user.uid, emitter)
+        }
+    }
+
+    private fun getCourses(userId: String, emitter: SingleEmitter<List<CourseDomain>>) {
+        firestore
+                .collection(COURSES_COLLECTION_PATH)
+                .document(userId)
+                .collection(USER_COURSES_COLLECTION_PATH)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+
+                        val courses = task.result?.documents?.map {
+                            it.toObject(CourseDomain::class.java)!!
+                        }
+
+                        if (courses.isNullOrEmpty()) {
+                            emitter.onError(Throwable("No course found"))
+                        } else {
+                            emitter.onSuccess(courses)
+                        }
+
+                    } else {
+                        emitter.onError(task.exception ?: Throwable("Error adding courses"))
+                    }
+                }
+
+    }
+
     data class CourseAndLectureDaysWrapper(
             val course: List<CourseDomain>
     )
@@ -222,7 +264,6 @@ class RemoteDataSourceImpl @Inject constructor(private val firebaseAuth: Firebas
     companion object {
         private const val USERS_COLLECTION_PATH = "users"
         private const val USERS_READING_TIME_COLLECTION_PATH = "users_reading_time"
-
         private const val COURSES_COLLECTION_PATH = "users_courses"
         private const val USER_COURSES_COLLECTION_PATH = "user_courses"
 
