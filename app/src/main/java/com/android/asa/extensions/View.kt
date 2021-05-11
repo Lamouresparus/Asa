@@ -1,11 +1,13 @@
 package com.android.asa.extensions
 
-import android.text.TextUtils
-import android.util.Patterns
+import android.app.TimePickerDialog
+import android.icu.util.Calendar
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
@@ -55,5 +57,20 @@ fun TextInputLayout.showError(errorMessage: String) {
 
 fun TextInputLayout.disableError() {
     error = null
+}
+
+@RequiresApi(Build.VERSION_CODES.N)
+fun View.showTimePicker(text: String, callback: (String) -> Unit) {
+    val mcurrentTime: Calendar = Calendar.getInstance()
+    val hour: Int = mcurrentTime.get(Calendar.HOUR_OF_DAY)
+    val minute: Int = mcurrentTime.get(Calendar.MINUTE)
+    val mTimePicker = TimePickerDialog(context,
+            { _, selectedHour, selectedMinute ->
+                callback.invoke("$selectedHour:$selectedMinute")
+
+            }, hour, minute, false)
+
+    mTimePicker.setTitle(text)
+    mTimePicker.show()
 }
 

@@ -1,6 +1,8 @@
 package com.android.asa.di
 
+import com.asa.data.repository.CourseRepositoryImpl
 import com.asa.data.repository.UserRepositoryImpl
+import com.asa.domain.repository.CourseRepository
 import com.asa.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -15,4 +17,8 @@ abstract class AppModule {
     @Binds
     @Singleton
     abstract fun provideUserRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
+
+    @Binds
+    @Singleton
+    abstract fun provideCourseRepository(courseRepositoryImpl: CourseRepositoryImpl): CourseRepository
 }
