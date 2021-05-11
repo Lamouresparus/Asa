@@ -16,4 +16,5 @@ interface RemoteDataSource {
     fun saveReadingTime(params: ReadingTimeSetUpUseCase.Params): Completable
     fun saveCourses(params: AddCourseUseCase.Params): Completable
     fun getCoursesForToday(): Single<List<CourseDomain>>
+    fun getUserCourses(): Single<List<CourseDomain>>
 }

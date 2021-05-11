@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/addAllCoursesFragment2"
-        android:name="com.android.asa.ui.add_course.AddAllCoursesFragment"
+        android:name="com.android.asa.ui.add_course.ViewAllCoursesAddedFragment"
         android:label="fragment_add_all_courses"
         tools:layout="@layout/fragment_add_all_courses" >
         <action
