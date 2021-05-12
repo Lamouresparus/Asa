@@ -8,4 +8,5 @@ import io.reactivex.Single
 interface CourseRepository {
     fun saveCourses(params: AddCourseUseCase.Params): Completable
     fun getCoursesForToday(): Single<List<CourseDomain>>
+    fun getUserCourses(): Single<List<CourseDomain>>
 }
