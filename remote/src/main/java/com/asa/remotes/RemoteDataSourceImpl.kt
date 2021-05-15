@@ -55,8 +55,6 @@ class RemoteDataSourceImpl @Inject constructor(
                                         it.exception
                                             ?: Throwable("Error logging in")
                                     )
-
-
                                 } else {
                                     emitter.onError(
                                         it.exception

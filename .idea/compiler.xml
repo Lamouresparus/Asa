@@ -3,6 +3,7 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
       <module name="Asa.app" target="11" />
+      <module name="Asa.local" target="11" />
       <module name="Asa.remote" target="11" />
     </bytecodeTargetLevel>
   </component>
