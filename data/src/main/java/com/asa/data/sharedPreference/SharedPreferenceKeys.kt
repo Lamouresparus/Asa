@@ -1,0 +1,46 @@
+package com.asa.data.sharedPreference
+
+class SharedPreferenceKeys {
+
+    val ASA = "com.asa.android"
+    val KEY_IS_APP_FIRST_LAUNCH = "KEY_IS_APP_FIRST_LAUNCH"
+
+    /**
+     * user properties
+     */
+    val KEY_USER_ID = "KEY_USER_ID"
+    val KEY_USER_NAME = "KEY_USER_NAME"
+    val KEY_USER_FIRST_NAME = "KEY_USER_FIRST_NAME"
+    val KEY_USER_LAST_NAME = "KEY_USER_LAST_NAME"
+    val KEY_USER_REGISTRATION_STATUS = "KEY_USER_REGISTRATION_STATUS"
+    val KEY_USER_EMAIL = "KEY_USER_EMAIL"
+    val KEY_USER_REGISTRATION_NUMBER = "KEY_USER_REGISTRATION_NUMBER"
+    val KEY_USER_STAFF_ID = "KEY_USER_STAFF_ID"
+    val KEY_USER_TYPE = "KEY_USER_TYPE"
+    val KEY_USER_GENDER = "KEY_USER_GENDER"
+    val KEY_USER_DATE_OF_BIRTH = "KEY_USER_DATE_OF_BIRTH"
+    val KEY_ENABLE_NOTIFICATION = "KEY_ENABLE_NOTIlocationFICATION"
+    val KEY_USER_LOCATION = "KEY_USER_LOCATION"
+    val KEY_USER_DESCRIPTION = "KEY_USER_DESCRIPTION"
+
+
+    /**
+     * semester properties
+     */
+
+    val KEY_HAS_BEGUN_SEMESTER = "KEY_HAS_BEGUN_SEMESTER"
+    val KEY_NO_OF_COURSES_OFFERED = "KEY_NUN_COURSES_OFFERED"
+
+
+    val KEY_LIST = listOf<String>(
+        KEY_USER_ID,
+        KEY_USER_NAME,
+        KEY_USER_EMAIL,
+        KEY_USER_GENDER,
+        KEY_USER_DATE_OF_BIRTH,
+        KEY_ENABLE_NOTIFICATION,
+        KEY_USER_LOCATION,
+        KEY_USER_DESCRIPTION
+    )
+
+}
