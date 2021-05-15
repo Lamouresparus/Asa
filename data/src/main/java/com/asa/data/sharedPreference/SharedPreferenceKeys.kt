@@ -24,6 +24,14 @@ class SharedPreferenceKeys {
     val KEY_USER_DESCRIPTION = "KEY_USER_DESCRIPTION"
 
 
+    /**
+     * semester properties
+     */
+
+    val KEY_HAS_BEGUN_SEMESTER = "KEY_HAS_BEGUN_SEMESTER"
+    val KEY_NO_OF_COURSES_OFFERED = "KEY_NUN_COURSES_OFFERED"
+
+
     val KEY_LIST = listOf<String>(
         KEY_USER_ID,
         KEY_USER_NAME,

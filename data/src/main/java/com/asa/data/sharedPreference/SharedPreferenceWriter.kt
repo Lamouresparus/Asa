@@ -1,5 +1,6 @@
 package com.asa.data.sharedPreference
 
+import com.asa.domain.model.SemesterDomain
 import com.asa.domain.model.UserDomain
 
 
@@ -10,4 +11,5 @@ interface SharedPreferenceWriter {
     fun saveUserLocation(location: String)
     fun saveUserDescription(description: String)
     fun clearKeys(keys: List<String>)
+    fun saveSemesterInformation(semester: SemesterDomain)
 }

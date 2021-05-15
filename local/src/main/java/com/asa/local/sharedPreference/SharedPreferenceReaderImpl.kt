@@ -3,6 +3,7 @@ package com.asa.local.sharedPreference
 import android.content.SharedPreferences
 import com.asa.data.sharedPreference.SharedPreferenceKeys
 import com.asa.data.sharedPreference.SharedPreferenceReader
+import com.asa.domain.model.SemesterDomain
 import com.asa.domain.model.UserDomain
 import javax.inject.Inject
 
@@ -17,6 +18,12 @@ class SharedPreferenceReaderImpl @Inject constructor(
 
     override fun isLoggedIn(): Boolean {
         return getUserData() != null
+    }
+
+    override fun getSemesterInformation(): SemesterDomain {
+        val hasSemesterBegun = getBoolean(keys.KEY_HAS_BEGUN_SEMESTER)
+        val numOfCoursesRegistered = getInt(keys.KEY_NO_OF_COURSES_OFFERED)
+        return SemesterDomain(hasSemesterBegun, numOfCoursesRegistered)
     }
 
     override fun getUserData(): UserDomain? {
@@ -49,7 +56,6 @@ class SharedPreferenceReaderImpl @Inject constructor(
     }
 
     override fun getUserId(): String? {
-
         return sharedPreferences.getString(keys.KEY_USER_ID, null)
     }
 

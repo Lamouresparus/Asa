@@ -5,6 +5,7 @@ import com.asa.data.sources.DataSourceFactory
 import com.asa.domain.LogInUseCase
 import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
+import com.asa.domain.model.SemesterDomain
 import com.asa.domain.repository.UserRepository
 import io.reactivex.Completable
 import javax.inject.Inject
@@ -16,14 +17,16 @@ class UserRepositoryImpl @Inject constructor(
     override fun login(params: LogInUseCase.Params): Completable {
         return dataSource.remote().login(params).doOnSuccess {
             prefWriter.apply {
-                saveUser(it)
+                saveUser(it.first)
+                saveSemesterInformation(it.second)
             }
         }.ignoreElement()
     }
 
     override fun register(param: RegisterUseCase.Params): Completable {
         return dataSource.remote().register(param).doOnSuccess {
-            //save user to room db
+            prefWriter.saveUser(it)
+            prefWriter.saveSemesterInformation(SemesterDomain())
         }.ignoreElement()
     }
 

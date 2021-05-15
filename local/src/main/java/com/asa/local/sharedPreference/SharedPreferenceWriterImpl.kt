@@ -3,6 +3,7 @@ package com.asa.local.sharedPreference
 import android.content.SharedPreferences
 import com.asa.data.sharedPreference.SharedPreferenceKeys
 import com.asa.data.sharedPreference.SharedPreferenceWriter
+import com.asa.domain.model.SemesterDomain
 import com.asa.domain.model.UserDomain
 import javax.inject.Inject
 
@@ -24,6 +25,11 @@ class SharedPreferenceWriterImpl @Inject constructor(
         saveString(keys.KEY_USER_FIRST_NAME, user.firstName)
         saveString(keys.KEY_USER_LAST_NAME, user.lastName)
         saveBoolean(keys.KEY_USER_REGISTRATION_STATUS, user.isRegistrationComplete)
+    }
+
+    override fun saveSemesterInformation(semester: SemesterDomain) {
+        saveBoolean(keys.KEY_HAS_BEGUN_SEMESTER, semester.hasSemesterBegun)
+        saveInt(keys.KEY_NO_OF_COURSES_OFFERED, semester.noOfCoursesOffered)
     }
 
     override fun enableNotification(enable: Boolean) {

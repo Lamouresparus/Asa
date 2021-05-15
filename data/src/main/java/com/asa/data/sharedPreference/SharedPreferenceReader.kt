@@ -1,5 +1,6 @@
 package com.asa.data.sharedPreference
 
+import com.asa.domain.model.SemesterDomain
 import com.asa.domain.model.UserDomain
 
 
@@ -12,6 +13,8 @@ interface SharedPreferenceReader {
     fun isLoggedIn(): Boolean
 
     fun getUserData(): UserDomain?
+
+    fun getSemesterInformation(): SemesterDomain
 
     fun isNotificationEnabled(): Boolean
 
