@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.R
 import com.asa.domain.model.CourseDomain
-import com.asa.domain.model.LectureDayDomain
 import java.util.*
 
 class AllCoursesAdapter() : RecyclerView.Adapter<AllCoursesAdapter.ViewHolder>() {
