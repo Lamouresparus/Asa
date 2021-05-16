@@ -74,4 +74,7 @@
     <string name="add_courses_to_be_offered_this_semester">Add courses to be offered this semester</string>
     <string name="add_courses_to_create_a_plan_for_a_new_semester">Add courses to create a plan for a new semester</string>
     <string name="add_new_courses">Add new courses</string>
+    <string name="today_you_have">Today, you have</string>
+    <string name="and">and</string>
+    <string name="today_s_classes">Today\'s classes</string>
 </resources>
