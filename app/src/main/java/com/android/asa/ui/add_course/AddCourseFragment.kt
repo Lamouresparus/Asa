@@ -1,6 +1,7 @@
 package com.android.asa.ui.add_course
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,16 +45,12 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
     }
 
     private fun setUpViews() {
-        binding.lectureDayRv.apply {
-            layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            adapter = LectureDaysAdapter(this@AddCourseFragment)
-        }
+        setUpRecyclerViews()
 
-        binding.courseDetailsRv.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = lectureVenueDetailsAdapter
-        }
+        setUpClickListeners()
+    }
 
+    private fun setUpClickListeners() {
         binding.saveButton.setOnClickListener {
 
             // TODO add more input validations here
@@ -66,12 +63,25 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
         }
     }
 
+    private fun setUpRecyclerViews() {
+        binding.lectureDayRv.apply {
+            layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            adapter = LectureDaysAdapter(this@AddCourseFragment)
+        }
+
+        binding.courseDetailsRv.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = lectureVenueDetailsAdapter
+        }
+    }
+
     private fun observeData() {
 
         viewModel.addCourse.observe(viewLifecycleOwner, EventObserver { result ->
             when (result) {
                 is Result.Loading -> {
                     showProgressDialog("Adding ${binding.courseTitleEt.text.trim()}...")
+                    Log.d("loading", "loading")
                 }
 
                 is Result.Success -> {
@@ -80,12 +90,14 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
                     findNavController().navigate(AddCourseFragmentDirections.actionAddCourseFragmentToAddAllCoursesFragment2())
 
                     hideProgressDialog()
+                    Log.d("loading", "success")
+
                 }
 
                 is Result.Error -> {
                     showToast(result.errorMessage)
                     hideProgressDialog()
-
+                    Log.d("loading", "error")
                 }
             }
 

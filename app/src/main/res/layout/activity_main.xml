@@ -36,7 +36,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/home_navigation_menu" />
+        app:menu="@menu/home_navigation_menu"
+        app:itemIconSize="30dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
