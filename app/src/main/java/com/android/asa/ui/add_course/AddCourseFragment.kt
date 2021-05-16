@@ -53,10 +53,50 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
     private fun setUpClickListeners() {
         binding.saveButton.setOnClickListener {
 
-            // TODO add more input validations here
-            if (lectureDays.isEmpty()) {
-                showToast("pls set up a lecture days")
+            if (binding.courseTitleEt.text.trim().isEmpty()) {
+                showToast("course title cannot be empty")
                 return@setOnClickListener
+            }
+
+            if (binding.courseCodeEt.text.trim().isEmpty()) {
+                showToast("course code cannot be empty")
+                return@setOnClickListener
+            }
+            if (binding.courseDescriptionEt.text.trim().isEmpty()) {
+                showToast("course description cannot be empty")
+                return@setOnClickListener
+            }
+            if (binding.creditUnitEt.text.trim().isEmpty()) {
+                showToast("course credit unit cannot be empty")
+                return@setOnClickListener
+            }
+            if (binding.lecturerNameEt.text.trim().isEmpty()) {
+                showToast("lecturer name cannot be empty")
+                return@setOnClickListener
+            }
+
+
+            if (lectureDays.isEmpty()) {
+                showToast("please set up lecture days")
+                return@setOnClickListener
+            }
+            for (lectureDay in lectureDays) {
+                val day = lectureDay.dayOfWeek
+                if (lectureDay.venue.isEmpty()) {
+                    showToast("No venue inputted for $day")
+                    return@setOnClickListener
+
+                }
+                if (lectureDay.startTime.isEmpty() || lectureDay.endTime.isEmpty()) {
+                    showToast("Lecture time for $day not set")
+                    return@setOnClickListener
+
+                }
+                if (lectureDay.startTime.toInt() >= lectureDay.endTime.toInt()) {
+                    showToast("Invalid lecture time for $day")
+                    return@setOnClickListener
+
+                }
             }
 
             viewModel.saveCourses(getAddCourseParams())
