@@ -20,8 +20,9 @@ class RegisterUseCase @Inject constructor(private val userRepository: UserReposi
         val lastName: String,
         val isRegistrationComplete: Boolean = false,
         override val userType: Int = 0,
-        override var userId: String = ""
-    ) : Params
+        override var userId: String = "",
+        val level: Int
+        ) : Params
 
     data class StaffParams(
         override val email: String,

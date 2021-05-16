@@ -1,0 +1,55 @@
+Index: app/src/main/java/com/android/asa/ui/add_course/AddAllCoursesFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.android.asa.ui.add_course\n\nimport android.os.Bundle\nimport androidx.fragment.app.Fragment\nimport android.view.LayoutInflater\nimport android.view.View\nimport android.view.ViewGroup\nimport androidx.navigation.fragment.findNavController\nimport com.android.asa.databinding.FragmentAddAllCoursesBinding\n\n\nclass AddAllCoursesFragment : Fragment() {\n    private lateinit var binding: FragmentAddAllCoursesBinding\n    override fun onCreateView(\n            inflater: LayoutInflater, container: ViewGroup?,\n            savedInstanceState: Bundle?,\n    ): View {\n        binding = FragmentAddAllCoursesBinding.inflate(layoutInflater)\n        setUpClickListeners()\n        // Inflate the layout for this fragment\n        return binding.root\n    }\n\n    private fun setUpClickListeners() {\n        binding.addCoursesIv.setOnClickListener {\n            findNavController().navigate(AddAllCoursesFragmentDirections.actionAddAllCoursesFragment2ToAddCourseFragment())\n        }\n        binding.doneButton.setOnClickListener {\n            findNavController().navigate(AddAllCoursesFragmentDirections.actionAddAllCoursesFragment2ToHomeFragment())\n        }\n    }\n\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/android/asa/ui/add_course/AddAllCoursesFragment.kt	(revision f856790cde09ef0143ca795059c47629e24a7cf7)
++++ app/src/main/java/com/android/asa/ui/add_course/AddAllCoursesFragment.kt	(date 1620729319000)
+@@ -7,9 +7,10 @@
+ import android.view.ViewGroup
+ import androidx.navigation.fragment.findNavController
+ import com.android.asa.databinding.FragmentAddAllCoursesBinding
++import com.android.asa.ui.common.BaseFragment
+ 
+ 
+-class AddAllCoursesFragment : Fragment() {
++class AddAllCoursesFragment : BaseFragment() {
+     private lateinit var binding: FragmentAddAllCoursesBinding
+     override fun onCreateView(
+             inflater: LayoutInflater, container: ViewGroup?,
+Index: app/src/main/java/com/android/asa/ui/add_course/AllCoursesAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/android/asa/ui/add_course/AllCoursesAdapter.kt	(date 1620737853000)
++++ app/src/main/java/com/android/asa/ui/add_course/AllCoursesAdapter.kt	(date 1620737853000)
+@@ -0,0 +1,25 @@
++package com.android.asa.ui.add_course
++
++import android.view.LayoutInflater
++import android.view.ViewGroup
++import androidx.recyclerview.widget.RecyclerView
++import com.android.asa.R
++
++class AllCoursesAdapter : RecyclerView.Adapter<AllCoursesAdapter.ViewHolder>() {
++
++    inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup): RecyclerView.ViewHolder(inflater.inflate(R.layout.added_courses_item_view, parent,false)){
++
++    }
++
++    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
++        TODO("Not yet implemented")
++    }
++
++    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
++        TODO("Not yet implemented")
++    }
++
++    override fun getItemCount(): Int {
++        TODO("Not yet implemented")
++    }
++}
+\ No newline at end of file
