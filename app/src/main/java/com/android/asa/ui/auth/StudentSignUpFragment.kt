@@ -16,6 +16,7 @@ import com.android.asa.utils.Result
 import com.asa.domain.RegisterUseCase
 import com.classic.chatapp.utils.EventObserver
 
+@Suppress("DEPRECATION")
 class StudentSignUpFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: FragmentStudentSignUpBinding
@@ -113,6 +114,6 @@ class StudentSignUpFragment : BaseFragment(), AdapterView.OnItemSelectedListener
         val regNo = binding.regNoEt.text.toString().trim()
         val firstName = binding.firstNameEt.text.toString().trim()
         val lastName = binding.lastNameEt.text.toString().trim()
-        return RegisterUseCase.StudentParams(email, password, regNo, firstName, lastName, level.toInt())
+        return RegisterUseCase.StudentParams(email, password, regNo, firstName, lastName, level = level.toInt())
     }
 }
