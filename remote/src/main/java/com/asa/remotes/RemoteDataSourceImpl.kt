@@ -292,25 +292,24 @@ class RemoteDataSourceImpl @Inject constructor(
                 return@create
             }
 
-            firestore.collection(USER_COURSES_COLLECTION_PATH)
+            firestore.collection(SEMESTER_COLLECTION_PATH)
                     .document(user.uid)
+                    .collection(USER_COURSES_COLLECTION_PATH)
                     .get()
                     .addOnCompleteListener { task ->
 
                         if (task.isSuccessful) {
 
-                            val dataWrapper =
-                                    task.result?.toObject(CourseAndLectureDaysWrapper::class.java)
-
-                            if (dataWrapper != null) {
-
-                                emitter.onSuccess(dataWrapper.course)
-                            } else {
-                                emitter.onError(
-                                        task.exception
-                                                ?: Throwable("Error fetching courses")
-                                )
+                            val courses = task.result?.documents?.map {
+                                it.toObject(CourseDomain::class.java)!!
                             }
+
+                            if (courses.isNullOrEmpty()) {
+                                emitter.onError(Throwable("No course found"))
+                            } else {
+                                emitter.onSuccess(courses)
+                            }
+
 
                         } else {
                             emitter.onError(task.exception ?: Throwable("Error fetching courses"))

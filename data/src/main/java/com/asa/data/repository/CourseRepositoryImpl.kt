@@ -17,7 +17,6 @@ class CourseRepositoryImpl @Inject constructor(
 
 
     override fun getCoursesForToday(): Single<List<CourseDomain>> {
-
         return dataSource.remote().getCoursesForToday()
     }
 

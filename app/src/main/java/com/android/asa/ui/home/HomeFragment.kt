@@ -1,10 +1,18 @@
 package com.android.asa.ui.home
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.android.asa.MainActivity
 import com.android.asa.databinding.FragmentHomeBinding
+import com.android.asa.extensions.showToast
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
@@ -15,31 +23,72 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 
 import com.android.asa.ui.common.BaseFragment
+import com.android.asa.utils.Result
+import com.asa.domain.model.CourseDomain
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment() {
 
+    private val viewModel by viewModels<HomeViewModel>()
+
     private lateinit var binding: FragmentHomeBinding
+
+    lateinit var classesAdapter: TodaysClassesAdapter
+
+    private val todayClasses = mutableListOf<CourseDomain>()
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
-
-        //findNavController().navigate(BeginSemesterFragmentDirections.actionBeginSemesterFragmentToAddSemesterCoursesFragment())
         setUpRv()
         setupBarChart()
-        // Inflate the layout for this fragment
         return binding.root
     }
 
-    private fun setUpRv() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeData()
+    }
 
+    private fun setUpRv() {
+        classesAdapter = TodaysClassesAdapter(todayClasses)
+        binding.recyclerView.apply {
+            adapter = classesAdapter
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        }
+    }
+
+    private fun observeData() {
+        viewModel.todayCourses.observe(viewLifecycleOwner, { result ->
+            when (result) {
+                is Result.Loading -> {
+                    progressDialog.apply {
+                        setMessage("fetching classes for today")
+                        show()
+                    }
+                }
+
+                is Result.Success -> {
+                    todayClasses.clear()
+                    result.data?.toList()?.let { todayClasses.addAll(it)
+                    Log.d("List number", it.size.toString())}
+                    classesAdapter.notifyDataSetChanged()
+                    progressDialog.dismiss()
+
+                }
+                is Result.Error -> {
+                    progressDialog.dismiss()
+                    showToast(result.errorMessage)
+                }
+            }
+        })
     }
 
     private fun setupBarChart() {
-        val barChart = binding.readingProgressbarChart as BarChart
+        val barChart = binding.readingProgressbarChart
 
         val entries: ArrayList<BarEntry> = ArrayList()
         entries.add(BarEntry(1f, 0.5f))
