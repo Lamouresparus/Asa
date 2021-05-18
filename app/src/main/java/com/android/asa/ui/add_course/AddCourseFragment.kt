@@ -63,6 +63,11 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
                 showToast("course code cannot be empty")
                 return@setOnClickListener
             }
+
+            if (binding.courseCodeEt.text.trim().length!=6) {
+                showToast("invalid course code")
+                return@setOnClickListener
+            }
             if (binding.courseDescriptionEt.text.trim().isEmpty()) {
                 showToast("course description cannot be empty")
                 return@setOnClickListener

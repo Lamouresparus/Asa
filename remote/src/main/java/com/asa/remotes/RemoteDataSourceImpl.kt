@@ -1,5 +1,8 @@
 package com.asa.remotes
 
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import com.asa.data.sources.RemoteDataSource
 import com.asa.domain.AddCourseUseCase
 import com.asa.domain.LogInUseCase
@@ -16,6 +19,8 @@ import durdinapps.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
+import java.time.LocalDate
+import java.util.*
 import javax.inject.Inject
 
 class RemoteDataSourceImpl @Inject constructor(
@@ -284,7 +289,12 @@ class RemoteDataSourceImpl @Inject constructor(
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun getCoursesForToday(): Single<List<CourseDomain>> {
+
+        val day = LocalDate.now().dayOfWeek.name.toLowerCase(Locale.ROOT)
+
+        Log.d("day is", day)
         return Single.create { emitter ->
             val user = firebaseAuth.currentUser
             if (user == null) {
@@ -295,6 +305,7 @@ class RemoteDataSourceImpl @Inject constructor(
             firestore.collection(SEMESTER_COLLECTION_PATH)
                     .document(user.uid)
                     .collection(USER_COURSES_COLLECTION_PATH)
+                    .whereArrayContains("lectureDayOfWeek", day.capitalize())
                     .get()
                     .addOnCompleteListener { task ->
 
