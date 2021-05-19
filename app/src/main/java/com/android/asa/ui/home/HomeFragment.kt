@@ -13,6 +13,7 @@ import com.android.asa.extensions.makeVisible
 import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
 import com.android.asa.utils.Result
+import com.asa.data.sharedPreference.SharedPreferenceReader
 import com.asa.domain.model.CourseDomain
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
@@ -22,9 +23,14 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment() {
+
+
+    @Inject
+    lateinit var prefReader: SharedPreferenceReader
 
     private val viewModel by viewModels<HomeViewModel>()
 
@@ -39,9 +45,14 @@ class HomeFragment : BaseFragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
+        setUpViews()
+        return binding.root
+    }
+
+    private fun setUpViews() {
         setUpRv()
         setupBarChart()
-        return binding.root
+        binding.studentName.text = prefReader.getUserData()?.firstName
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

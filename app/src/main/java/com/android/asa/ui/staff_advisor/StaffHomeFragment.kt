@@ -8,9 +8,15 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.databinding.FragmentStaffHomeBinding
+import com.asa.data.sharedPreference.SharedPreferenceReader
+import javax.inject.Inject
 
 //
 class StaffHomeFragment : Fragment() {
+
+
+    @Inject
+    lateinit var prefReader: SharedPreferenceReader
 
     private lateinit var binding: FragmentStaffHomeBinding
 
@@ -20,8 +26,13 @@ class StaffHomeFragment : Fragment() {
             savedInstanceState: Bundle?,
     ): View {
         binding = FragmentStaffHomeBinding.inflate(layoutInflater)
-        setUpRv()
+        setUpViews()
         return binding.root
+    }
+
+    private fun setUpViews() {
+        setUpRv()
+        binding.staffName.text = prefReader.getUserData()?.firstName
     }
 
     private fun setUpRv() {

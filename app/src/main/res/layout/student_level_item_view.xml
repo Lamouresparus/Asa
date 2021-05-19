@@ -48,7 +48,7 @@
             android:layout_height="23dp"
             android:layout_marginTop="24dp"
             android:scaleType="centerCrop"
-            app:strokeColor="@color/black"
+            app:strokeColor="@color/white"
             app:strokeWidth="1dp"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +68,7 @@
             app:layout_constraintVertical_bias="0.0"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
             app:srcCompat="@drawable/ic_circle_grey_filled"
-            app:strokeColor="@color/black"
+            app:strokeColor="@color/white"
             app:strokeWidth="1dp" />
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -76,7 +76,7 @@
             android:layout_width="23dp"
             android:layout_height="23dp"
             android:scaleType="centerCrop"
-            app:strokeColor="@color/black"
+            app:strokeColor="@color/white"
             app:strokeWidth="1dp"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
             android:layout_marginStart="12dp"

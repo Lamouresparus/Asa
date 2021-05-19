@@ -7,6 +7,8 @@ import androidx.lifecycle.lifecycleScope
 import com.android.asa.MainActivity
 import com.android.asa.R
 import com.android.asa.ui.auth.AuthenticationActivity
+import com.android.asa.ui.staff_advisor.StaffHomeActivity
+import com.asa.data.sharedPreference.SharedPreferenceReader
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -18,6 +20,9 @@ class SplashActivity : AppCompatActivity() {
     @Inject
     lateinit var fireBaseAuth: FirebaseAuth
 
+    @Inject
+    lateinit var prefReader: SharedPreferenceReader
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -26,7 +31,15 @@ class SplashActivity : AppCompatActivity() {
             delay(1500)
 
             if (fireBaseAuth.currentUser != null) {
-                navigateToMainActivity()
+
+                if(prefReader.getUserData()?.userType == 0){
+                    navigateToMainActivity()
+
+                }
+                else{
+                    navigateToStaffHomeActivity()
+
+                }
             } else {
                 navigateToLogin()
             }
@@ -41,6 +54,12 @@ class SplashActivity : AppCompatActivity() {
 
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun navigateToStaffHomeActivity() {
+        val intent = Intent(this, StaffHomeActivity::class.java)
         startActivity(intent)
         finish()
     }

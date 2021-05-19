@@ -95,7 +95,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
             tools:listitem="@layout/student_level_item_view"
-            android:layout_marginBottom="120dp"
+            android:layout_marginBottom="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView23"

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.R
 
 class StudentLevelAdapter : RecyclerView.Adapter<StudentLevelAdapter.ViewHolder>() {
-    private val colors: List<String> = listOf("#FFAD00", "#A860C3", "#72ED77", "#474747", "#FF443C", "#00BBBA")
+    private val colors: List<String> = listOf("#00BBBA", "#72ED77", "#FFAD00", "#EB5757", "#BB6BD9", "#4F4F4F")
     private val levels: List<String> = listOf("100 Level", "200 Level", "300 Level", "400 Level", "500 Level", "600 Level", "700 Level")
     private val levelTags: List<String> = listOf("Freshmen", "Sophomore", "Junior", "Senior", "Final Year", "Extra Year 1", "Extra Year 2")
 
