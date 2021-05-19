@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/blankFragment">
 
     <fragment
         android:id="@+id/beginSemesterFragment"
@@ -76,5 +76,10 @@
         android:name="com.android.asa.ui.assignments_and_tests.AssignmentsFragment"
         android:label="fragment_assignments"
         tools:layout="@layout/fragment_assignments" />
+    <fragment
+        android:id="@+id/blankFragment"
+        android:name="com.android.asa.ui.navigation.BlankFragment"
+        android:label="fragment_blank"
+        tools:layout="@layout/fragment_blank" />
 
 </navigation>
