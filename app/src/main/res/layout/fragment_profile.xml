@@ -2,7 +2,8 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -250,8 +251,14 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:id="@+id/courses_recycler_view"
+            android:layout_height="match_parent"
             android:layout_marginTop="28dp"
+            android:orientation="horizontal"
+            tools:itemCount="3"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_centerVertical="true"
+            tools:listitem="@layout/layout_item_for_user_courses"
             app:layout_constraintEnd_toStartOf="@+id/guideline10"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintTop_toBottomOf="@+id/textView35" />
