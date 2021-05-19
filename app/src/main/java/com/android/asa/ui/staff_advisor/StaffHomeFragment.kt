@@ -1,26 +1,34 @@
 package com.android.asa.ui.staff_advisor
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.android.asa.R
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.android.asa.databinding.FragmentStaffHomeBinding
 
 //
 class StaffHomeFragment : Fragment() {
 
+    private lateinit var binding: FragmentStaffHomeBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?,
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_staff_home, container, false)
+    ): View {
+        binding = FragmentStaffHomeBinding.inflate(layoutInflater)
+        setUpRv()
+        return binding.root
+    }
+
+    private fun setUpRv() {
+        binding.studentLevelsRv.apply {
+            adapter = StudentLevelAdapter()
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        }
     }
 
 }
