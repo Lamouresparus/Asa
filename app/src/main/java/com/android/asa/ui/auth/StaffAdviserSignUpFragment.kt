@@ -57,6 +57,7 @@ class fvStaffAdviserSignUpFragment : BaseFragment() {
 
                 is Result.Success -> {
                     progressDialog.dismiss()
+                    // TODO navigate to staff dash board
                 }
 
                 is Result.Error -> {
