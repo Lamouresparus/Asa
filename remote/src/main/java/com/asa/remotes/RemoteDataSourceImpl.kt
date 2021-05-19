@@ -376,12 +376,7 @@ class RemoteDataSourceImpl @Inject constructor(
                     emitter.onError(task.exception ?: Throwable("Error adding courses"))
                 }
             }
-
     }
-
-    data class CourseAndLectureDaysWrapper(
-        val course: List<CourseDomain>,
-    )
 
     companion object {
         private const val USERS_COLLECTION_PATH = "users"
