@@ -8,6 +8,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.databinding.FragmentHomeBinding
+import com.android.asa.extensions.makeInvisible
+import com.android.asa.extensions.makeVisible
 import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
 import com.android.asa.utils.Result
@@ -33,8 +35,8 @@ class HomeFragment : BaseFragment() {
     private val todayClasses = mutableListOf<CourseDomain>()
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?,
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
         setUpRv()
@@ -59,23 +61,20 @@ class HomeFragment : BaseFragment() {
     private fun observeData() {
         viewModel.todayCourses.observe(viewLifecycleOwner, { result ->
             when (result) {
-                is Result.Loading -> {
-                    progressDialog.apply {
-                        setMessage("fetching classes for today")
-                        show()
-                    }
-                }
+                is Result.Loading -> binding.progressBar.makeVisible()
 
                 is Result.Success -> {
                     todayClasses.clear()
-                    result.data?.toList()?.let { todayClasses.addAll(it)
-                    setNumberOfClasses(it.size.toString())}
+                    result.data?.toList()?.let {
+                        todayClasses.addAll(it)
+                        setNumberOfClasses(it.size.toString())
+                    }
                     classesAdapter.notifyDataSetChanged()
-                    progressDialog.dismiss()
+                    binding.progressBar.makeInvisible()
 
                 }
                 is Result.Error -> {
-                    progressDialog.dismiss()
+                    binding.progressBar.makeInvisible()
                     showToast(result.errorMessage)
                 }
             }
@@ -83,11 +82,11 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setNumberOfClasses(numberOfClasses: String = "0") {
-        binding.numberOfClasses.text="$numberOfClasses classes"
+        binding.numberOfClasses.text = "$numberOfClasses classes"
     }
 
     private fun setNumberOfAssignment(numberOfAssignment: String = "0") {
-        binding.numberOfAssignments.text="$numberOfAssignment due assignment"
+        binding.numberOfAssignments.text = "$numberOfAssignment due assignment"
     }
 
     private fun setupBarChart() {
