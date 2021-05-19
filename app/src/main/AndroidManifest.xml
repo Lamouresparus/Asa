@@ -3,12 +3,13 @@
     package="com.android.asa">
 
     <application
+        android:name=".AsaApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".AsaApplication"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.staff_advisor.StaffHomeActivity" />
         <activity
             android:name=".ui.reading_time_set_up.ReadingTimeActivity"
             android:theme="@style/AppFullScreenTheme" />

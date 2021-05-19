@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/staff_home_nav_graph.xml"
+    app:startDestination="@id/staffHomeFragment">
+
+    <fragment
+        android:id="@+id/staffHomeFragment"
+        android:name="com.android.asa.ui.staff_advisor.StaffHomeFragment"
+        android:label="fragment_staff_home"
+        tools:layout="@layout/fragment_staff_home" />
+</navigation>
