@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_nav_graph"
-    app:startDestination="@id/homeRouterFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/beginSemesterFragment"
@@ -83,12 +83,18 @@
         tools:layout="@layout/fragment_home_router">
         <action
             android:id="@+id/action_homeRouterFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@+id/homeRouterFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_homeRouterFragment_to_beginSemesterFragment"
-            app:destination="@id/beginSemesterFragment" />
+            app:destination="@id/beginSemesterFragment"
+            app:popUpTo="@+id/homeRouterFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_homeRouterFragment_to_addSemesterCoursesFragment"
-            app:destination="@id/addSemesterCoursesFragment" />
+            app:destination="@id/addSemesterCoursesFragment"
+            app:popUpTo="@+id/homeRouterFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
