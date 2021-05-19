@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -25,18 +25,18 @@
             app:layout_constraintGuide_end="32dp" />
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
+            android:id="@+id/back_arrow"
+            android:layout_width="25dp"
+            android:layout_height="26dp"
             android:layout_marginTop="54dp"
             android:src="@drawable/ic_arrow_left"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
+            android:id="@+id/edit_profile"
+            android:layout_width="25dp"
+            android:layout_height="26dp"
             android:layout_marginTop="54dp"
             android:src="@drawable/ic_outline_edit"
             app:layout_constraintEnd_toStartOf="@+id/guideline10"
@@ -48,8 +48,9 @@
             android:layout_height="70dp"
             android:layout_marginTop="42dp"
             android:scaleType="centerCrop"
+            android:padding="4dp"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/back_arrow"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
             app:srcCompat="@drawable/user_profile_img"
             app:strokeColor="@color/colorAccent"
@@ -144,13 +145,15 @@
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/materialCardView"
             android:layout_width="50dp"
             android:layout_height="44dp"
             android:layout_marginTop="30dp"
             android:alpha="0.6"
-            android:background="@color/colorAccent"
+            app:cardCornerRadius="8dp"
+            android:elevation="8dp"
+            app:cardBackgroundColor="@color/colorAccent"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintTop_toBottomOf="@+id/user_institution">
 
@@ -167,13 +170,15 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.cardview.widget.CardView
             android:layout_width="220dp"
+            app:cardBackgroundColor="#00BBBA"
             android:layout_height="44dp"
             android:layout_marginStart="13dp"
-            android:background="#00BBBA"
+            app:cardCornerRadius="8dp"
+            android:elevation="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/materialCardView"
             app:layout_constraintStart_toEndOf="@+id/materialCardView"
             app:layout_constraintTop_toTopOf="@+id/materialCardView">
@@ -196,7 +201,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/textView33"
@@ -256,7 +261,7 @@
             android:layout_marginTop="28dp"
             android:orientation="horizontal"
             tools:itemCount="3"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             android:layout_centerVertical="true"
             tools:listitem="@layout/layout_item_for_user_courses"
             app:layout_constraintEnd_toStartOf="@+id/guideline10"
