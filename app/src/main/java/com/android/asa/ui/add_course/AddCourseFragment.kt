@@ -1,6 +1,7 @@
 package com.android.asa.ui.add_course
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,65 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
     }
 
     private fun setUpViews() {
+        setUpRecyclerViews()
+
+        setUpClickListeners()
+    }
+
+    private fun setUpClickListeners() {
+        binding.saveButton.setOnClickListener {
+
+            if (binding.courseTitleEt.text.trim().isEmpty()) {
+                showToast("course title cannot be empty")
+                return@setOnClickListener
+            }
+
+            if (binding.courseCodeEt.text.trim().isEmpty()) {
+                showToast("course code cannot be empty")
+                return@setOnClickListener
+            }
+            if (binding.courseDescriptionEt.text.trim().isEmpty()) {
+                showToast("course description cannot be empty")
+                return@setOnClickListener
+            }
+            if (binding.creditUnitEt.text.trim().isEmpty()) {
+                showToast("course credit unit cannot be empty")
+                return@setOnClickListener
+            }
+            if (binding.lecturerNameEt.text.trim().isEmpty()) {
+                showToast("lecturer name cannot be empty")
+                return@setOnClickListener
+            }
+
+
+            if (lectureDays.isEmpty()) {
+                showToast("please set up lecture days")
+                return@setOnClickListener
+            }
+            for (lectureDay in lectureDays) {
+                val day = lectureDay.dayOfWeek
+                if (lectureDay.venue.isEmpty()) {
+                    showToast("No venue inputted for $day")
+                    return@setOnClickListener
+
+                }
+                if (lectureDay.startTime.isEmpty() || lectureDay.endTime.isEmpty()) {
+                    showToast("Lecture time for $day not set")
+                    return@setOnClickListener
+
+                }
+                if (lectureDay.startTime.toInt() >= lectureDay.endTime.toInt()) {
+                    showToast("Invalid lecture time for $day")
+                    return@setOnClickListener
+
+                }
+            }
+
+            viewModel.saveCourses(getAddCourseParams())
+        }
+    }
+
+    private fun setUpRecyclerViews() {
         binding.lectureDayRv.apply {
             layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             adapter = LectureDaysAdapter(this@AddCourseFragment)
@@ -53,17 +113,6 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
             layoutManager = LinearLayoutManager(context)
             adapter = lectureVenueDetailsAdapter
         }
-
-        binding.saveButton.setOnClickListener {
-
-            // TODO add more input validations here
-            if (lectureDays.isEmpty()) {
-                showToast("pls set up a lecture days")
-                return@setOnClickListener
-            }
-
-            viewModel.saveCourses(getAddCourseParams())
-        }
     }
 
     private fun observeData() {
@@ -72,6 +121,7 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
             when (result) {
                 is Result.Loading -> {
                     showProgressDialog("Adding ${binding.courseTitleEt.text.trim()}...")
+                    Log.d("loading", "loading")
                 }
 
                 is Result.Success -> {
@@ -80,12 +130,14 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
                     findNavController().navigate(AddCourseFragmentDirections.actionAddCourseFragmentToAddAllCoursesFragment2())
 
                     hideProgressDialog()
+                    Log.d("loading", "success")
+
                 }
 
                 is Result.Error -> {
                     showToast(result.errorMessage)
                     hideProgressDialog()
-
+                    Log.d("loading", "error")
                 }
             }
 
