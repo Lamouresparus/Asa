@@ -1,15 +1,15 @@
 package com.android.asa.ui.add_course
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.asa.R
+import com.android.asa.MainActivity
 import com.android.asa.databinding.FragmentAddAllCoursesBinding
 import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
@@ -24,8 +24,8 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
     private val viewModel by activityViewModels<AddCoursesViewModel>()
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?,
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentAddAllCoursesBinding.inflate(layoutInflater)
         setUpViews()
@@ -39,10 +39,10 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
 
     private fun setUpRecyclerViews() {
         binding.courseOfferedRv
-                .apply {
-                    layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-                    adapter = allCoursesAdapter
-                }
+            .apply {
+                layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+                adapter = allCoursesAdapter
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,9 +79,13 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
             findNavController().popBackStack()
         }
         binding.doneButton.setOnClickListener {
-            findNavController()
-                    .navigate(ViewAllCoursesAddedFragmentDirections.actionAddAllCoursesFragment2ToHomeFragment(),
-                            navOptions { popUpTo = R.id.homeFragment })
+            requireActivity().apply {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+//            findNavController()
+//                .navigate(ViewAllCoursesAddedFragmentDirections.actionAddAllCoursesFragment2ToHomeFragment(),
+//                    navOptions { popUpTo = R.id.homeFragment })
         }
     }
 
