@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import com.android.asa.R
 import com.android.asa.databinding.FragmentHomeBinding
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
@@ -30,12 +32,20 @@ class HomeFragment : BaseFragment() {
         //findNavController().navigate(BeginSemesterFragmentDirections.actionBeginSemesterFragmentToAddSemesterCoursesFragment())
         setUpRv()
         setupBarChart()
+        setUpClickListener()
         // Inflate the layout for this fragment
         return binding.root
     }
 
     private fun setUpRv() {
 
+    }
+
+    private fun setUpClickListener() {
+
+        binding.profilePhotoIv.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+        }
     }
 
     private fun setupBarChart() {
