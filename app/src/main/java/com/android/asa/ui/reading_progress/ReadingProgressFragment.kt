@@ -14,7 +14,6 @@ class ReadingProgressFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         binding = FragmentReadingProgressBinding.inflate(layoutInflater)
-        // Inflate the layout for this fragment
         return binding.root
     }
 

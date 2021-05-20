@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="timerTextStyle">
+        <item name="android:fontFamily">@font/lato_regular</item>
+        <item name="android:textSize">50sp</item>
+        <item name="android:fontWeight">700</item>
+    </style>
+</resources>

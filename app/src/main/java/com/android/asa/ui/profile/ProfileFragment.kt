@@ -49,6 +49,10 @@ class ProfileFragment : BaseFragment() {
         binding.backArrow.setOnClickListener {
             findNavController().navigateUp()
         }
+
+        binding.graph.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_readingTimerFragment)
+        }
     }
     private fun setUpRecycler() {
         binding.coursesRecyclerView.apply {

@@ -113,5 +113,13 @@
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_readingTimerFragment"
+            app:destination="@id/readingTimerFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/readingTimerFragment"
+        android:name="com.android.asa.ui.reading_ui.ReadingTimerFragment"
+        android:label="fragment_reading_timer"
+        tools:layout="@layout/fragment_reading_timer" />
 </navigation>
