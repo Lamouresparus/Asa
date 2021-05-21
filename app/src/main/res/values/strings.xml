@@ -77,4 +77,12 @@
     <string name="today_you_have">Today, you have</string>
     <string name="and">and</string>
     <string name="today_s_classes">Today\'s classes</string>
+    <string name="title">Extend By</string>
+    <string name="time_suffix">Mins</string>
+    <string name="time_prefix">Hr</string>
+    <string name="extend_by">Extend</string>
+    <string name="time">%02d:%02d:%02d</string>
+    <string name="timer">Timer</string>
+    <string name="btn_stop">Stop</string>
+
 </resources>
