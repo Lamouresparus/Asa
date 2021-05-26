@@ -1,20 +1,19 @@
 package com.android.asa.ui.reading_ui
 
 import android.content.*
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.akexorcist.snaptimepicker.SnapTimePickerDialog
 import com.akexorcist.snaptimepicker.TimeRange
 import com.akexorcist.snaptimepicker.TimeValue
@@ -26,24 +25,20 @@ import com.android.asa.extensions.makeVisible
 import com.android.asa.ui.common.BaseFragment
 import com.android.asa.utils.Constants
 import com.android.asa.utils.isServiceRunningInForeground
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.concurrent.TimeUnit
-
 
 class ReadingTimerFragment : BaseFragment() {
+
     private lateinit var binding: FragmentReadingTimerBinding
     private var curTimeInMillis = 0L
     private var isTimerOn = false
     private var isReadingDurationReached = false
+    var totalReadingTimeInMillis = 0L
+
+    private val args: ReadingTimerFragmentArgs by navArgs()
+
     private val intentToService by lazy {
-        Intent(requireContext(), CountUpTimerService::class.java)
+        Intent(requireActivity(), CountUpTimerService::class.java)
     }
     private lateinit var timerService: CountUpTimerService
     private var isBound = MutableLiveData(false)
@@ -71,16 +66,13 @@ class ReadingTimerFragment : BaseFragment() {
         binding = FragmentReadingTimerBinding.inflate(layoutInflater)
 
         return binding.root
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUpOnClicks()
-
+        setUpOnClickListeners()
+        binding.courseCode.text = args.userCourses.courseCode
     }
-
 
     override fun onResume() {
         super.onResume()
@@ -90,12 +82,14 @@ class ReadingTimerFragment : BaseFragment() {
     }
 
     private fun startTimerService() {
+        isTimerOn = true
         requireActivity().startService(intentToService)
         requireActivity().bindService(intentToService, mServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
     private fun stopTimerService() {
         if (isBound.value!!) {
+            isTimerOn = false
             requireActivity().unbindService(mServiceConnection)
             isBound.postValue(false)
         }
@@ -131,37 +125,14 @@ class ReadingTimerFragment : BaseFragment() {
             val myBinder = service as CountUpTimerService.TimerBinder
             timerService = myBinder.service
             isBound.postValue(true)
+            timerService.totalTimeInMilli.observe(viewLifecycleOwner, Observer {
+                totalReadingTimeInMillis = it
+            })
         }
     }
 
-//    fun setUpTimer() {
-//        GlobalScope.launch {
-//            withContext(Dispatchers.Main) {
-//                val timer: Disposable = Observable
-//                        .interval(1, TimeUnit.SECONDS)
-//                        .subscribe({ time ->
-//                            val minutes: Long = time / 60.toLong()
-//                            val second: Long = time % 60.toLong()
-//                            val hour = time / 3600
-//                            binding.timerSecs.setText(second.toString())
-//                            binding.timerMins.setText(minutes.toString())
-//                            if (hour != 0L) {
-//                                binding.timerHrs.setText(hour.toString())
-//                            }
-//                            Log.d("sauce", "$hour: $minutes :$second")
-//                        }, {
-//                            Log.d("sauce", it.toString())
-//                        })
-//            }
-//
-//        }
-//
-//    }
 
-
-
-    private fun setUpOnClicks() {
-
+    private fun setUpOnClickListeners() {
         binding.startReading.setOnClickListener {
             binding.startReading.makeGone()
             binding.snooze.text = "Pause"
@@ -174,18 +145,20 @@ class ReadingTimerFragment : BaseFragment() {
 
         binding.snoozeContainer.setOnClickListener {
             if (isTimerOn) {
-
-            } else if (isReadingDurationReached) {
-                showExtendTimeDialog()
-
-            } else {
-
+                stopTimerService()
+            }
+            else{
+                // Snooze
             }
 
         }
 
         binding.dismissContainer.setOnClickListener {
 
+        }
+
+        binding.backBtn.setOnClickListener {
+            findNavController().navigateUp()
         }
 
 
@@ -213,7 +186,7 @@ class ReadingTimerFragment : BaseFragment() {
     }
 
     /**
-     * used to get events from foreground service
+     * used to get events from foreground service and display the time
      */
     inner class TimerStatusReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -231,6 +204,10 @@ class ReadingTimerFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "CountUpTimerService"
     }
 
 }

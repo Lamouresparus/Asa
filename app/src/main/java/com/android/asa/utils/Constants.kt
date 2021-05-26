@@ -13,4 +13,5 @@ object Constants {
     const val ACTION_TIME_KEY = "TIME_KEY"
     const val ACTION_TIME_VALUE = "00:00:00"
     const val ACTION_TIMER_STOP = "TIMER_STOP"
+    const val ACTION_TIME_IN_MILLIS = "ACTION_TIME_IN_MILLIS"
 }

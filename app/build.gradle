@@ -71,6 +71,7 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation "androidx.lifecycle:lifecycle-service:2.3.1"
+    implementation "androidx.navigation:navigation-fragment-ktx:1.2.5"
 
     //Time Picker
     implementation 'com.akexorcist:snap-time-picker:1.0.3'

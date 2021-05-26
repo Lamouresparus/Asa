@@ -1,8 +1,11 @@
 package com.android.asa.ui.profile
 
+import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
+import kotlinx.android.parcel.Parcelize
 
-data class UserCourses(val courseCode:String,val CourseProgress:String)
+@Parcelize
+data class UserCourses(val courseCode:String,val CourseProgress:String): Parcelable
 
 class CoursesDiffUtil : DiffUtil.ItemCallback<UserCourses>() {
     override fun areItemsTheSame(oldItem: UserCourses, newItem: UserCourses): Boolean {

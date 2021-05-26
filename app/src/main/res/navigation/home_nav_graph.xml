@@ -104,7 +104,11 @@
         android:id="@+id/editProfileFragment"
         tools:layout="@layout/fragment_edit_profile"
         android:name="com.android.asa.ui.profile.EditProfileFragment"
-        android:label="EditProfileFragment" />
+        android:label="EditProfileFragment" >
+        <action
+            android:id="@+id/action_editProfileFragment_to_readingTimerFragment"
+            app:destination="@id/readingTimerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         tools:layout="@layout/fragment_profile"
@@ -121,5 +125,9 @@
         android:id="@+id/readingTimerFragment"
         android:name="com.android.asa.ui.reading_ui.ReadingTimerFragment"
         android:label="fragment_reading_timer"
-        tools:layout="@layout/fragment_reading_timer" />
+        tools:layout="@layout/fragment_reading_timer" >
+        <argument
+            android:name="userCourses"
+            app:argType="com.android.asa.ui.profile.UserCourses" />
+    </fragment>
 </navigation>

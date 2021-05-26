@@ -60,7 +60,7 @@
 
     <style name="TimerTextStyle" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/lato_regular</item>
-        <item name="android:textSize">50sp</item>
+        <item name="android:textSize">56sp</item>
         <item name="fontWeight">700</item>
         <item name="android:textColor">@color/colorPrimary</item>
     </style>

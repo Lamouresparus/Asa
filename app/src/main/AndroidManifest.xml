@@ -25,9 +25,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".ui.reading_ui.NotificationBroadcastReceiver"/>
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppFullScreenTheme" />
+        <service android:name=".ui.reading_ui.CountUpTimerService"
+            android:enabled="true"
+            android:exported="true"
+            />
     </application>
 
 </manifest>

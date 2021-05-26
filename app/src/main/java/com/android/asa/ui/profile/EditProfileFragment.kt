@@ -58,11 +58,11 @@ class EditProfileFragment : BaseFragment() {
 
     private fun setUpRecycler() {
         binding.coursesRecyclerView.apply {
-            adapter = coursessAdapter
+            adapter = coursesAdapter
             layoutManager = GridLayoutManager(requireContext(),3, LinearLayoutManager.VERTICAL,false)
         }
 
-        coursessAdapter.submitList(viewModel.coursesList)
+        coursesAdapter.submitList(viewModel.coursesList)
 
     }
 
@@ -85,7 +85,7 @@ class EditProfileFragment : BaseFragment() {
     }
 
 
-    private val coursessAdapter =
+    private val coursesAdapter =
             object : RecyclerViewAdapter<UserCourses>(
                     CoursesDiffUtil()
             ) {
@@ -97,10 +97,21 @@ class EditProfileFragment : BaseFragment() {
                         view: View,
                         recyclerViewAdapter: RecyclerViewAdapter<UserCourses>
                 ): ViewHolder<UserCourses> {
-                    return ProfileViewHolder(LayoutItemForUserCoursesBinding.bind(view))
+                    return ProfileViewHolder(LayoutItemForUserCoursesBinding.bind(view),onCourseItemClickCallBack)
                 }
-
             }
+
+    private val onCourseItemClickCallBack: (UserCourses) -> Unit = {course->
+
+        val bundle = Bundle().apply {
+            putParcelable("userCourses", course)
+        }
+        findNavController().navigate(
+                R.id.action_editProfileFragment_to_readingTimerFragment,
+                bundle
+        )
+    }
+
     companion object {
         const val REQUEST_CODE_FOR_PROFILE_IMAGE = 300
     }

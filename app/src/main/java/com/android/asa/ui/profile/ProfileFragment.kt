@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.asa.R
 import com.android.asa.databinding.FragmentProfileBinding
 import com.android.asa.databinding.LayoutItemForUserCoursesBinding
-import com.android.asa.ui.auth.AuthViewModel
 import com.android.asa.ui.common.BaseFragment
 import com.android.asa.ui.widget.RecyclerViewAdapter
 import com.android.asa.ui.widget.ViewHolder
@@ -41,7 +39,7 @@ class ProfileFragment : BaseFragment() {
 
     }
 
-    fun setUpClickListeners(){
+    private fun setUpClickListeners(){
         binding.editProfile.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
         }
@@ -50,24 +48,21 @@ class ProfileFragment : BaseFragment() {
             findNavController().navigateUp()
         }
 
-        binding.graph.setOnClickListener {
-            findNavController().navigate(R.id.action_profileFragment_to_readingTimerFragment)
-        }
     }
     private fun setUpRecycler() {
         binding.coursesRecyclerView.apply {
-            adapter = coursessAdapter
+            adapter = coursesAdapter
 //            addItemDecoration(CoursesItemDecorator(3,40,true))
             layoutManager = GridLayoutManager(requireContext(),3,LinearLayoutManager.VERTICAL,false)
         }
 
-        coursessAdapter.submitList(viewModel.coursesList)
+        coursesAdapter.submitList(viewModel.coursesList)
 
     }
 
 
 
-    private val coursessAdapter =
+    private val coursesAdapter =
             object : RecyclerViewAdapter<UserCourses>(
                     CoursesDiffUtil()
             ) {
@@ -79,8 +74,18 @@ class ProfileFragment : BaseFragment() {
                         view: View,
                         recyclerViewAdapter: RecyclerViewAdapter<UserCourses>
                 ): ViewHolder<UserCourses> {
-                    return ProfileViewHolder(LayoutItemForUserCoursesBinding.bind(view))
+                    return ProfileViewHolder(LayoutItemForUserCoursesBinding.bind(view),onCourseItemClickCallBack)
                 }
-
             }
+
+    private val onCourseItemClickCallBack: (UserCourses) -> Unit = {course->
+
+        val bundle = Bundle().apply {
+            putParcelable("userCourses", course)
+        }
+        findNavController().navigate(
+                R.id.action_profileFragment_to_readingTimerFragment,
+                bundle
+        )
+    }
 }
