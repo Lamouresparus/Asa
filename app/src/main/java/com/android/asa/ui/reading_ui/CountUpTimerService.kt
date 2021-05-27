@@ -1,37 +1,50 @@
 package com.android.asa.ui.reading_ui
 
 import android.annotation.SuppressLint
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
+import android.app.NotificationManager.IMPORTANCE_LOW
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.drawable.Icon
-import android.os.Binder
-import android.os.Build
-import android.os.IBinder
-import android.os.SystemClock
+import android.os.*
 import android.util.Log
 import android.widget.Chronometer
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.NavDeepLinkBuilder
+import com.android.asa.MainActivity
 import com.android.asa.R
+import com.android.asa.ui.profile.UserCourses
 import com.android.asa.ui.reading_time_set_up.ReadingTimeActivity
 import com.android.asa.utils.Constants
+import com.android.asa.utils.Constants.CHANNEL_ID
+import com.android.asa.utils.Constants.CHANNEL_NAME
+import com.android.asa.utils.Constants.INTENT_SHOW_TIMER_FRAGMENT
+import com.android.asa.utils.Constants.INTENT_USER_COURSE_DATA_BUNDLE
+import com.android.asa.utils.Constants.NOTIFICATION_ID
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CountUpTimerService : Service() {
     private val mBinder: IBinder = TimerBinder()
     private lateinit var chronometer: Chronometer
     private var isBound = false
+    var userCourseData: UserCourses = UserCourses("", "")
     private val job = Job()
     var timeFlow: MutableStateFlow<String> = MutableStateFlow("")
-    var totalTimeInMilli:MutableLiveData<Long> = MutableLiveData(0L)
-//    private lateinit var notificationBuilder: Notification.Builder
+    var totalTimeInMilli: MutableLiveData<Long> = MutableLiveData(0L)
+
+    @Inject
+    lateinit var baseNotificationBuilder: NotificationCompat.Builder
+
+    lateinit var curNotificationBuilder: NotificationCompat.Builder
 
 
     private var notificationReceiver: BroadcastReceiver =
@@ -50,7 +63,7 @@ class CountUpTimerService : Service() {
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "Start Service ..............................")
-
+        curNotificationBuilder = baseNotificationBuilder
         startForegroundService()
 
         isBound = true
@@ -59,64 +72,46 @@ class CountUpTimerService : Service() {
         chronometer.start()
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannel(notificationManager: NotificationManager) {
+        val channel = NotificationChannel(
+                CHANNEL_ID,
+                CHANNEL_NAME,
+                IMPORTANCE_LOW
+        )
+        notificationManager.createNotificationChannel(channel)
+    }
+
     private fun startForegroundService() {
 
-//        val notification: Notification = getNotification()
+        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel(notificationManager)
+        }
+        startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
 
         registerReceiver(notificationReceiver, IntentFilter(Constants.ACTION_NOTIFICATION_KEY))
 
-        // Notification ID cannot be 0.
-//        startForeground(Constants.NOTIFICATION_ID, notification)
     }
 
 
-//    @SuppressLint("UnspecifiedImmutableFlag")
-//    private fun getNotification(): Notification {
-//
-//        // Create an explicit intent for an Activity in your app
-//        // TODO Change ReadingTimeActivity to the Home Activity later
-//        val intentMain = Intent(this, ReadingTimeActivity::class.java).apply {
-//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//        }
-//        val pendingIntentMain = PendingIntent.getActivity(this, 0, intentMain, 0)
-//
-//        val intentStop = Intent(this, NotificationBroadcastReceiver::class.java).apply {
-//            action = Constants.ACTION_STOP
-//        }
-//        val pendingIntentStop = PendingIntent.getBroadcast(
-//                this, 0, intentStop, PendingIntent.FLAG_UPDATE_CURRENT
-//        )
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            notificationBuilder = Notification.Builder(this, Constants.CHANNEL_ID)
-//                    .setContentTitle(getText(R.string.timer))
-//                    .setContentText("0")
-//                    .setSmallIcon(R.drawable.ic_mdi_alarm)
-//                    .setContentIntent(pendingIntentMain)
-//                    .setAutoCancel(true)
-//                    .setOnlyAlertOnce(true)
-//                    .setOngoing(true)
-//                    .setColor(getColor(R.color.purple_700))
-//                    .setColorized(true)
-//                    .setCategory(Notification.CATEGORY_PROGRESS)
-//                    .setTicker(getText(R.string.time))
-//                    .setAutoCancel(true)
-//                    .setStyle(Notification.DecoratedMediaCustomViewStyle())
-//                    //.setCustomContentView(RemoteViews(this.packageName, R.layout.layout_notification))
-//                    .addAction(
-//                            Notification.Action.Builder(
-//                                    Icon.createWithResource(this, R.drawable.ic_baseline_close_24),
-//                                    getText(R.string.btn_stop),
-//                                    pendingIntentStop
-//                            ).build()
-//                    )
-//        }
-//
-//
-//        return notificationBuilder.build()
-//    }
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val bundle = Bundle().apply {
+            putParcelable("userCourses", userCourseData)
+        }
+        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                Intent(this, MainActivity::class.java).apply {
+                    putExtra(INTENT_USER_COURSE_DATA_BUNDLE, bundle)
+                    putExtra(INTENT_SHOW_TIMER_FRAGMENT, true)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                }
+                , PendingIntent.FLAG_UPDATE_CURRENT
+        )
         CoroutineScope(job).launch(Dispatchers.IO) {
 
             // while isBound is true, means the service has a work to do because it is used in
@@ -127,9 +122,12 @@ class CountUpTimerService : Service() {
                 if (!isBound) break
 
                 timeFlow.value = getTimestamp().also { time ->
-//                    updateNotification(time)
+                    val notification = curNotificationBuilder
+                            .setContentText(time)
+                            .setContentIntent(pendingIntent)
+                    notificationManager.notify(NOTIFICATION_ID, notification.build())
                 }
-                Log.d(TAG, timeFlow.value)
+//                Log.d(TAG, timeFlow.value)
                 delay(1000)
             }
         }
@@ -142,13 +140,6 @@ class CountUpTimerService : Service() {
         return mBinder
     }
 
-    override fun onRebind(intent: Intent) {
-        super.onRebind(intent)
-    }
-
-    override fun onUnbind(intent: Intent): Boolean {
-        return super.onUnbind(intent)
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -196,20 +187,6 @@ class CountUpTimerService : Service() {
         // TODO: send message to activity when Timer going to be stopped (optional)
         sendBroadcastEvent(Constants.ACTION_TIME_KEY, Constants.ACTION_TIMER_STOP)
     }
-
-    /**
-     * updates the Notification content by [Constants.NOTIFICATION_ID]
-     */
-//    private fun updateNotification(timestamp: String) {
-//        val notificationManager =
-//                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//
-//        val notification = notificationBuilder
-//                .setContentText(timestamp)
-//                .build()
-//
-//        notificationManager.notify(Constants.NOTIFICATION_ID, notification)
-//    }
 
     inner class TimerBinder : Binder() {
         val service: CountUpTimerService

@@ -35,6 +35,9 @@ class ReadingTimerFragment : BaseFragment() {
     private var isReadingDurationReached = false
     var totalReadingTimeInMillis = 0L
 
+    // For testing purpose only , this is equal to 1 minute
+    val timeReached = 60000L
+
     private val args: ReadingTimerFragmentArgs by navArgs()
 
     private val intentToService by lazy {
@@ -90,7 +93,8 @@ class ReadingTimerFragment : BaseFragment() {
     private fun stopTimerService() {
         if (isBound.value!!) {
             isTimerOn = false
-            requireActivity().unbindService(mServiceConnection)
+            isReadingDurationReached = false
+            activity?.unbindService(mServiceConnection)
             isBound.postValue(false)
         }
         requireActivity().stopService(intentToService)
@@ -103,13 +107,6 @@ class ReadingTimerFragment : BaseFragment() {
             // But is still running in foreground. So when you start the app again, you should
             // bind the activity to service again.
             requireActivity().bindService(intentToService, mServiceConnection, Context.BIND_AUTO_CREATE)
-
-            /*timerService.timeFlow.onEach { time ->
-                binding.timer.text = time
-            }.launchIn(lifecycleScope)*/
-
-//            binding.btnStartStop.setBackgroundColor(resources.getColor(Color.red))
-//            binding.btnStartStop.text = getString(R.string.btn_stop)
         } else {
 //            binding.btnStartStop.setBackgroundColor(resources.getColor(Color.green))
 //            binding.btnStartStop.text = getString(R.string.btn_start)
@@ -121,12 +118,23 @@ class ReadingTimerFragment : BaseFragment() {
             //isBound.postValue(false)
         }
 
+
+
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             val myBinder = service as CountUpTimerService.TimerBinder
             timerService = myBinder.service
+            timerService.userCourseData = args.userCourses
             isBound.postValue(true)
             timerService.totalTimeInMilli.observe(viewLifecycleOwner, Observer {
                 totalReadingTimeInMillis = it
+                if (it>timeReached){
+                    stopTimerService()
+                    isReadingDurationReached = true
+                    binding.readingDurationReachedContainer.makeVisible()
+                    binding.snooze.text = "Extend"
+                    binding.dismiss.text = "Finish"
+
+                }
             })
         }
     }
@@ -144,42 +152,54 @@ class ReadingTimerFragment : BaseFragment() {
         }
 
         binding.snoozeContainer.setOnClickListener {
-            if (isTimerOn) {
-                stopTimerService()
-            }
-            else{
-                // Snooze
+            when {
+                isTimerOn -> {
+                    stopTimerService()
+                }
+                isReadingDurationReached -> {
+                    showExtendTimeDialog()
+                }
+                else -> {
+                    // Snooze
+                }
             }
 
         }
 
         binding.dismissContainer.setOnClickListener {
-
+            if (isReadingDurationReached){
+                findNavController().navigate(R.id.action_readingTimerFragment_to_readingCompleteFragment)
+            }
+            stopTimerService()
+            binding.startReading.makeVisible()
+            binding.timerClockContainer.makeVisible()
+            binding.timerContainer.makeInvisible()
+            binding.snooze.text = "Snooze"
+            binding.dismiss.text = "Dismiss"
         }
 
         binding.backBtn.setOnClickListener {
             findNavController().navigateUp()
         }
 
-
     }
 
-    fun showExtendTimeDialog() {
+    private fun showExtendTimeDialog() {
         SnapTimePickerDialog.Builder().apply {
             setTitle(R.string.title)
-            setPrefix(R.string.time_suffix)
-            setSuffix(R.string.time_prefix)
-            setThemeColor(R.color.colorAccent)
+            setPrefix(R.string.time_prefix)
+            setSuffix(R.string.time_suffix)
+            setThemeColor(R.color.colorPrimary)
             setTitleColor(R.color.colorTextPrimary)
             setPositiveButtonText(R.string.extend_by)
-            setPositiveButtonColor(R.color.white)
+            setPositiveButtonColor(R.color.colorPrimary)
             setButtonTextAllCaps(true)
             setPreselectedTime(TimeValue(1, 0))
             setSelectableTimeRange(TimeRange(TimeValue(0, 30), TimeValue(11, 0)))
 
         }.build().apply {
             setListener { hour, minute ->
-                // Do something when user selected the time
+
             }
         }.show(childFragmentManager, tag)
 

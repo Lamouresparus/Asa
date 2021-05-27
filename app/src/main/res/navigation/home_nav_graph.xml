@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_addSemesterCoursesFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_addSemesterCoursesFragment_to_readingTimerFragment"
+            app:destination="@id/readingTimerFragment" />
     </fragment>
 
     <fragment
@@ -99,6 +102,9 @@
         <action
             android:id="@+id/action_homeRouterFragment_to_addSemesterCoursesFragment"
             app:destination="@id/addSemesterCoursesFragment" />
+        <action
+            android:id="@+id/action_homeRouterFragment_to_readingTimerFragment"
+            app:destination="@id/readingTimerFragment" />
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
@@ -129,5 +135,13 @@
         <argument
             android:name="userCourses"
             app:argType="com.android.asa.ui.profile.UserCourses" />
+        <action
+            android:id="@+id/action_readingTimerFragment_to_readingCompleteFragment"
+            app:destination="@id/readingCompleteFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/readingCompleteFragment"
+        android:name="com.android.asa.ui.reading_ui.ReadingCompleteFragment"
+        android:label="fragment_reading_complete"
+        tools:layout="@layout/fragment_reading_complete" />
 </navigation>
