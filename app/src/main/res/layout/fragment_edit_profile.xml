@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline8"
@@ -24,22 +23,22 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="32dp" />
 
-    <ImageView
-        android:id="@+id/back_btn"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="54dp"
-        android:src="@drawable/ic_arrow_left"
-        app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="54dp"
+            android:src="@drawable/ic_arrow_left"
+            app:layout_constraintStart_toStartOf="@+id/guideline8"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/user_image"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:padding="4dp"
             android:layout_marginTop="42dp"
+            android:padding="4dp"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintTop_toBottomOf="@+id/back_btn"
@@ -70,29 +69,21 @@
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintTop_toBottomOf="@+id/user_image" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <EditText
             android:id="@+id/user_institution"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="10dp"
+            android:backgroundTint="@color/ash"
             android:fontFamily="@font/lato_regular"
-            android:text=""
-            android:layout_marginStart="-4dp"
-            android:textColor="@color/grey"
-            android:textFontWeight="500"
-            android:textSize="16sp"
-            app:boxBackgroundColor="@android:color/transparent"
-            android:background="@android:color/transparent"
+            android:inputType="text"
+            android:text="University of Uyo"
+            android:textColor="@color/colorTextPrimary"
+            android:textCursorDrawable="@null"
             app:layout_constraintEnd_toStartOf="@+id/guideline10"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
-            app:layout_constraintTop_toBottomOf="@+id/textView23">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_user_institution"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="University of Uyo"/>
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toBottomOf="@+id/textView23"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/materialCardView"
@@ -108,37 +99,31 @@
             app:layout_constraintTop_toBottomOf="@+id/user_institution" />
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout"
+        <EditText
+            android:id="@+id/user_department"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:boxBackgroundColor="@android:color/transparent"
-            android:background="@android:color/transparent"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="-4dp"
+            android:text="Mechanical  engineering"
+            android:backgroundTint="@color/ash"
+            android:importantForAutofill="no"
+            android:inputType="textCapCharacters"
+            android:textColor="@color/colorTextPrimary"
+            android:textCursorDrawable="@null"
             app:layout_constraintEnd_toStartOf="@+id/guideline10"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
-            app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+            app:layout_constraintTop_toBottomOf="@+id/materialCardView"/>
 
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-
-                android:id="@+id/edit_user_department"
-                android:layout_height="match_parent"
-                android:text="Mechanical  engineering" />
-
-        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.cardview.widget.CardView
-            android:layout_width="220dp"
-            app:cardCornerRadius="8dp"
-            android:elevation="8dp"
-            app:cardBackgroundColor="#00BBBA"
             android:id="@+id/save_changes_btn"
+            android:layout_width="220dp"
             android:layout_height="44dp"
             android:layout_marginStart="42dp"
+            android:elevation="8dp"
+            app:cardBackgroundColor="#00BBBA"
+            app:cardCornerRadius="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/user_image"
             app:layout_constraintStart_toEndOf="@+id/user_image"
             app:layout_constraintTop_toTopOf="@+id/user_image">
@@ -163,104 +148,86 @@
 
         </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/textView33"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:fontFamily="@font/lato_regular"
-        android:text="Bio"
-        android:textColor="@color/colorTextPrimary"
-        android:textFontWeight="900"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        <TextView
+            android:id="@+id/textView33"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:fontFamily="@font/lato_regular"
+            android:text="Bio"
+            android:textColor="@color/colorTextPrimary"
+            android:textFontWeight="900"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="@+id/guideline8"
+            app:layout_constraintTop_toBottomOf="@+id/user_department" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <EditText
             android:id="@+id/user_bio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/lato_regular"
             android:textAlignment="textStart"
-            android:textColor="@color/grey"
+            android:backgroundTint="@color/ash"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine"
+            android:textColor="@color/colorTextPrimary"
+            android:textCursorDrawable="@null"
             android:textFontWeight="500"
-            app:boxBackgroundColor="@android:color/transparent"
-            android:background="@android:color/transparent"
+            android:text="Ipsum occaecat labore duis nulla aute cillum reprehenderit et magna est esse."
             android:textSize="16sp"
-            android:layout_marginStart="-4dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline10"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
-            app:layout_constraintTop_toBottomOf="@+id/textView33">
+            app:layout_constraintTop_toBottomOf="@+id/textView33"/>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:textAlignment="textStart"
-                android:inputType="textMultiLine"
-                android:id="@+id/bio_edit_text"
-                android:text="Ipsum occaecat labore duis nulla aute cillum reprehenderit et magna est esse."
-                android:layout_height="match_parent"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <View
-            android:id="@+id/view4"
-            android:layout_width="0dp"
-            android:layout_height="0.8dp"
-            android:layout_marginTop="10dp"
-            android:alpha="0.9"
-            android:visibility="invisible"
-            android:background="@color/ash"
-            app:layout_constraintEnd_toStartOf="@+id/guideline10"
-            app:layout_constraintStart_toStartOf="@+id/guideline8"
-            app:layout_constraintTop_toBottomOf="@+id/user_bio" />
 
         <TextView
             android:id="@+id/textView35"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="40dp"
             android:fontFamily="@font/lato_regular"
             android:text="Courses offered"
             android:textFontWeight="900"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
-            app:layout_constraintTop_toBottomOf="@+id/view4" />
+            app:layout_constraintTop_toBottomOf="@+id/user_bio" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/courses_recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="28dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toBottomOf="@+id/textView35"
-        tools:itemCount="3"
-        tools:listitem="@layout/layout_item_for_user_courses" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/courses_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="28dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toStartOf="@+id/guideline10"
+            app:layout_constraintStart_toStartOf="@+id/guideline8"
+            app:layout_constraintTop_toBottomOf="@+id/textView35"
+            tools:itemCount="3"
+            tools:listitem="@layout/layout_item_for_user_courses" />
 
         <TextView
             android:id="@+id/textView23"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
+            android:fontFamily="@font/lato_regular"
             android:text="School"
             android:textColor="@color/colorTextPrimary"
             android:textFontWeight="900"
             android:textSize="20sp"
-            android:fontFamily="@font/lato_regular"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
-    <ImageView
-        android:id="@+id/changed_profile_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/user_image"
-        app:layout_constraintEnd_toEndOf="@+id/user_image"
-        app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toTopOf="@+id/user_image"
-        app:srcCompat="@drawable/ic_mdi_camera_outline" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/changed_profile_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/user_image"
+            app:layout_constraintEnd_toEndOf="@+id/user_image"
+            app:layout_constraintStart_toStartOf="@+id/guideline8"
+            app:layout_constraintTop_toTopOf="@+id/user_image"
+            app:srcCompat="@drawable/ic_mdi_camera_outline" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
