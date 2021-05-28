@@ -26,11 +26,11 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".ui.reading_ui.NotificationBroadcastReceiver"/>
+        <receiver android:name=".ui.countup_reading_timer_ui.NotificationBroadcastReceiver"/>
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppFullScreenTheme" />
-        <service android:name=".ui.reading_ui.CountUpTimerService"
+        <service android:name=".ui.countup_reading_timer_ui.CountUpTimerService"
             android:enabled="true"
             android:exported="true"
             />

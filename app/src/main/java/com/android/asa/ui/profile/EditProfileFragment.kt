@@ -7,9 +7,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.inflate
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,6 +18,7 @@ import com.android.asa.databinding.LayoutItemForUserCoursesBinding
 import com.android.asa.ui.common.BaseFragment
 import com.android.asa.ui.widget.RecyclerViewAdapter
 import com.android.asa.ui.widget.ViewHolder
+import com.android.asa.ui.countup_reading_timer_ui.UserCourses
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -101,7 +100,7 @@ class EditProfileFragment : BaseFragment() {
                 }
             }
 
-    private val onCourseItemClickCallBack: (UserCourses) -> Unit = {course->
+    private val onCourseItemClickCallBack: (UserCourses) -> Unit = { course->
 
         val bundle = Bundle().apply {
             putParcelable("userCourses", course)

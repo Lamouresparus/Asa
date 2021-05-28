@@ -3,6 +3,7 @@ package com.android.asa.ui.profile
 import android.graphics.Color
 import com.android.asa.databinding.LayoutItemForUserCoursesBinding
 import com.android.asa.ui.widget.ViewHolder
+import com.android.asa.ui.countup_reading_timer_ui.UserCourses
 
 class ProfileViewHolder (private val binding: LayoutItemForUserCoursesBinding,
                          private val onCourseItemClick: (UserCourses) -> Unit,) :

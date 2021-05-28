@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import com.asa.data.sharedPreference.SharedPreferenceKeys
 import com.asa.data.sharedPreference.SharedPreferenceReader
 import com.asa.domain.model.SemesterDomain
+import com.asa.domain.model.UserCoursesDomain
 import com.asa.domain.model.UserDomain
 import javax.inject.Inject
 
@@ -53,6 +54,17 @@ class SharedPreferenceReaderImpl @Inject constructor(
 
     override fun isNotificationEnabled(): Boolean {
         return sharedPreferences.getBoolean(keys.KEY_ENABLE_NOTIFICATION, true)
+    }
+
+    override fun getCourseDetail(): UserCoursesDomain? {
+        val courseCode: String? = getString(keys.KEY_USER_COURSE_CODE)
+        val CourseProgress: String? = getString(keys.KEY_USER_COURSE_PROGRESS)
+
+        return if (courseCode.isNullOrEmpty() || CourseProgress.isNullOrEmpty()) null
+        else UserCoursesDomain(
+                courseCode,
+                CourseProgress
+        )
     }
 
     override fun getUserId(): String? {

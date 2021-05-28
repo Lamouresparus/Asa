@@ -129,19 +129,21 @@
     </fragment>
     <fragment
         android:id="@+id/readingTimerFragment"
-        android:name="com.android.asa.ui.reading_ui.ReadingTimerFragment"
+        android:name="com.android.asa.ui.countup_reading_timer_ui.ReadingTimerFragment"
         android:label="fragment_reading_timer"
         tools:layout="@layout/fragment_reading_timer" >
-        <argument
-            android:name="userCourses"
-            app:argType="com.android.asa.ui.profile.UserCourses" />
+
         <action
             android:id="@+id/action_readingTimerFragment_to_readingCompleteFragment"
             app:destination="@id/readingCompleteFragment" />
+        <argument
+            android:name="userCourses"
+            app:argType="com.android.asa.ui.countup_reading_timer_ui.UserCourses" />
+
     </fragment>
     <fragment
         android:id="@+id/readingCompleteFragment"
-        android:name="com.android.asa.ui.reading_ui.ReadingCompleteFragment"
+        android:name="com.android.asa.ui.countup_reading_timer_ui.ReadingCompleteFragment"
         android:label="fragment_reading_complete"
         tools:layout="@layout/fragment_reading_complete" />
 </navigation>

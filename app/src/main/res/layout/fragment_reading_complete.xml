@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.reading_ui.ReadingCompleteFragment">
+    tools:context=".ui.countup_reading_timer_ui.ReadingCompleteFragment">
 
 
     <TextView

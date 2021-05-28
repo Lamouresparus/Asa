@@ -4,16 +4,12 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Icon
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.core.content.res.ResourcesCompat.getColor
-import androidx.navigation.Navigator
 import com.android.asa.MainActivity
 import com.android.asa.R
-import com.android.asa.ui.reading_time_set_up.ReadingTimeActivity
-import com.android.asa.ui.reading_ui.NotificationBroadcastReceiver
+import com.android.asa.ui.countup_reading_timer_ui.NotificationBroadcastReceiver
 import com.android.asa.utils.Constants
 import dagger.Module
 import dagger.Provides

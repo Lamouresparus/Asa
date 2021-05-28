@@ -1,4 +1,4 @@
-package com.android.asa.ui.reading_ui
+package com.android.asa.ui.countup_reading_timer_ui
 
 import android.content.BroadcastReceiver
 import android.content.Context

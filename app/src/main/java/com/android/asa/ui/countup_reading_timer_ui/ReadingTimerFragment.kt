@@ -1,12 +1,12 @@
-package com.android.asa.ui.reading_ui
+package com.android.asa.ui.countup_reading_timer_ui
 
 import android.content.*
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -23,10 +23,14 @@ import com.android.asa.extensions.makeGone
 import com.android.asa.extensions.makeInvisible
 import com.android.asa.extensions.makeVisible
 import com.android.asa.ui.common.BaseFragment
+import com.android.asa.ui.profile.ProfileViewModel
 import com.android.asa.utils.Constants
 import com.android.asa.utils.isServiceRunningInForeground
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
+@AndroidEntryPoint
 class ReadingTimerFragment : BaseFragment() {
 
     private lateinit var binding: FragmentReadingTimerBinding
@@ -34,6 +38,8 @@ class ReadingTimerFragment : BaseFragment() {
     private var isTimerOn = false
     private var isReadingDurationReached = false
     var totalReadingTimeInMillis = 0L
+
+    private val viewModel by activityViewModels<ProfileViewModel>()
 
     // For testing purpose only , this is equal to 1 minute
     val timeReached = 60000L
@@ -74,7 +80,17 @@ class ReadingTimerFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpOnClickListeners()
+
+        viewModel.saveUserCourse(args.userCourses)
         binding.courseCode.text = args.userCourses.courseCode
+
+
+        //Its set to true if the user wants to open this fragment from the Intent received from the Notification
+        //Its set to true in the mainActivity
+        if (viewModel.showTimerCountDown) {
+            hideClockView()
+
+        }
     }
 
     override fun onResume() {
@@ -108,8 +124,7 @@ class ReadingTimerFragment : BaseFragment() {
             // bind the activity to service again.
             requireActivity().bindService(intentToService, mServiceConnection, Context.BIND_AUTO_CREATE)
         } else {
-//            binding.btnStartStop.setBackgroundColor(resources.getColor(Color.green))
-//            binding.btnStartStop.text = getString(R.string.btn_start)
+
         }
     }
 
@@ -119,15 +134,29 @@ class ReadingTimerFragment : BaseFragment() {
         }
 
 
+        /**
+            timeReached is the number of hours specified by the user he wants to read
+           time is the number of milliseconds since the user has started reading
+           if the current time is greater than timeReached , then the user has achieved the number of hours/minutes he wants to read
+           he can decide to extend it or not
+
+           totalReadingTimeInMillis is the total time the user has read
+
+            */
 
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             val myBinder = service as CountUpTimerService.TimerBinder
+
             timerService = myBinder.service
             timerService.userCourseData = args.userCourses
             isBound.postValue(true)
-            timerService.totalTimeInMilli.observe(viewLifecycleOwner, Observer {
-                totalReadingTimeInMillis = it
-                if (it>timeReached){
+            timerService.totalTimeInMilli.observe(viewLifecycleOwner, Observer {time->
+
+
+                totalReadingTimeInMillis = time
+
+
+                if (time > timeReached) {
                     stopTimerService()
                     isReadingDurationReached = true
                     binding.readingDurationReachedContainer.makeVisible()
@@ -139,15 +168,20 @@ class ReadingTimerFragment : BaseFragment() {
         }
     }
 
+/**
+This function is used to hide the CLOCK View when the user has started reading
+ */
+    fun hideClockView() {
+        binding.startReading.makeGone()
+        binding.snooze.text = "Pause"
+        binding.dismiss.text = "Stop"
+        binding.timerClockContainer.makeInvisible()
+        binding.timerContainer.makeVisible()
+    }
 
     private fun setUpOnClickListeners() {
         binding.startReading.setOnClickListener {
-            binding.startReading.makeGone()
-            binding.snooze.text = "Pause"
-            binding.dismiss.text = "Stop"
-            binding.timerClockContainer.makeInvisible()
-            binding.timerContainer.makeVisible()
-
+            hideClockView()
             startTimerService()
         }
 
@@ -167,7 +201,9 @@ class ReadingTimerFragment : BaseFragment() {
         }
 
         binding.dismissContainer.setOnClickListener {
-            if (isReadingDurationReached){
+
+            if (isReadingDurationReached) {
+                binding.readingDurationReachedContainer.makeInvisible()
                 findNavController().navigate(R.id.action_readingTimerFragment_to_readingCompleteFragment)
             }
             stopTimerService()
@@ -183,6 +219,11 @@ class ReadingTimerFragment : BaseFragment() {
         }
 
     }
+
+
+    /**
+    This is function is used to show the extend time Dialog
+     */
 
     private fun showExtendTimeDialog() {
         SnapTimePickerDialog.Builder().apply {
@@ -226,8 +267,5 @@ class ReadingTimerFragment : BaseFragment() {
         }
     }
 
-    companion object {
-        private const val TAG = "CountUpTimerService"
-    }
 
 }

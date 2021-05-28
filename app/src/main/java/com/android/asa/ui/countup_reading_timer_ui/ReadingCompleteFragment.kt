@@ -1,4 +1,4 @@
-package com.android.asa.ui.reading_ui
+package com.android.asa.ui.countup_reading_timer_ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.android.asa.R
 import com.android.asa.databinding.FragmentReadingCompleteBinding
 import com.android.asa.databinding.FragmentReadingProgressBinding
 

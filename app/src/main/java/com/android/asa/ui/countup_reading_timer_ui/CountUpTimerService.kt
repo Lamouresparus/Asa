@@ -1,13 +1,11 @@
-package com.android.asa.ui.reading_ui
+package com.android.asa.ui.countup_reading_timer_ui
 
-import android.annotation.SuppressLint
 import android.app.*
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.drawable.Icon
 import android.os.*
 import android.util.Log
 import android.widget.Chronometer
@@ -15,11 +13,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.navigation.NavDeepLinkBuilder
 import com.android.asa.MainActivity
 import com.android.asa.R
-import com.android.asa.ui.profile.UserCourses
-import com.android.asa.ui.reading_time_set_up.ReadingTimeActivity
 import com.android.asa.utils.Constants
 import com.android.asa.utils.Constants.CHANNEL_ID
 import com.android.asa.utils.Constants.CHANNEL_NAME
@@ -52,7 +47,6 @@ class CountUpTimerService : Service() {
                 override fun onReceive(context: Context, intent: Intent) {
                     when (intent.extras?.getString(Constants.ACTION_NOTIFICATION_NAME)) {
                         Constants.ACTION_STOP -> {
-                            Log.i(TAG, "Stop Notification Action has been clicked")
                             stopForegroundService()
                         }
                     }
@@ -62,7 +56,6 @@ class CountUpTimerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.i(TAG, "Start Service ..............................")
         curNotificationBuilder = baseNotificationBuilder
         startForegroundService()
 
