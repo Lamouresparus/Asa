@@ -24,8 +24,10 @@ class StudentSignInFragment : BaseFragment() {
 
     private val viewModel by activityViewModels<AuthViewModel>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentStudentSignInBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -59,6 +61,7 @@ class StudentSignInFragment : BaseFragment() {
                 is com.android.asa.utils.Result.Success -> {
                     progressDialog.dismiss()
                     startActivity(Intent(requireActivity(), MainActivity::class.java))
+                    requireActivity().finish()
                 }
                 is com.android.asa.utils.Result.Error -> {
                     progressDialog.dismiss()
