@@ -5,7 +5,7 @@ import com.android.asa.extensions.asLiveData
 import com.android.asa.ui.common.BaseViewModel
 import com.android.asa.utils.Result
 import com.asa.domain.ReadingTimeSetUpUseCase
-import com.classic.chatapp.utils.Event
+import com.android.asa.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
