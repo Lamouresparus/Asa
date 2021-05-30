@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_nav_graph"
-    app:startDestination="@id/homeRouterFragment">
+    app:startDestination="@id/blankFragment">
 
     <fragment
         android:id="@+id/beginSemesterFragment"
@@ -146,4 +146,9 @@
         android:name="com.android.asa.ui.countup_reading_timer_ui.ReadingCompleteFragment"
         android:label="fragment_reading_complete"
         tools:layout="@layout/fragment_reading_complete" />
+        android:id="@+id/blankFragment"
+        android:name="com.android.asa.ui.navigation.BlankFragment"
+        android:label="fragment_blank"
+        tools:layout="@layout/fragment_blank" />
+
 </navigation>

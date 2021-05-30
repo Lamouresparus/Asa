@@ -16,22 +16,23 @@ import durdinapps.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
+import java.util.*
 import javax.inject.Inject
 
 class RemoteDataSourceImpl @Inject constructor(
-        private val firebaseAuth: FirebaseAuth,
-        private val firestore: FirebaseFirestore,
+    private val firebaseAuth: FirebaseAuth,
+    private val firestore: FirebaseFirestore,
 ) : RemoteDataSource {
 
     override fun login(params: LogInUseCase.Params): Single<Pair<UserDomain, SemesterDomain>> {
         return RxFirebaseAuth
-                .signInWithEmailAndPassword(firebaseAuth, params.email, params.password)
-                .flatMapSingle {
-                    val user = it.user ?: throw Throwable("user does not exist")
-                    Single.zip(getUser(user.uid), getSemesterInformation(user.uid), { _user, semester ->
-                        Pair(_user, semester)
-                    })
-                }
+            .signInWithEmailAndPassword(firebaseAuth, params.email, params.password)
+            .flatMapSingle {
+                val user = it.user ?: throw Throwable("user does not exist")
+                Single.zip(getUser(user.uid), getSemesterInformation(user.uid), { _user, semester ->
+                    Pair(_user, semester)
+                })
+            }
 
 //        return Single.create { emitter ->
 //            firebaseAuth
@@ -86,56 +87,56 @@ class RemoteDataSourceImpl @Inject constructor(
 
     private fun getSemesterInformation(userId: String): Single<SemesterDomain> {
         val semesterDocRef =
-                firestore.collection(SEMESTER_COLLECTION_PATH).document(userId)
+            firestore.collection(SEMESTER_COLLECTION_PATH).document(userId)
         return RxFirestore.getDocument(semesterDocRef, SemesterDomain::class.java).toSingle()
     }
 
 
     override fun startNewSemester(userId: String): Completable {
         val semesterDocRef =
-                firestore.collection(SEMESTER_COLLECTION_PATH).document(userId)
+            firestore.collection(SEMESTER_COLLECTION_PATH).document(userId)
         return RxFirestore.updateDocument(semesterDocRef, "hasSemesterBegun", true)
     }
 
     override fun register(param: RegisterUseCase.Params): Single<UserDomain> {
         return RxFirebaseAuth
-                .createUserWithEmailAndPassword(firebaseAuth, param.email, param.password)
-                .flatMapSingle {
-                    val user = it.user ?: throw Throwable("user does not exist")
+            .createUserWithEmailAndPassword(firebaseAuth, param.email, param.password)
+            .flatMapSingle {
+                val user = it.user ?: throw Throwable("user does not exist")
 
-                    val userObject = when (param) {
-                        is RegisterUseCase.StudentParams -> {
-                            UserDomain(
-                                    userId = user.uid,
-                                    email = param.email,
-                                    0,
-                                    regNumber = param.studentRegistrationNumber,
-                                    firstName = param.firstName,
-                                    lastName = param.lastName,
-                                    level = param.level,
-                                    isRegistrationComplete = false
-                            )
-                        }
-                        is RegisterUseCase.StaffParams -> {
-                            UserDomain(
-                                    userId = user.uid,
-                                    email = param.email,
-                                    1,
-                                    staffId = param.staffIdentificationNumber
-                            )
-                        }
-                        else -> throw UnsupportedOperationException("Invalid user type")
+                val userObject = when (param) {
+                    is RegisterUseCase.StudentParams -> {
+                        UserDomain(
+                            userId = user.uid,
+                            email = param.email,
+                            0,
+                            regNumber = param.studentRegistrationNumber,
+                            firstName = param.firstName,
+                            lastName = param.lastName,
+                            level = param.level,
+                            isRegistrationComplete = false
+                        )
                     }
+                    is RegisterUseCase.StaffParams -> {
+                        UserDomain(
+                            userId = user.uid,
+                            email = param.email,
+                            1,
+                            staffId = param.staffIdentificationNumber
+                        )
+                    }
+                    else -> throw UnsupportedOperationException("Invalid user type")
+                }
 
-                    val userDocRef = firestore.collection(USERS_COLLECTION_PATH).document(user.uid)
-                    val semesterDocRef =
-                            firestore.collection(SEMESTER_COLLECTION_PATH).document(user.uid)
-                    val batches = listOf(
-                            firestore.batch().set(userDocRef, userObject),
-                            firestore.batch().set(semesterDocRef, SemesterDomain())
-                    )
-                    RxFirestore.atomicOperation(batches).toSingle { user }
-                }.flatMap { getUser(it.uid) }
+                val userDocRef = firestore.collection(USERS_COLLECTION_PATH).document(user.uid)
+                val semesterDocRef =
+                    firestore.collection(SEMESTER_COLLECTION_PATH).document(user.uid)
+                val batches = listOf(
+                    firestore.batch().set(userDocRef, userObject),
+                    firestore.batch().set(semesterDocRef, SemesterDomain())
+                )
+                RxFirestore.atomicOperation(batches).toSingle { user }
+            }.flatMap { getUser(it.uid) }
 
 //        return Single.create { emitter ->
 //
@@ -209,36 +210,36 @@ class RemoteDataSourceImpl @Inject constructor(
             }
 
             firestore
-                    .collection(USERS_READING_TIME_COLLECTION_PATH)
-                    .document(user.uid)
-                    .set(params)
-                    .addOnCompleteListener { dbTask ->
+                .collection(USERS_READING_TIME_COLLECTION_PATH)
+                .document(user.uid)
+                .set(params)
+                .addOnCompleteListener { dbTask ->
 
-                        if (dbTask.isSuccessful) {
+                    if (dbTask.isSuccessful) {
 
-                            firestore
-                                    .collection(USERS_COLLECTION_PATH)
-                                    .document(user.uid)
-                                    .update("registrationComplete", true)
-                                    .addOnCompleteListener {
-                                        if (it.isSuccessful) {
-                                            emitter.onComplete()
+                        firestore
+                            .collection(USERS_COLLECTION_PATH)
+                            .document(user.uid)
+                            .update("registrationComplete", true)
+                            .addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    emitter.onComplete()
 
-                                        } else {
-                                            emitter.onError(
-                                                    it.exception
-                                                            ?: Throwable("Error creating user")
-                                            )
-                                        }
-                                    }
-
-                        } else {
-                            emitter.onError(
-                                    dbTask.exception
+                                } else {
+                                    emitter.onError(
+                                        it.exception
                                             ?: Throwable("Error creating user")
-                            )
-                        }
+                                    )
+                                }
+                            }
+
+                    } else {
+                        emitter.onError(
+                            dbTask.exception
+                                ?: Throwable("Error creating user")
+                        )
                     }
+                }
 
         }
     }
@@ -259,14 +260,14 @@ class RemoteDataSourceImpl @Inject constructor(
             }
 
             val addCourseRef = firestore
-                    .collection(SEMESTER_COLLECTION_PATH)
-                    .document(user.uid)
-                    .collection(USER_COURSES_COLLECTION_PATH)
-                    .document(params.course.courseCode)
+                .collection(SEMESTER_COLLECTION_PATH)
+                .document(user.uid)
+                .collection(USER_COURSES_COLLECTION_PATH)
+                .document(params.course.courseCode)
 
             val semesterRef = firestore
-                    .collection(SEMESTER_COLLECTION_PATH)
-                    .document(user.uid)
+                .collection(SEMESTER_COLLECTION_PATH)
+                .document(user.uid)
 
             firestore.runBatch { batch ->
 
@@ -284,7 +285,23 @@ class RemoteDataSourceImpl @Inject constructor(
     }
 
 
+    private fun getDayOfTheWeek(): String {
+        val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+        val daysOfTheWeek = arrayListOf(
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        )
+        return daysOfTheWeek[dayOfWeek - 1]
+    }
+
     override fun getCoursesForToday(): Single<List<CourseDomain>> {
+        val day = getDayOfTheWeek()
+
         return Single.create { emitter ->
             val user = firebaseAuth.currentUser
             if (user == null) {
@@ -292,31 +309,31 @@ class RemoteDataSourceImpl @Inject constructor(
                 return@create
             }
 
-            firestore.collection(USER_COURSES_COLLECTION_PATH)
-                    .document(user.uid)
-                    .get()
-                    .addOnCompleteListener { task ->
+            firestore.collection(SEMESTER_COLLECTION_PATH)
+                .document(user.uid)
+                .collection(USER_COURSES_COLLECTION_PATH)
+                .whereArrayContains("lectureDayOfWeek", day)
+                .get()
+                .addOnCompleteListener { task ->
 
-                        if (task.isSuccessful) {
+                    if (task.isSuccessful) {
 
-                            val dataWrapper =
-                                    task.result?.toObject(CourseAndLectureDaysWrapper::class.java)
-
-                            if (dataWrapper != null) {
-
-                                emitter.onSuccess(dataWrapper.course)
-                            } else {
-                                emitter.onError(
-                                        task.exception
-                                                ?: Throwable("Error fetching courses")
-                                )
-                            }
-
-                        } else {
-                            emitter.onError(task.exception ?: Throwable("Error fetching courses"))
+                        val courses = task.result?.documents?.map {
+                            it.toObject(CourseDomain::class.java)!!
                         }
 
+                        if (courses.isNullOrEmpty()) {
+                            emitter.onError(Throwable("No course found"))
+                        } else {
+                            emitter.onSuccess(courses)
+                        }
+
+
+                    } else {
+                        emitter.onError(task.exception ?: Throwable("Error fetching courses"))
                     }
+
+                }
 
         }
     }
@@ -338,33 +355,28 @@ class RemoteDataSourceImpl @Inject constructor(
 
     private fun getCourses(userId: String, emitter: SingleEmitter<List<CourseDomain>>) {
         firestore
-                .collection(SEMESTER_COLLECTION_PATH)
-                .document(userId)
-                .collection(USER_COURSES_COLLECTION_PATH)
-                .get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
+            .collection(SEMESTER_COLLECTION_PATH)
+            .document(userId)
+            .collection(USER_COURSES_COLLECTION_PATH)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
 
-                        val courses = task.result?.documents?.map {
-                            it.toObject(CourseDomain::class.java)!!
-                        }
-
-                        if (courses.isNullOrEmpty()) {
-                            emitter.onError(Throwable("No course found"))
-                        } else {
-                            emitter.onSuccess(courses)
-                        }
-
-                    } else {
-                        emitter.onError(task.exception ?: Throwable("Error adding courses"))
+                    val courses = task.result?.documents?.map {
+                        it.toObject(CourseDomain::class.java)!!
                     }
+
+                    if (courses.isNullOrEmpty()) {
+                        emitter.onError(Throwable("No course found"))
+                    } else {
+                        emitter.onSuccess(courses)
+                    }
+
+                } else {
+                    emitter.onError(task.exception ?: Throwable("Error adding courses"))
                 }
-
+            }
     }
-
-    data class CourseAndLectureDaysWrapper(
-            val course: List<CourseDomain>,
-    )
 
     companion object {
         private const val USERS_COLLECTION_PATH = "users"

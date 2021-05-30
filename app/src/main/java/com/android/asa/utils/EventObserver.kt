@@ -1,6 +1,7 @@
 package com.classic.chatapp.utils
 
 import androidx.lifecycle.Observer
+import com.android.asa.utils.Event
 
 /**
  * An [Observer] for [Event]s, simplifying the pattern of checking if the [Event]'s content has
