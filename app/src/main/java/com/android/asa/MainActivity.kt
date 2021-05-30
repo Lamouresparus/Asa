@@ -34,32 +34,32 @@ class MainActivity : AppCompatActivity() {
         setupViews()
 
         if (intent.extras != null) {
-            var bundle = intent.extras
-            val showTimer = bundle?.getBoolean(INTENT_SHOW_TIMER_FRAGMENT)
+            val bundle = intent.extras
+            val showTimer = bundle?.getBoolean(INTENT_SHOW_TIMER_FRAGMENT) ?: false
 
             val courseBundle = Bundle().apply {
                 putParcelable("userCourses", viewModel.getUserCourse())
             }
-            if (showTimer!!) {
+            if (showTimer) {
                 viewModel.showTimerCountDown = true
                 navController.navigate(
-                        R.id.action_addSemesterCoursesFragment_to_readingTimerFragment,
-                        courseBundle
+                    R.id.action_addSemesterCoursesFragment_to_readingTimerFragment,
+                    courseBundle
                 )
             }
         }
 
+        val fragmentsToHide = listOf(
+            R.id.profileFragment,
+            R.id.editProfileFragment,
+            R.id.readingTimerFragment,
+            R.id.readingCompleteFragment
+        )
         navController.addOnDestinationChangedListener { _, destination, _ ->
 
             when (destination.id) {
-                R.id.profileFragment -> binding.buttomNavigation.makeGone()
-                R.id.editProfileFragment -> binding.buttomNavigation.makeGone()
-                R.id.readingTimerFragment -> binding.buttomNavigation.makeGone()
-                R.id.readingCompleteFragment -> binding.buttomNavigation.makeGone()
-
-                else -> {
-                    binding.buttomNavigation.makeVisible()
-                }
+                in fragmentsToHide -> binding.buttomNavigation.makeGone()
+                else -> binding.buttomNavigation.makeVisible()
             }
         }
     }
