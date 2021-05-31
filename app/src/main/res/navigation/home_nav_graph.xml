@@ -114,6 +114,7 @@
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
     </fragment>
+    <fragment
         android:id="@+id/blankFragment"
         android:name="com.android.asa.ui.navigation.BlankFragment"
         android:label="fragment_blank"
