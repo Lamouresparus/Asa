@@ -29,6 +29,7 @@ class AllSetFragment : Fragment() {
     private fun setUpOnclick() {
         binding.button.setOnClickListener {
             startActivity(Intent(requireActivity(), MainActivity::class.java))
+            requireActivity().finish()
         }
     }
 

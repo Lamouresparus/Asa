@@ -6,9 +6,10 @@ class CourseDomain(
         val creditUnit: Int,
         val description: String,
         val lecturer: String,
+        val lectureDayOfWeek: List<String>,
         val lectureDays: List<LectureDayDomain>
 ) {
-    constructor() : this("", "", 0, "", "", emptyList())
+    constructor() : this("", "", 0, "", "", emptyList(), emptyList())
 }
 
 data class LectureDayDomain(

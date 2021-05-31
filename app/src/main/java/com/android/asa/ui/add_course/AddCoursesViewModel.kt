@@ -7,7 +7,7 @@ import com.android.asa.utils.Result
 import com.asa.domain.AddCourseUseCase
 import com.asa.domain.GetUserCoursesUseCase
 import com.asa.domain.model.CourseDomain
-import com.classic.chatapp.utils.Event
+import com.android.asa.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

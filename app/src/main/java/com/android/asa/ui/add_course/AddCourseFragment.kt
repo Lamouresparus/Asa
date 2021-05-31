@@ -26,6 +26,7 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
     private lateinit var binding: FragmentAddCourseBinding
 
     private var lectureDays = mutableListOf<LectureDayDomain>()
+    private var lectureDayOfWeek = mutableListOf<String>()
     private var lectureVenueDetailsAdapter = LectureVenueDetailsAdapter(lectureDays, this@AddCourseFragment)
 
     private val viewModel by activityViewModels<AddCoursesViewModel>()
@@ -62,6 +63,11 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
                 showToast("course code cannot be empty")
                 return@setOnClickListener
             }
+
+            if (binding.courseCodeEt.text.trim().length!=6) {
+                showToast("invalid course code")
+                return@setOnClickListener
+            }
             if (binding.courseDescriptionEt.text.trim().isEmpty()) {
                 showToast("course description cannot be empty")
                 return@setOnClickListener
@@ -92,12 +98,14 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
                     return@setOnClickListener
 
                 }
-                if (lectureDay.startTime.toInt() >= lectureDay.endTime.toInt()) {
+                if (splitTime(lectureDay.startTime)[0] >= splitTime(lectureDay.endTime)[0]) {
                     showToast("Invalid lecture time for $day")
                     return@setOnClickListener
 
                 }
             }
+
+
 
             viewModel.saveCourses(getAddCourseParams())
         }
@@ -126,6 +134,7 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
 
                 is Result.Success -> {
                     lectureDays.clear()
+                    lectureDayOfWeek.clear()
                     lectureVenueDetailsAdapter.notifyDataSetChanged()
                     findNavController().navigate(AddCourseFragmentDirections.actionAddCourseFragmentToAddAllCoursesFragment2())
 
@@ -147,6 +156,7 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
 
     override fun isChecked(day: LectureDayDomain) {
         lectureDays.add(day)
+        lectureDayOfWeek.add(day.dayOfWeek)
         lectureVenueDetailsAdapter.notifyItemInserted(lectureDays.size - 1)
     }
 
@@ -156,6 +166,7 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
         lectureDays.removeAt(position)
 
         lectureVenueDetailsAdapter.notifyItemRemoved(position)
+        lectureDayOfWeek.remove(dayOfWeek)
     }
 
 
@@ -166,10 +177,19 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
                 creditUnit = binding.creditUnitEt.text.trim().toString().toInt(),
                 description = binding.courseDescriptionEt.text.trim().toString(),
                 lecturer = binding.lecturerNameEt.text.trim().toString(),
+                lectureDayOfWeek = lectureDayOfWeek,
                 lectureDays = lectureDays
 
         )
         return AddCourseUseCase.Params(course)
+    }
+
+    private fun splitTime(time: String): ArrayList<Int> {
+        val arr = time.split(":").toTypedArray()
+        val arrInt : ArrayList<Int> = arrayListOf()
+        for(time: String in arr) arrInt.add(time.toInt())
+        return arrInt
+
     }
 
 }

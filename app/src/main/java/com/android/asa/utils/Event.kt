@@ -1,4 +1,4 @@
-package com.classic.chatapp.utils
+package com.android.asa.utils
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
