@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.asa.R
 import com.android.asa.databinding.FragmentHomeBinding
 import com.android.asa.extensions.makeInvisible
 import com.android.asa.extensions.makeVisible
@@ -14,6 +17,7 @@ import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
 import com.android.asa.utils.Result
 import com.asa.domain.model.CourseDomain
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -46,6 +50,7 @@ class HomeFragment : BaseFragment() {
         binding = FragmentHomeBinding.inflate(layoutInflater)
         setUpRv()
         setupBarChart()
+        setUpClickListener()
         return binding.root
     }
 
@@ -92,6 +97,13 @@ class HomeFragment : BaseFragment() {
 
     private fun setNumberOfAssignment(numberOfAssignment: String = "0") {
         binding.numberOfAssignments.text = "$numberOfAssignment due assignment"
+    }
+
+    private fun setUpClickListener() {
+
+        binding.profilePhotoIv.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+        }
     }
 
     private fun setupBarChart() {
