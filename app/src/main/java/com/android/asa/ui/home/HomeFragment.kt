@@ -40,6 +40,11 @@ class HomeFragment : BaseFragment() {
 
     private val todayClasses = mutableListOf<CourseDomain>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.getCoursesForToday()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,

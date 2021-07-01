@@ -5,7 +5,6 @@ import com.android.asa.extensions.asLiveData
 import com.android.asa.ui.common.BaseViewModel
 import com.android.asa.utils.Result
 import com.asa.domain.GetCoursesForCurrentDayUseCase
-import com.android.asa.utils.Event
 import com.asa.domain.model.CourseDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -20,21 +19,18 @@ class HomeViewModel @Inject constructor(
     private var _todayCourses = MutableLiveData<Result<List<CourseDomain>>>()
     val todayCourses = _todayCourses.asLiveData()
 
-    init {
-        startNewSemester()
-    }
 
-    fun startNewSemester() {
+    fun getCoursesForToday() {
         coursesForCurrentDayUseCase
-                .execute()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-                    _todayCourses.postValue((Result.Loading))
-                }.subscribe(
-                        {
-                            _todayCourses.postValue((Result.Success(it)))
-                        },
+            .execute()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                _todayCourses.postValue((Result.Loading))
+            }.subscribe(
+                {
+                    _todayCourses.postValue((Result.Success(it)))
+                },
                         {
                             _todayCourses.postValue((Result.Error(it.message.toString())))
                         }
