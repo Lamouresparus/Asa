@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.android.asa.R
 import com.android.asa.databinding.FragmentAddSemesterCoursesBinding
 
 class AddSemesterCoursesFragment : Fragment() {
@@ -24,6 +25,10 @@ class AddSemesterCoursesFragment : Fragment() {
     private fun setUpClickListener() {
         binding.addNewCoursesBtn.setOnClickListener {
             findNavController().navigate(AddSemesterCoursesFragmentDirections.actionAddSemesterCoursesFragmentToAddCourseFragment())
+        }
+
+        binding.profilePhotoIv.setOnClickListener {
+            findNavController().navigate(R.id.action_addSemesterCoursesFragment_to_profileFragment)
         }
     }
 

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.android.asa.R
 import com.android.asa.databinding.FragmentBeginSemesterBinding
 import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
@@ -64,6 +65,10 @@ class BeginSemesterFragment : BaseFragment() {
     private fun setUpOnClicks() {
         binding.startNewSemesterBtn.setOnClickListener {
             viewModel.startNewSemester()
+        }
+
+        binding.profilePhotoIv.setOnClickListener {
+            findNavController().navigate(R.id.action_beginSemesterFragment_to_profileFragment)
         }
     }
 
