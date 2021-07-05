@@ -13,6 +13,7 @@ import com.android.asa.MainActivity
 import com.android.asa.databinding.FragmentAddAllCoursesBinding
 import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
+import com.android.asa.utils.ReadingTimetableManager
 import com.android.asa.utils.Result
 
 class ViewAllCoursesAddedFragment : BaseFragment() {
@@ -52,16 +53,17 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
     }
 
     private fun observeData() {
+        val readingTimetableManager = ReadingTimetableManager()
         viewModel.courses.observe(viewLifecycleOwner, { result ->
             when (result) {
                 is Result.Loading -> showProgressDialog("Fetching courses...")
 
                 is Result.Success -> {
                     val listOfCourses = result.data
+                    readingTimetableManager.generateReadingTimeTable(listOfCourses, 0, 0, 0)
                     if (listOfCourses != null) allCoursesAdapter.setCourses(listOfCourses)
                     else showToast("you have no courses added yet")
                     hideProgressDialog()
-
                 }
                 is Result.Error -> {
                     showToast(result.errorMessage)
@@ -70,9 +72,7 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
             }
 
         })
-
     }
-
 
     private fun setUpClickListeners() {
         binding.addCoursesIv.setOnClickListener {
@@ -88,5 +88,4 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
 //                    navOptions { popUpTo = R.id.homeFragment })
         }
     }
-
 }

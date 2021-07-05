@@ -2,6 +2,7 @@ package com.asa.remotes
 
 import com.asa.data.sources.RemoteDataSource
 import com.asa.domain.AddCourseUseCase
+import com.asa.domain.CreateReadingTimetableUseCase
 import com.asa.domain.LogInUseCase
 import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
@@ -97,6 +98,10 @@ class RemoteDataSourceImpl @Inject constructor(
             firestore.collection(SEMESTER_COLLECTION_PATH).document(userId)
         return RxFirestore.updateDocument(semesterDocRef, "hasSemesterBegun", true)
     }
+
+//    override fun createReadingTimetable(params: CreateReadingTimetableUseCase.Params): Completable {
+//
+//    }
 
     override fun register(param: RegisterUseCase.Params): Single<UserDomain> {
         return RxFirebaseAuth
