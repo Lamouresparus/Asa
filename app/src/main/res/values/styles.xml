@@ -10,7 +10,7 @@
     </style>
 
 
-    <style name="AppFullScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppFullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
@@ -35,6 +35,7 @@
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
+
     <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
         <item name="cornerSize">50%</item>
         <item name="cornerFamily">rounded</item>
