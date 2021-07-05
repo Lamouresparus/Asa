@@ -2,7 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/home_nav_graph">
+    android:id="@+id/home_nav_graph"
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/beginSemesterFragment"
@@ -91,18 +92,18 @@
 
     <fragment
         android:id="@+id/editProfileFragment"
-        tools:layout="@layout/fragment_edit_profile"
         android:name="com.android.asa.ui.profile.EditProfileFragment"
-        android:label="EditProfileFragment" >
+        android:label="EditProfileFragment"
+        tools:layout="@layout/fragment_edit_profile">
         <action
             android:id="@+id/action_editProfileFragment_to_readingTimerFragment"
             app:destination="@id/readingTimerFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        tools:layout="@layout/fragment_profile"
         android:name="com.android.asa.ui.profile.ProfileFragment"
-        android:label="ProfileFragment" >
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
@@ -114,7 +115,7 @@
         android:id="@+id/readingTimerFragment"
         android:name="com.android.asa.ui.countup_reading_timer_ui.ReadingTimerFragment"
         android:label="fragment_reading_timer"
-        tools:layout="@layout/fragment_reading_timer" >
+        tools:layout="@layout/fragment_reading_timer">
 
         <action
             android:id="@+id/action_readingTimerFragment_to_readingCompleteFragment"

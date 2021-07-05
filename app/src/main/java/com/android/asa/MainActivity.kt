@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private val viewModel by viewModels<ProfileViewModel>()
 
-
     @Inject
     lateinit var prefReader: SharedPreferenceReader
 
@@ -32,22 +31,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupViews()
-
-        if (intent.extras != null) {
-            val bundle = intent.extras
-            val showTimer = bundle?.getBoolean(INTENT_SHOW_TIMER_FRAGMENT) ?: false
-
-            val courseBundle = Bundle().apply {
-                putParcelable("userCourses", viewModel.getUserCourse())
-            }
-            if (showTimer) {
-                viewModel.showTimerCountDown = true
-                navController.navigate(
-                    R.id.action_addSemesterCoursesFragment_to_readingTimerFragment,
-                    courseBundle
-                )
-            }
-        }
 
         val fragmentsToHide = listOf(
             R.id.profileFragment,
@@ -60,6 +43,27 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 in fragmentsToHide -> binding.buttomNavigation.makeGone()
                 else -> binding.buttomNavigation.makeVisible()
+            }
+        }
+
+        navigateToReadingTimerIfNecessary()
+    }
+
+    private fun navigateToReadingTimerIfNecessary() {
+
+        if (intent.extras != null) {
+            val bundle = intent.extras
+            val showTimer = bundle?.getBoolean(INTENT_SHOW_TIMER_FRAGMENT) ?: false
+
+            val courseBundle = Bundle().apply {
+                putParcelable("userCourses", viewModel.getUserCourse())
+            }
+            if (showTimer) {
+                viewModel.showTimerCountDown = true
+                navController.navigate(
+                    R.id.readingTimerFragment,
+                    courseBundle
+                )
             }
         }
     }
@@ -90,11 +94,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.buttomNavigation.setupWithNavController(navController)
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, null)
     }
-
 }

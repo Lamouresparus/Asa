@@ -91,7 +91,6 @@ class RemoteDataSourceImpl @Inject constructor(
         return RxFirestore.getDocument(semesterDocRef, SemesterDomain::class.java).toSingle()
     }
 
-
     override fun startNewSemester(userId: String): Completable {
         val semesterDocRef =
             firestore.collection(SEMESTER_COLLECTION_PATH).document(userId)
@@ -200,7 +199,6 @@ class RemoteDataSourceImpl @Inject constructor(
 //        }
     }
 
-
     override fun saveReadingTime(params: ReadingTimeSetUpUseCase.Params): Completable {
         return Completable.create { emitter ->
             val user = firebaseAuth.currentUser
@@ -224,7 +222,6 @@ class RemoteDataSourceImpl @Inject constructor(
                             .addOnCompleteListener {
                                 if (it.isSuccessful) {
                                     emitter.onComplete()
-
                                 } else {
                                     emitter.onError(
                                         it.exception
@@ -232,7 +229,6 @@ class RemoteDataSourceImpl @Inject constructor(
                                     )
                                 }
                             }
-
                     } else {
                         emitter.onError(
                             dbTask.exception
@@ -284,7 +280,6 @@ class RemoteDataSourceImpl @Inject constructor(
         }
     }
 
-
     private fun getDayOfTheWeek(): String {
         val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
         val daysOfTheWeek = arrayListOf(
@@ -316,28 +311,28 @@ class RemoteDataSourceImpl @Inject constructor(
                 .get()
                 .addOnCompleteListener { task ->
 
-                    if (task.isSuccessful) {
+                    if (!emitter.isDisposed) {
 
-                        val courses = task.result?.documents?.map {
-                            it.toObject(CourseDomain::class.java)!!
-                        }
+                        if (task.isSuccessful) {
 
-                        if (courses.isNullOrEmpty()) {
-                            emitter.onError(Throwable("No course found"))
+                            val courses = task.result?.documents?.map {
+                                it.toObject(CourseDomain::class.java)!!
+                            }
+
+                            if (courses.isNullOrEmpty()) {
+                                emitter.onError(Throwable("No course found"))
+                            } else {
+                                emitter.onSuccess(courses)
+                            }
                         } else {
-                            emitter.onSuccess(courses)
+                            emitter.onError(task.exception ?: Throwable("Error fetching courses"))
                         }
-
-
-                    } else {
-                        emitter.onError(task.exception ?: Throwable("Error fetching courses"))
                     }
 
                 }
 
         }
     }
-
 
     override fun getUserCourses(): Single<List<CourseDomain>> {
 
@@ -371,7 +366,6 @@ class RemoteDataSourceImpl @Inject constructor(
                     } else {
                         emitter.onSuccess(courses)
                     }
-
                 } else {
                     emitter.onError(task.exception ?: Throwable("Error adding courses"))
                 }
