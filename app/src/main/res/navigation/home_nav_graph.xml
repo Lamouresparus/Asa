@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/blankFragment">
 
     <fragment
         android:id="@+id/beginSemesterFragment"
@@ -90,6 +90,21 @@
         tools:layout="@layout/fragment_assignments" />
 
     <fragment
+        android:id="@+id/homeRouterFragment"
+        android:name="com.android.asa.ui.homeRouter.HomeRouterFragment"
+        android:label="fragment_home_router"
+        tools:layout="@layout/fragment_home_router">
+        <action
+            android:id="@+id/action_homeRouterFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_homeRouterFragment_to_beginSemesterFragment"
+            app:destination="@id/beginSemesterFragment" />
+        <action
+            android:id="@+id/action_homeRouterFragment_to_addSemesterCoursesFragment"
+            app:destination="@id/addSemesterCoursesFragment" />
+    </fragment>
+    <fragment
         android:id="@+id/editProfileFragment"
         tools:layout="@layout/fragment_edit_profile"
         android:name="com.android.asa.ui.profile.EditProfileFragment"
@@ -124,6 +139,11 @@
             app:argType="com.android.asa.ui.countup_reading_timer_ui.UserCourses" />
 
     </fragment>
+    <fragment
+        android:id="@+id/blankFragment"
+        android:name="com.android.asa.ui.navigation.BlankFragment"
+        android:label="fragment_blank"
+        tools:layout="@layout/fragment_blank" />
     <fragment
         android:id="@+id/readingCompleteFragment"
         android:name="com.android.asa.ui.countup_reading_timer_ui.ReadingCompleteFragment"
