@@ -80,7 +80,6 @@ class HomeFragment : BaseFragment() {
                     }
                     classesAdapter.notifyDataSetChanged()
                     binding.progressBar.makeInvisible()
-
                 }
                 is Result.Error -> {
                     binding.progressBar.makeInvisible()
@@ -109,25 +108,29 @@ class HomeFragment : BaseFragment() {
         val barChart = binding.readingProgressbarChart
 
         val entries: ArrayList<BarEntry> = ArrayList()
-        entries.add(BarEntry(1f, 0.5f))
-        entries.add(BarEntry(2f, 1f))
-        entries.add(BarEntry(3f, 2f))
-        entries.add(BarEntry(4f, 3f))
-        entries.add(BarEntry(5f, 4f))
-        entries.add(BarEntry(6f, 5f))
+        entries.apply {
+            add(BarEntry(1f, 0.5f))
+            add(BarEntry(2f, 1f))
+            add(BarEntry(3f, 2f))
+            add(BarEntry(4f, 3f))
+            add(BarEntry(5f, 4f))
+            add(BarEntry(6f, 5f))
+        }
 
         val barDataSet = BarDataSet(entries, "Cells")
 
+        val labels = ArrayList<String>().apply {
+            //the first label is ignored.
+            add("CPE 511")
+            add("GRE 312")
+            add("CPE513")
+            add("CPE514")
+            add("CPE518")
+            add("ELE514")
+            add("ELE514")
+        }
 
-        val labels = ArrayList<String>()
-        //the first label is ignored.
-        labels.add("CPE 511")
-        labels.add("GRE 312")
-        labels.add("CPE513")
-        labels.add("CPE514")
-        labels.add("CPE518")
-        labels.add("ELE514")
-        labels.add("ELE514")
+
 
 
         barChart.labelFor
@@ -145,6 +148,4 @@ class HomeFragment : BaseFragment() {
             }
         }
     }
-
-
 }
