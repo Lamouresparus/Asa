@@ -14,8 +14,8 @@ class ReadingTimeSetUpUseCase @Inject constructor(private val userRepository: Us
 
 
     data class Params(
-            var preferredReadingPeriod: String,
-            var kindOfReader: String,
-            var averageReadingTime: String,
+        var preferredReadDay: Int,
+        var preferredReadTime: Int,
+        var averageReadingHours: Int,
     )
 }

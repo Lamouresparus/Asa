@@ -2,7 +2,6 @@ package com.android.asa.ui.add_course
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.MainActivity
+import com.android.asa.R
 import com.android.asa.databinding.FragmentAddAllCoursesBinding
 import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
@@ -107,7 +107,11 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
 
     private fun setUpClickListeners() {
         binding.addCoursesIv.setOnClickListener {
+            findNavController().navigate(R.id.action_addAllCoursesFragment2_to_addCourseFragment)
+        }
+        binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
+
         }
         binding.doneButton.setOnClickListener {
             viewModel.uploadReadingTimetable(UploadReadingTimetableUseCase.Params(readingTimetable))

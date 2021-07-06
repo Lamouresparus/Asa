@@ -36,18 +36,13 @@ class AverageReadingTimeFragment : BaseFragment() {
     }
 
     private fun setUpOnclick() {
-        binding.halfToOneHour.setOnClickListener {
-            ReadingTimeViewModel.averageReadingTime = "0.5-1"
-            finalizeSetUp()
-        }
-
         binding.oneToTwoHours.setOnClickListener {
-            ReadingTimeViewModel.averageReadingTime = "1-2"
+            ReadingTimeViewModel.averageReadingHours = 0
             finalizeSetUp()
         }
 
-        binding.twoToFourHours.setOnClickListener {
-            ReadingTimeViewModel.averageReadingTime = "2-4"
+        binding.threeToFourHours.setOnClickListener {
+            ReadingTimeViewModel.averageReadingHours = 1
             finalizeSetUp()
         }
 
@@ -55,9 +50,9 @@ class AverageReadingTimeFragment : BaseFragment() {
 
     private fun finalizeSetUp() {
         val params = ReadingTimeSetUpUseCase.Params(
-                preferredReadingPeriod = ReadingTimeViewModel.preferredReadingPeriod,
-                kindOfReader = ReadingTimeViewModel.kindOfReader,
-                averageReadingTime = ReadingTimeViewModel.averageReadingTime
+                preferredReadDay = ReadingTimeViewModel.preferredReadDay,
+                preferredReadTime = ReadingTimeViewModel.preferredReadTime,
+            averageReadingHours = ReadingTimeViewModel.averageReadingHours
         )
         viewModel.uploadReadTimeSetUp(params)
     }

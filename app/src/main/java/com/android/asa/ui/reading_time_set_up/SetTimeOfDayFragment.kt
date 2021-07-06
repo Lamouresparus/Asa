@@ -21,17 +21,12 @@ class SetTimeOfDayFragment : Fragment() {
 
     private fun setUpOnClickListeners() {
         binding.buttonMorning.setOnClickListener {
-            ReadingTimeViewModel.preferredReadingPeriod = "morning"
-            navigateToNextScreen()
-        }
-
-        binding.buttonAfternoon.setOnClickListener {
-            ReadingTimeViewModel.preferredReadingPeriod = "afternoon"
+            ReadingTimeViewModel.preferredReadTime = 1
             navigateToNextScreen()
         }
 
         binding.buttonNight.setOnClickListener {
-            ReadingTimeViewModel.preferredReadingPeriod = "night"
+            ReadingTimeViewModel.preferredReadTime = 0
             navigateToNextScreen()
 
         }

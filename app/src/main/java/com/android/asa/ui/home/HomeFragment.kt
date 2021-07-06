@@ -80,7 +80,6 @@ class HomeFragment : BaseFragment() {
                     }
                     classesAdapter.notifyDataSetChanged()
                     binding.progressBar.makeInvisible()
-
                 }
                 is Result.Error -> {
                     binding.progressBar.makeInvisible()
@@ -105,7 +104,6 @@ class HomeFragment : BaseFragment() {
         binding.profilePhotoIv.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }
-
     }
 
     private fun setupBarChart() {
@@ -120,7 +118,6 @@ class HomeFragment : BaseFragment() {
         entries.add(BarEntry(6f, 5f))
 
         val barDataSet = BarDataSet(entries, "Cells")
-
 
         val labels = ArrayList<String>()
         //the first label is ignored.
@@ -148,6 +145,4 @@ class HomeFragment : BaseFragment() {
             }
         }
     }
-
-
 }
