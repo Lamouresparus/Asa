@@ -1,7 +1,7 @@
 package com.asa.data.sources
 
 import com.asa.domain.AddCourseUseCase
-import com.asa.domain.CreateReadingTimetableUseCase
+import com.asa.domain.UploadReadingTimetableUseCase
 import com.asa.domain.LogInUseCase
 import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
@@ -20,5 +20,5 @@ interface RemoteDataSource {
     fun getCoursesForToday(): Single<List<CourseDomain>>
     fun getUserCourses(): Single<List<CourseDomain>>
     fun startNewSemester(userId: String): Completable
-    fun createReadingTimetable(params: CreateReadingTimetableUseCase.Params): Completable
+    fun uploadReadingTimetable(params: UploadReadingTimetableUseCase.Params): Completable
 }

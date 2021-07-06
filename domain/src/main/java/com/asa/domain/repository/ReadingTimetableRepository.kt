@@ -1,8 +1,8 @@
 package com.asa.domain.repository
 
-import com.asa.domain.CreateReadingTimetableUseCase
+import com.asa.domain.UploadReadingTimetableUseCase
 import io.reactivex.Completable
 
 interface ReadingTimetableRepository {
-    fun createReadingTimetable(params: CreateReadingTimetableUseCase.Params): Completable
+    fun uploadReadingTimetable(params: UploadReadingTimetableUseCase.Params): Completable
 }

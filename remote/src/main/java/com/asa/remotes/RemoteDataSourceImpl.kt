@@ -1,11 +1,12 @@
 package com.asa.remotes
 
+import android.util.Log
 import com.asa.data.sources.RemoteDataSource
 import com.asa.domain.AddCourseUseCase
-import com.asa.domain.CreateReadingTimetableUseCase
 import com.asa.domain.LogInUseCase
 import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
+import com.asa.domain.UploadReadingTimetableUseCase
 import com.asa.domain.model.CourseDomain
 import com.asa.domain.model.SemesterDomain
 import com.asa.domain.model.UserDomain
@@ -92,16 +93,38 @@ class RemoteDataSourceImpl @Inject constructor(
         return RxFirestore.getDocument(semesterDocRef, SemesterDomain::class.java).toSingle()
     }
 
-
     override fun startNewSemester(userId: String): Completable {
         val semesterDocRef =
             firestore.collection(SEMESTER_COLLECTION_PATH).document(userId)
         return RxFirestore.updateDocument(semesterDocRef, "hasSemesterBegun", true)
     }
 
-//    override fun createReadingTimetable(params: CreateReadingTimetableUseCase.Params): Completable {
-//
-//    }
+    override fun uploadReadingTimetable(params: UploadReadingTimetableUseCase.Params): Completable {
+
+        return Completable.create { emitter ->
+
+            val user = firebaseAuth.currentUser
+            if (user == null) {
+                emitter.onError(Throwable("Invalid user"))
+
+                return@create
+            }
+
+            firestore
+                .collection(SEMESTER_COLLECTION_PATH)
+                .document(user.uid)
+                .collection(USER_READING_TIMETABLE_PATH)
+                .document(READING_TIMETABLE_PATH)
+                .set(params)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        emitter.onComplete()
+                    } else {
+                        emitter.onError(task.exception ?: Throwable("Error uploading reading timetable"))
+                    }
+                }
+        }
+    }
 
     override fun register(param: RegisterUseCase.Params): Single<UserDomain> {
         return RxFirebaseAuth
@@ -205,7 +228,6 @@ class RemoteDataSourceImpl @Inject constructor(
 //        }
     }
 
-
     override fun saveReadingTime(params: ReadingTimeSetUpUseCase.Params): Completable {
         return Completable.create { emitter ->
             val user = firebaseAuth.currentUser
@@ -229,7 +251,6 @@ class RemoteDataSourceImpl @Inject constructor(
                             .addOnCompleteListener {
                                 if (it.isSuccessful) {
                                     emitter.onComplete()
-
                                 } else {
                                     emitter.onError(
                                         it.exception
@@ -237,7 +258,6 @@ class RemoteDataSourceImpl @Inject constructor(
                                     )
                                 }
                             }
-
                     } else {
                         emitter.onError(
                             dbTask.exception
@@ -289,7 +309,6 @@ class RemoteDataSourceImpl @Inject constructor(
         }
     }
 
-
     private fun getDayOfTheWeek(): String {
         val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
         val daysOfTheWeek = arrayListOf(
@@ -332,8 +351,6 @@ class RemoteDataSourceImpl @Inject constructor(
                         } else {
                             emitter.onSuccess(courses)
                         }
-
-
                     } else {
                         emitter.onError(task.exception ?: Throwable("Error fetching courses"))
                     }
@@ -342,7 +359,6 @@ class RemoteDataSourceImpl @Inject constructor(
 
         }
     }
-
 
     override fun getUserCourses(): Single<List<CourseDomain>> {
 
@@ -376,7 +392,6 @@ class RemoteDataSourceImpl @Inject constructor(
                     } else {
                         emitter.onSuccess(courses)
                     }
-
                 } else {
                     emitter.onError(task.exception ?: Throwable("Error adding courses"))
                 }
@@ -388,5 +403,7 @@ class RemoteDataSourceImpl @Inject constructor(
         private const val USERS_READING_TIME_COLLECTION_PATH = "users_reading_time"
         private const val SEMESTER_COLLECTION_PATH = "semester_information"
         private const val USER_COURSES_COLLECTION_PATH = "user_courses"
+        private const val USER_READING_TIMETABLE_PATH = "user_reading_timetable"
+        private const val READING_TIMETABLE_PATH = "timetable"
     }
 }

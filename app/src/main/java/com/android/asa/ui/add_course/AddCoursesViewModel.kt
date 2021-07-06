@@ -8,6 +8,7 @@ import com.asa.domain.AddCourseUseCase
 import com.asa.domain.GetUserCoursesUseCase
 import com.asa.domain.model.CourseDomain
 import com.android.asa.utils.Event
+import com.asa.domain.UploadReadingTimetableUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddCoursesViewModel @Inject constructor(
         private val addCourseUseCase: AddCourseUseCase,
-        private val coursesUseCase: GetUserCoursesUseCase
+        private val coursesUseCase: GetUserCoursesUseCase,
+        private val readingTimetableUseCase: UploadReadingTimetableUseCase
 ) : BaseViewModel() {
 
     private var _addCourse = MutableLiveData<Event<Result<Unit>>>()
@@ -24,6 +26,9 @@ class AddCoursesViewModel @Inject constructor(
 
     private var _courses = MutableLiveData<Result<List<CourseDomain>>>()
     val courses = _courses.asLiveData()
+
+    private var _uploadReadingTimetable = MutableLiveData<Event<Result<Unit>>>()
+    val uploadReadingTimetable = _uploadReadingTimetable.asLiveData()
 
     fun saveCourses(params: AddCourseUseCase.Params) {
         addCourseUseCase
@@ -55,5 +60,18 @@ class AddCoursesViewModel @Inject constructor(
                 }).addToContainer()
 
 
+    }
+
+    fun uploadReadingTimetable(params: UploadReadingTimetableUseCase.Params){
+        readingTimetableUseCase.execute(params)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                _uploadReadingTimetable.postValue(Event(Result.Loading))
+            }.subscribe({
+                _uploadReadingTimetable.postValue(Event(Result.Success()))
+            }, {
+                _uploadReadingTimetable.postValue(Event(Result.Error(it.message.toString())))
+            }).addToContainer()
     }
 }
