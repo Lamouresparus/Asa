@@ -33,7 +33,7 @@
             android:name=".MainActivity"
             android:theme="@style/AppFullScreenTheme" />
         <service
-            android:name=".ui.countup_reading_timer_ui.CountUpTimerService"
+            android:name=".ui.countup_reading_timer_ui.ReadingTimerService"
             android:enabled="true"
             android:exported="true" />
     </application>

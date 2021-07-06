@@ -3,9 +3,11 @@ package com.android.asa.ui.countup_reading_timer_ui
 import android.content.*
 import android.os.Bundle
 import android.os.IBinder
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -22,13 +24,17 @@ import com.android.asa.databinding.FragmentReadingTimerBinding
 import com.android.asa.extensions.makeGone
 import com.android.asa.extensions.makeInvisible
 import com.android.asa.extensions.makeVisible
+import com.android.asa.extensions.secondsToTime
 import com.android.asa.ui.common.BaseFragment
+import com.android.asa.ui.countup_reading_timer_ui.ReadingTimerService.Companion.ACTION_READING_TIMER
+import com.android.asa.ui.countup_reading_timer_ui.ReadingTimerService.Companion.READING_TIMER_TEXT
+import com.android.asa.ui.countup_reading_timer_ui.ReadingTimerService.Companion.SERVICE_COMMAND
 import com.android.asa.ui.profile.ProfileViewModel
 import com.android.asa.utils.Constants
 import com.android.asa.utils.isServiceRunningInForeground
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+import java.io.Serializable
 
 @AndroidEntryPoint
 class ReadingTimerFragment : BaseFragment() {
@@ -46,34 +52,19 @@ class ReadingTimerFragment : BaseFragment() {
 
     private val args: ReadingTimerFragmentArgs by navArgs()
 
-    private val intentToService by lazy {
-        Intent(requireActivity(), CountUpTimerService::class.java)
-    }
-    private lateinit var timerService: CountUpTimerService
-    private var isBound = MutableLiveData(false)
-    private val receiver: TimerStatusReceiver by lazy {
-        TimerStatusReceiver()
+    private val receiver: TimerReceiver by lazy {
+        TimerReceiver()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        isBound.postValue(
-                requireContext().isServiceRunningInForeground(CountUpTimerService::class.java)
-        )
-
-        isBound.observe(this) { isActive ->
-            lifecycleScope.launch {
-                updateUI(isActive)
-            }
-        }
+    private val broadCastManager by lazy {
+        LocalBroadcastManager.getInstance(requireContext())
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?,
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentReadingTimerBinding.inflate(layoutInflater)
-
         return binding.root
     }
 
@@ -84,94 +75,44 @@ class ReadingTimerFragment : BaseFragment() {
         viewModel.saveUserCourse(args.userCourses)
         binding.courseCode.text = args.userCourses.courseCode
 
-
         //Its set to true if the user wants to open this fragment from the Intent received from the Notification
         //Its set to true in the mainActivity
         if (viewModel.showTimerCountDown) {
             hideClockView()
-
         }
     }
 
     override fun onResume() {
         super.onResume()
-        isBound.postValue(requireContext().isServiceRunningInForeground(CountUpTimerService::class.java))
-        LocalBroadcastManager.getInstance(requireContext())
-                .registerReceiver(receiver, IntentFilter(Constants.ACTION_TIME_KEY))
+        broadCastManager.registerReceiver(receiver, IntentFilter(ACTION_READING_TIMER))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        broadCastManager.unregisterReceiver(receiver)
     }
 
     private fun startTimerService() {
-        isTimerOn = true
-        requireActivity().startService(intentToService)
-        requireActivity().bindService(intentToService, mServiceConnection, Context.BIND_AUTO_CREATE)
-    }
-
-    private fun stopTimerService() {
-        if (isBound.value!!) {
-            isTimerOn = false
-            isReadingDurationReached = false
-            activity?.unbindService(mServiceConnection)
-            isBound.postValue(false)
-        }
-        requireActivity().stopService(intentToService)
-    }
-
-
-    private fun updateUI(isStart: Boolean) {
-        if (isStart) {
-            // when the activity going to be Destroyed, the service will be Unbind from activity,
-            // But is still running in foreground. So when you start the app again, you should
-            // bind the activity to service again.
-            requireActivity().bindService(intentToService, mServiceConnection, Context.BIND_AUTO_CREATE)
-        } else {
-
+        sendCommandToForegroundService(TimerState.START).also {
+            isTimerOn = true
         }
     }
 
-    private val mServiceConnection: ServiceConnection = object : ServiceConnection {
-        override fun onServiceDisconnected(name: ComponentName) {
-            //isBound.postValue(false)
-        }
+    private fun stopTimerService() = sendCommandToForegroundService(TimerState.STOP)
 
-
-        /**
-            timeReached is the number of hours specified by the user he wants to read
-           time is the number of milliseconds since the user has started reading
-           if the current time is greater than timeReached , then the user has achieved the number of hours/minutes he wants to read
-           he can decide to extend it or not
-
-           totalReadingTimeInMillis is the total time the user has read
-
-            */
-
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            val myBinder = service as CountUpTimerService.TimerBinder
-
-            timerService = myBinder.service
-            timerService.userCourseData = args.userCourses
-            isBound.postValue(true)
-            timerService.totalTimeInMilli.observe(viewLifecycleOwner, Observer {time->
-
-
-                totalReadingTimeInMillis = time
-
-
-                if (time > timeReached) {
-                    stopTimerService()
-                    isReadingDurationReached = true
-                    binding.readingDurationReachedContainer.makeVisible()
-                    binding.snooze.text = "Extend"
-                    binding.dismiss.text = "Finish"
-
-                }
-            })
-        }
+    private fun sendCommandToForegroundService(timerState: TimerState) {
+        ContextCompat.startForegroundService(requireContext(), getServiceIntent(timerState))
     }
 
-/**
-This function is used to hide the CLOCK View when the user has started reading
- */
-    fun hideClockView() {
+    private fun getServiceIntent(command: TimerState) =
+        Intent(requireContext(), ReadingTimerService::class.java).apply {
+            putExtra(SERVICE_COMMAND, command as Serializable)
+        }
+
+    /**
+    This function is used to hide the CLOCK View when the user has started reading
+     */
+    private fun hideClockView() {
         binding.startReading.makeGone()
         binding.snooze.text = "Pause"
         binding.dismiss.text = "Stop"
@@ -189,7 +130,14 @@ This function is used to hide the CLOCK View when the user has started reading
             when {
                 isTimerOn -> {
                     stopTimerService()
+                    isTimerOn = false
                 }
+
+                !isTimerOn -> {
+                    startTimerService()
+                    isTimerOn = true
+                }
+
                 isReadingDurationReached -> {
                     showExtendTimeDialog()
                 }
@@ -217,14 +165,11 @@ This function is used to hide the CLOCK View when the user has started reading
         binding.backBtn.setOnClickListener {
             findNavController().navigateUp()
         }
-
     }
-
 
     /**
     This is function is used to show the extend time Dialog
      */
-
     private fun showExtendTimeDialog() {
         SnapTimePickerDialog.Builder().apply {
             setTitle(R.string.title)
@@ -243,29 +188,21 @@ This function is used to hide the CLOCK View when the user has started reading
 
             }
         }.show(childFragmentManager, tag)
+    }
 
+    private fun updateUi(elapsedTime: Int) {
+        binding.timer.text = elapsedTime.secondsToTime()
     }
 
     /**
-     * used to get events from foreground service and display the time
+     * receive time update form the service
      */
-    inner class TimerStatusReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                Constants.ACTION_TIME_KEY -> {
-                    if (intent.hasExtra(Constants.ACTION_TIME_VALUE)) {
-                        val intentExtra = intent.getStringExtra(Constants.ACTION_TIME_VALUE)
+    inner class TimerReceiver : BroadcastReceiver() {
 
-                        if (intentExtra == Constants.ACTION_TIMER_STOP) {
-                            stopTimerService()
-                        } else {
-                            binding.timer.text = intent.getStringExtra(Constants.ACTION_TIME_VALUE)
-                        }
-                    }
-                }
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == ACTION_READING_TIMER) {
+                updateUi(intent.getIntExtra(READING_TIMER_TEXT, 0))
             }
         }
     }
-
-
 }

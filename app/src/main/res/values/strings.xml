@@ -84,6 +84,5 @@
     <string name="time">%02d:%02d:%02d</string>
     <string name="timer">Timer</string>
     <string name="btn_stop">Stop</string>
-    <string name="courses_offered">Courses offered</string>
 
 </resources>
