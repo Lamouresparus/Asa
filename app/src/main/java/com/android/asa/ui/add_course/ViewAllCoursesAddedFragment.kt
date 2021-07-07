@@ -14,15 +14,13 @@ import com.android.asa.R
 import com.android.asa.databinding.FragmentAddAllCoursesBinding
 import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
-import com.android.asa.utils.ReadingTimetableManager
 import com.android.asa.utils.Result
-import com.asa.domain.UploadReadingTimetableUseCase
-import com.asa.domain.model.ReadingTimeDomain
+import com.asa.domain.model.CourseDomain
 import com.classic.chatapp.utils.EventObserver
 
 class ViewAllCoursesAddedFragment : BaseFragment() {
 
-    private lateinit var readingTimetable: List<ReadingTimeDomain>
+    private lateinit var allCourses: List<CourseDomain>
     private lateinit var binding: FragmentAddAllCoursesBinding
 
     private var allCoursesAdapter = AllCoursesAdapter()
@@ -58,7 +56,6 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
     }
 
     private fun observeData() {
-        val readingTimetableManager = ReadingTimetableManager()
         viewModel.courses.observe(viewLifecycleOwner, { result ->
             when (result) {
                 is Result.Loading -> showProgressDialog("Fetching courses...")
@@ -67,7 +64,7 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
                     val listOfCourses = result.data
                     if (listOfCourses != null) {
                         allCoursesAdapter.setCourses(listOfCourses)
-                        readingTimetable = readingTimetableManager.generateReadingTimeTable(listOfCourses, 0, 0, 0)
+                        allCourses = listOfCourses
                     } else showToast("you have no courses added yet")
                     hideProgressDialog()
                 }
@@ -89,6 +86,8 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
                 is Result.Success -> {
 
                     hideProgressDialog()
+
+                    showToast("Reading Timetable Generated Successfully")
 
                     requireActivity().apply {
                         startActivity(Intent(this, MainActivity::class.java))
@@ -114,7 +113,7 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
 
         }
         binding.doneButton.setOnClickListener {
-            viewModel.uploadReadingTimetable(UploadReadingTimetableUseCase.Params(readingTimetable))
+            viewModel.generateAndUploadReadingTimetable(allCourses)
         }
     }
 }

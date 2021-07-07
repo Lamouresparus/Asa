@@ -5,17 +5,16 @@ import io.reactivex.Completable
 import javax.inject.Inject
 
 class ReadingTimeSetUpUseCase @Inject constructor(private val userRepository: UserRepository) :
-        BaseUseCase<ReadingTimeSetUpUseCase.Params, Completable> {
+    BaseUseCase<ReadingTimeSetUpUseCase.Params, Completable> {
 
     override fun execute(param: Params?): Completable {
         param ?: throw UnsupportedOperationException("reading params not provided")
         return userRepository.saveReadingTime(param)
     }
 
-
     data class Params(
         var preferredReadDay: Int,
         var preferredReadTime: Int,
-        var averageReadingHours: Int,
+        var averageReadingHours: Int
     )
 }
