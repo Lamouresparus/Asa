@@ -1,9 +1,10 @@
-package com.android.asa.utils
+package com.asa.domain
 
 import com.asa.domain.model.CourseDomain
 import com.asa.domain.model.ReadingTimeDomain
+import javax.inject.Inject
 
-class ReadingTimetableManager {
+class ReadingTimetableManager @Inject  constructor() {
 
     private val dayOfTheWeek = arrayListOf(
         "Monday",

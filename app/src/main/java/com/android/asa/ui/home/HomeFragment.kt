@@ -104,10 +104,6 @@ class HomeFragment : BaseFragment() {
         binding.profilePhotoIv.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }
-
-        binding.notifications.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_addAllCoursesFragment2)
-        }
     }
 
     private fun setupBarChart() {

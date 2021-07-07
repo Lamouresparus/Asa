@@ -1,6 +1,5 @@
 package com.asa.remotes
 
-import android.util.Log
 import com.asa.data.sources.RemoteDataSource
 import com.asa.domain.AddCourseUseCase
 import com.asa.domain.LogInUseCase
@@ -8,6 +7,7 @@ import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
 import com.asa.domain.UploadReadingTimetableUseCase
 import com.asa.domain.model.CourseDomain
+import com.asa.domain.model.ReadingTimePreferencesDomain
 import com.asa.domain.model.SemesterDomain
 import com.asa.domain.model.UserDomain
 import com.google.firebase.auth.FirebaseAuth
@@ -120,7 +120,37 @@ class RemoteDataSourceImpl @Inject constructor(
                     if (task.isSuccessful) {
                         emitter.onComplete()
                     } else {
+
                         emitter.onError(task.exception ?: Throwable("Error uploading reading timetable"))
+                    }
+                }
+        }
+    }
+
+    override fun getReadingPreferences(): Single<ReadingTimePreferencesDomain> {
+
+        return Single.create { emitter ->
+
+            val user = firebaseAuth.currentUser
+            if (user == null) {
+                emitter.onError(Throwable("Invalid user"))
+
+                return@create
+            }
+            firestore.collection(USERS_READING_TIME_COLLECTION_PATH).document(user.uid)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+
+                        val readingPref = task.result?.toObject(ReadingTimePreferencesDomain::class.java)
+
+                        if (readingPref == null) {
+                            emitter.onError(Throwable("No reading preference found"))
+                        } else {
+                            emitter.onSuccess(readingPref)
+                        }
+                    } else {
+                        emitter.onError(task.exception ?: Throwable("Error fetching reading preference"))
                     }
                 }
         }

@@ -2,6 +2,7 @@ package com.android.asa.utils
 
 import com.asa.domain.model.CourseDomain
 import com.asa.domain.model.LectureDayDomain
+import com.asa.domain.ReadingTimetableManager
 import org.junit.Assert.*
 import org.junit.Test
 
