@@ -28,7 +28,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         tools:listitem="@layout/reading_timetable_daily_courses_item_view"
-        android:id="@+id/daily_courses_rv"
+        android:id="@+id/reading_timetable_daily_courses_item_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"

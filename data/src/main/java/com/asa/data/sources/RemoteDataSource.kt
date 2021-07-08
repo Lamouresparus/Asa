@@ -7,6 +7,7 @@ import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
 import com.asa.domain.model.CourseDomain
 import com.asa.domain.model.ReadingTimePreferencesDomain
+import com.asa.domain.model.ReadingTimetableDomain
 import com.asa.domain.model.SemesterDomain
 import com.asa.domain.model.UserDomain
 import io.reactivex.Completable
@@ -23,4 +24,5 @@ interface RemoteDataSource {
     fun startNewSemester(userId: String): Completable
     fun uploadReadingTimetable(params: UploadReadingTimetableUseCase.Params): Completable
     fun getReadingPreferences(): Single<ReadingTimePreferencesDomain>
+    fun getReadingTimetable(): Single<List<ReadingTimetableDomain>>
 }
