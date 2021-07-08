@@ -189,11 +189,10 @@ class RemoteDataSourceImpl @Inject constructor(
                     if (task.isSuccessful) {
                         Log.d("reading", "succesful")
 
-                        val doc = task.result
-                        //toObject(ReadingTimeDomain::class.java)!!
+                        val documentSnapShot = task.result
 
-                        if (doc != null) {
-                            val result = doc.toObject(ReadingTimeListDomain::class.java)?.readingTimeList
+                        if (documentSnapShot != null) {
+                            val result = documentSnapShot.toObject(UploadReadingTimetableUseCase.Params::class.java)?.readingTimetable
                             Log.d("reading", "List of sorted day is $result")
 
                             if (!result.isNullOrEmpty()) {
