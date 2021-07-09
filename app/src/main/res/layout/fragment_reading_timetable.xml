@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".ui.reading_timetable.ReadingTimetableFragment">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -109,7 +109,6 @@
             app:layout_constraintTop_toTopOf="@+id/textView29" />
 
         <androidx.recyclerview.widget.RecyclerView
-            tools:listitem="@layout/reading_timetable_item_view"
             android:id="@+id/reading_timetable_recyclerView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -120,6 +119,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView29"
             app:layout_constraintTop_toBottomOf="@+id/textView29" />
+        <View
+            android:id="@+id/view5"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="9dp"
+            app:layout_constraintEnd_toEndOf="@id/reading_timetable_recyclerView"
+            app:layout_constraintStart_toStartOf="@id/reading_timetable_recyclerView"
+            app:layout_constraintTop_toBottomOf="@id/reading_timetable_recyclerView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="80dp"
+            android:background="@color/ash"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

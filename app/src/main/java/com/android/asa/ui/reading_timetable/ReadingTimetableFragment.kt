@@ -14,6 +14,7 @@ import com.android.asa.extensions.makeInvisible
 import com.android.asa.extensions.makeVisible
 import com.android.asa.extensions.showToast
 import com.android.asa.utils.Result
+import com.asa.domain.model.CourseTotalReadingHoursDomain
 import com.asa.domain.model.ReadingTimetableDomain
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,6 +24,8 @@ class ReadingTimetableFragment : Fragment() {
     private val viewModel by viewModels<ReadingTimetableViewModel>()
 
     private lateinit var readingTimetableAdapter: ReadingTimetableAdapter
+    private lateinit var readingTimetableCoursesAdapter: ReadTimeTableCoursesAdapter
+    private var readingCourses = mutableListOf<CourseTotalReadingHoursDomain>()
     private var readingTimetable = mutableListOf<ReadingTimetableDomain>()
     private lateinit var binding: FragmentReadingTimetableBinding
 
@@ -34,24 +37,32 @@ class ReadingTimetableFragment : Fragment() {
     private fun observeData() {
         viewModel.readingTimetable.observe(viewLifecycleOwner, { result ->
             when (result) {
-                is Result.Loading -> binding.readingTimetableProgressBar.makeVisible()
+                is Result.Loading -> {
+                    binding.readingCoursesProgressBar.makeVisible()
+                    binding.readingTimetableProgressBar.makeVisible()
+                }
 
                 is Result.Success -> {
                     readingTimetable.clear()
                     result.data?.toList()?.let {
                         readingTimetable.addAll(it)
+                        readingCourses.addAll(viewModel.getTotalReadTime(it))
                     }
                     readingTimetableAdapter.notifyDataSetChanged()
+                    readingTimetableCoursesAdapter.notifyDataSetChanged()
                     binding.readingTimetableProgressBar.makeInvisible()
+                    binding.readingCoursesProgressBar.makeInvisible()
+
 
                     Log.d("reading", "List of sorted day is $readingTimetable")
                 }
 
                 is Result.Error -> {
                     binding.readingTimetableProgressBar.makeInvisible()
-                    showToast(result.errorMessage)
-                    Log.d("reading","error ${result.errorMessage}")
+                    binding.readingCoursesProgressBar.makeInvisible()
 
+                    showToast(result.errorMessage)
+                    Log.d("reading", "error ${result.errorMessage}")
                 }
             }
 
@@ -77,6 +88,12 @@ class ReadingTimetableFragment : Fragment() {
         binding.readingTimetableRecyclerView.apply {
             adapter = readingTimetableAdapter
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        }
+
+        readingTimetableCoursesAdapter = ReadTimeTableCoursesAdapter(readingCourses)
+        binding.coursesRecyclerView.apply {
+            adapter = readingTimetableCoursesAdapter
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         }
     }
 }

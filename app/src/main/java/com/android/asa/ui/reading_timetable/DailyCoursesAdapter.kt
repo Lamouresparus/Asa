@@ -27,19 +27,17 @@ class DailyCoursesAdapter(private val courses: List<ReadingTimeDomain>) : Recycl
 
         private fun convertTime(time: Int): String {
             var timeString = time.toString()
+            var meridian = "AM"
             if (time >= 12) {
-
+                meridian = "PM"
                 if (time > 12) {
                     timeString = (time % 12).toString()
                 }
-                timeString.plus("PM")
-            } else {
-                timeString.plus("AM")
             }
-            return timeString
+            return timeString.plus(meridian)
         }
 
-        private fun getBackgroundColor(number: Int) :String {
+        private fun getBackgroundColor(number: Int): String {
             var index = number
             if (index > colors.size - 1) {
                 index %= (colors.size - 1)
