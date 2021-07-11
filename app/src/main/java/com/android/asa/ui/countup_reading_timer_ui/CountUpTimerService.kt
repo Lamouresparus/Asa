@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@Deprecated("this class is deprecated, use ReadingTimerService")
 class CountUpTimerService : Service() {
     private val mBinder: IBinder = TimerBinder()
     private lateinit var chronometer: Chronometer
