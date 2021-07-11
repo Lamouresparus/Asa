@@ -8,8 +8,6 @@ import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
 import com.asa.domain.UploadReadingTimetableUseCase
 import com.asa.domain.model.CourseDomain
-import com.asa.domain.model.ReadingTimeDomain
-import com.asa.domain.model.ReadingTimeListDomain
 import com.asa.domain.model.ReadingTimePreferencesDomain
 import com.asa.domain.model.ReadingTimetableDomain
 import com.asa.domain.model.SemesterDomain

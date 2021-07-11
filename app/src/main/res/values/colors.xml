@@ -27,6 +27,7 @@
     <color name="grey">#838383</color>
     <color name="heather">#B3BBBA</color>
     <color name="heather_dip">#00BBBA</color>
+    <color name="gray93">#EDEDED</color>
     <color name="transparent">@android:color/transparent</color>
 
 </resources>

@@ -44,6 +44,7 @@ class ReadingTimetableFragment : Fragment() {
 
                 is Result.Success -> {
                     readingTimetable.clear()
+                    readingCourses.clear()
                     result.data?.toList()?.let {
                         readingTimetable.addAll(it)
                         readingCourses.addAll(viewModel.getTotalReadTime(it))
