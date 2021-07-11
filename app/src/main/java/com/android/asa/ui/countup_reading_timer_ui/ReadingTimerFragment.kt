@@ -1,18 +1,15 @@
 package com.android.asa.ui.countup_reading_timer_ui
 
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
-import android.os.IBinder
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -24,17 +21,12 @@ import com.android.asa.databinding.FragmentReadingTimerBinding
 import com.android.asa.extensions.makeGone
 import com.android.asa.extensions.makeInvisible
 import com.android.asa.extensions.makeVisible
-import com.android.asa.extensions.secondsToTime
+import com.android.asa.extensions.milliSecondsToTime
 import com.android.asa.ui.common.BaseFragment
 import com.android.asa.ui.countup_reading_timer_ui.ReadingTimerService.Companion.ACTION_READING_TIMER
 import com.android.asa.ui.countup_reading_timer_ui.ReadingTimerService.Companion.READING_TIMER_TEXT
-import com.android.asa.ui.countup_reading_timer_ui.ReadingTimerService.Companion.SERVICE_COMMAND
 import com.android.asa.ui.profile.ProfileViewModel
-import com.android.asa.utils.Constants
-import com.android.asa.utils.isServiceRunningInForeground
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import java.io.Serializable
 
 @AndroidEntryPoint
 class ReadingTimerFragment : BaseFragment() {
@@ -92,22 +84,15 @@ class ReadingTimerFragment : BaseFragment() {
         broadCastManager.unregisterReceiver(receiver)
     }
 
-    private fun startTimerService() {
-        sendCommandToForegroundService(TimerState.START).also {
-            isTimerOn = true
-        }
+    private fun startTimerService() = sendCommandToForegroundService(TimerActions.START)
+
+    private fun stopTimerService() = sendCommandToForegroundService(TimerActions.STOP)
+
+    private fun sendCommandToForegroundService(action: TimerActions) {
+        ContextCompat.startForegroundService(requireContext(), getServiceIntent(action))
     }
 
-    private fun stopTimerService() = sendCommandToForegroundService(TimerState.STOP)
-
-    private fun sendCommandToForegroundService(timerState: TimerState) {
-        ContextCompat.startForegroundService(requireContext(), getServiceIntent(timerState))
-    }
-
-    private fun getServiceIntent(command: TimerState) =
-        Intent(requireContext(), ReadingTimerService::class.java).apply {
-            putExtra(SERVICE_COMMAND, command as Serializable)
-        }
+    private fun getServiceIntent(command: TimerActions) = ReadingTimerService.intent(requireContext(), command)
 
     /**
     This function is used to hide the CLOCK View when the user has started reading
@@ -127,43 +112,65 @@ class ReadingTimerFragment : BaseFragment() {
         }
 
         binding.snoozeContainer.setOnClickListener {
-            when {
-                isTimerOn -> {
-                    stopTimerService()
-                    isTimerOn = false
-                }
-
-                !isTimerOn -> {
-                    startTimerService()
-                    isTimerOn = true
-                }
-
-                isReadingDurationReached -> {
-                    showExtendTimeDialog()
-                }
-                else -> {
-                    // Snooze
-                }
-            }
-
+            handleTimerOperations()
         }
+//            when {
+//                isTimerOn -> {
+//                    stopTimerService()
+//                    isTimerOn = false
+//                }
+//
+//                !isTimerOn -> {
+//                    startTimerService()
+//                    isTimerOn = true
+//                }
+//
+//                isReadingDurationReached -> {
+//                    showExtendTimeDialog()
+//                }
+//                else -> {
+//                    // Snooze
+//                }
+//            }
+//
+//        }
 
-        binding.dismissContainer.setOnClickListener {
-
-            if (isReadingDurationReached) {
-                binding.readingDurationReachedContainer.makeInvisible()
-                findNavController().navigate(R.id.action_readingTimerFragment_to_readingCompleteFragment)
-            }
-            stopTimerService()
-            binding.startReading.makeVisible()
-            binding.timerClockContainer.makeVisible()
-            binding.timerContainer.makeInvisible()
-            binding.snooze.text = "Snooze"
-            binding.dismiss.text = "Dismiss"
-        }
+        binding.dismissContainer.setOnClickListener { dismissTimer() }
 
         binding.backBtn.setOnClickListener {
-            findNavController().navigateUp()
+            if (ReadingTimerService.getTimerState() == TimerState.RUNNING) {
+                dismissTimer()
+            } else {
+                findNavController().navigateUp()
+            }
+        }
+    }
+
+    private fun dismissTimer() {
+        if (isReadingDurationReached) {
+            binding.readingDurationReachedContainer.makeInvisible()
+            findNavController().navigate(R.id.action_readingTimerFragment_to_readingCompleteFragment)
+        }
+        stopTimerService()
+        binding.startReading.makeVisible()
+        binding.timerClockContainer.makeVisible()
+        binding.timerContainer.makeInvisible()
+        binding.snooze.text = "Snooze"
+        binding.dismiss.text = "Dismiss"
+    }
+
+    private fun handleTimerOperations() {
+        when (ReadingTimerService.getTimerState()) {
+            TimerState.PAUSED -> {
+                binding.snooze.text = getString(R.string.pause)
+                sendCommandToForegroundService(TimerActions.RESUME)
+            }
+            TimerState.RUNNING -> {
+                binding.snooze.text = getString(R.string.resume)
+                sendCommandToForegroundService(TimerActions.PAUSE)
+            }
+            TimerState.STOPPED, TimerState.IDLE -> {// TODO nothing here}
+            }
         }
     }
 
@@ -190,8 +197,8 @@ class ReadingTimerFragment : BaseFragment() {
         }.show(childFragmentManager, tag)
     }
 
-    private fun updateUi(elapsedTime: Int) {
-        binding.timer.text = elapsedTime.secondsToTime()
+    private fun updateUi(elapsedTime: Long) {
+        binding.timer.text = elapsedTime.milliSecondsToTime()
     }
 
     /**
@@ -201,7 +208,7 @@ class ReadingTimerFragment : BaseFragment() {
 
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == ACTION_READING_TIMER) {
-                updateUi(intent.getIntExtra(READING_TIMER_TEXT, 0))
+                updateUi(intent.getLongExtra(READING_TIMER_TEXT, 0))
             }
         }
     }

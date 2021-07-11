@@ -1,75 +1,76 @@
 package com.android.asa.ui.countup_reading_timer_ui
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.android.asa.R
-import com.android.asa.extensions.secondsToTime
+import com.android.asa.extensions.milliSecondsToTime
 import com.android.asa.utils.NotificationHelper
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.io.Serializable
 import java.util.concurrent.TimeUnit
 
 class ReadingTimerService : Service() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private var timerState: TimerState = TimerState.INITIALIZED
-
-    private var timeElapse = 0
-
     private val notificationHelper by lazy { NotificationHelper(this) }
 
+    private var timeElapseInMills = 0L
+
     override fun onBind(intent: Intent?): IBinder? = null
+
+    override fun onCreate() {
+        super.onCreate()
+        startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getNotification())
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         intent?.extras?.run {
-            when (getSerializable(SERVICE_COMMAND) as TimerState) {
-                TimerState.START -> startTimer()
-                TimerState.PAUSE -> pauseTimerService()
-                TimerState.STOP -> endTimerService()
-                else -> return START_NOT_STICKY
+            val ordinal = getInt(SERVICE_COMMAND, 0)
+            when (TimerActions.values()[ordinal]) {
+                TimerActions.START -> startTimer()
+                TimerActions.PAUSE -> pauseTimerService()
+                TimerActions.RESUME -> resumeTimerService()
+                TimerActions.STOP -> endTimerService()
             }
         }
         return START_NOT_STICKY
     }
 
     private fun broadcastUpdate() {
-        if (timerState == TimerState.START) {
+        if (timerState == TimerState.RUNNING) {
             // to notification tray
-            notificationHelper.updateNotification(timeElapse.secondsToTime())
+            notificationHelper.updateNotification(timeElapseInMills.milliSecondsToTime())
             // to fragment view
             publishTimeUpdateToUI()
-        } else if (timerState == TimerState.STOP) {
+        } else if (timerState == TimerState.STOPPED) {
             notificationHelper.updateNotification("Reading ended")
         }
     }
 
     private fun publishTimeUpdateToUI() {
         val intent = Intent(ACTION_READING_TIMER).apply {
-            putExtra(READING_TIMER_TEXT, timeElapse)
+            putExtra(READING_TIMER_TEXT, timeElapseInMills)
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
     private fun startTimer() {
+        if (timerState == TimerState.RUNNING) return
         val disposable = Observable
             .interval(1, TimeUnit.SECONDS)
             .doOnSubscribe {
-                timerState = TimerState.START
+                timerState = TimerState.RUNNING
                 startForeground(NotificationHelper.NOTIFICATION_ID, notificationHelper.getNotification())
             }
-            .doOnDispose { timerState = TimerState.STOP }
             .observeOn(Schedulers.io())
             .doOnNext {
-                if (timerState == TimerState.START) {
-                    timeElapse++
+                if (timerState == TimerState.RUNNING) {
+                    timeElapseInMills++
                     broadcastUpdate()
                 }
             }.subscribe()
@@ -77,36 +78,59 @@ class ReadingTimerService : Service() {
     }
 
     private fun pauseTimerService() {
-        timerState = TimerState.PAUSE
-        compositeDisposable.clear()
-        stopService()
+        timerState = TimerState.PAUSED
+    }
+
+    private fun resumeTimerService() {
+        timerState = TimerState.RUNNING
     }
 
     private fun endTimerService() {
-        timerState = TimerState.STOP
         compositeDisposable.clear()
-        timeElapse = 0
+        timerState = TimerState.STOPPED
+        timeElapseInMills = 0L
+        publishTimeUpdateToUI()
         stopService()
     }
 
     private fun stopService() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            stopForeground(true)
-        } else {
-            stopSelf()
-        }
+        stopForeground(true)
+        stopSelf()
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.clear()
+        timerState = TimerState.IDLE
+        super.onDestroy()
     }
 
     companion object {
         const val SERVICE_COMMAND = "ReadingTimerServiceCommand"
         const val READING_TIMER_TEXT = "NotificationText"
         const val ACTION_READING_TIMER = "com.android.asa.READING_TIMER"
+
+        private var timerState: TimerState = TimerState.IDLE
+
+        fun getTimerState() = timerState
+
+        fun intent(context: Context, command: TimerActions): Intent {
+            return Intent(context, ReadingTimerService::class.java).apply {
+                putExtra(SERVICE_COMMAND, command.ordinal)
+            }
+        }
     }
 }
 
-enum class TimerState : Serializable {
-    INITIALIZED,
+enum class TimerState {
+    IDLE,
+    RUNNING,
+    PAUSED,
+    STOPPED
+}
+
+enum class TimerActions {
     START,
+    RESUME,
     PAUSE,
     STOP
 }
