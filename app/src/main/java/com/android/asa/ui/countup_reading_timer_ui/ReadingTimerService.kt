@@ -9,6 +9,7 @@ import com.android.asa.extensions.milliSecondsToTime
 import com.android.asa.utils.NotificationHelper
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
@@ -43,10 +44,8 @@ class ReadingTimerService : Service() {
 
     private fun broadcastUpdate() {
         if (timerState == TimerState.RUNNING) {
-            // to notification tray
-            notificationHelper.updateNotification(timeElapseInMills.milliSecondsToTime())
-            // to fragment view
             publishTimeUpdateToUI()
+            notificationHelper.updateNotification(timeElapseInMills.milliSecondsToTime())
         } else if (timerState == TimerState.STOPPED) {
             notificationHelper.updateNotification("Reading ended")
         }
@@ -61,7 +60,7 @@ class ReadingTimerService : Service() {
 
     private fun startTimer() {
         if (timerState == TimerState.RUNNING) return
-        val disposable = Observable
+        Observable
             .interval(1, TimeUnit.SECONDS)
             .doOnSubscribe {
                 timerState = TimerState.RUNNING
@@ -73,8 +72,7 @@ class ReadingTimerService : Service() {
                     timeElapseInMills++
                     broadcastUpdate()
                 }
-            }.subscribe()
-        compositeDisposable.add(disposable)
+            }.subscribe().addToContainer()
     }
 
     private fun pauseTimerService() {
@@ -103,6 +101,8 @@ class ReadingTimerService : Service() {
         timerState = TimerState.IDLE
         super.onDestroy()
     }
+
+    private fun Disposable.addToContainer() = compositeDisposable.add(this)
 
     companion object {
         const val SERVICE_COMMAND = "ReadingTimerServiceCommand"
