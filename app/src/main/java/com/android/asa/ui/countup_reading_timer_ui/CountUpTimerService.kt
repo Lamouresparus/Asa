@@ -42,18 +42,16 @@ class CountUpTimerService : Service() {
 
     lateinit var curNotificationBuilder: NotificationCompat.Builder
 
-
     private var notificationReceiver: BroadcastReceiver =
-            object : BroadcastReceiver() {
-                override fun onReceive(context: Context, intent: Intent) {
-                    when (intent.extras?.getString(Constants.ACTION_NOTIFICATION_NAME)) {
-                        Constants.ACTION_STOP -> {
-                            stopForegroundService()
-                        }
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                when (intent.extras?.getString(Constants.ACTION_NOTIFICATION_NAME)) {
+                    Constants.ACTION_STOP -> {
+                        stopForegroundService()
                     }
                 }
             }
-
+        }
 
     override fun onCreate() {
         super.onCreate()
@@ -66,13 +64,12 @@ class CountUpTimerService : Service() {
         chronometer.start()
     }
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(notificationManager: NotificationManager) {
         val channel = NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_NAME,
-                IMPORTANCE_LOW
+            CHANNEL_ID,
+            CHANNEL_NAME,
+            IMPORTANCE_LOW
         )
         notificationManager.createNotificationChannel(channel)
     }
@@ -87,9 +84,7 @@ class CountUpTimerService : Service() {
         startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
 
         registerReceiver(notificationReceiver, IntentFilter(Constants.ACTION_NOTIFICATION_KEY))
-
     }
-
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val bundle = Bundle().apply {
@@ -97,14 +92,13 @@ class CountUpTimerService : Service() {
         }
         val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val pendingIntent = PendingIntent.getActivity(
-                this,
-                0,
-                Intent(this, MainActivity::class.java).apply {
-                    putExtra(INTENT_USER_COURSE_DATA_BUNDLE, bundle)
-                    putExtra(INTENT_SHOW_TIMER_FRAGMENT, true)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                }
-                , PendingIntent.FLAG_UPDATE_CURRENT
+            this,
+            0,
+            Intent(this, MainActivity::class.java).apply {
+                putExtra(INTENT_USER_COURSE_DATA_BUNDLE, bundle)
+                putExtra(INTENT_SHOW_TIMER_FRAGMENT, true)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            }, PendingIntent.FLAG_UPDATE_CURRENT
         )
         CoroutineScope(job).launch(Dispatchers.IO) {
 
@@ -117,8 +111,8 @@ class CountUpTimerService : Service() {
 
                 timeFlow.value = getTimestamp().also { time ->
                     val notification = curNotificationBuilder
-                            .setContentText(time)
-                            .setContentIntent(pendingIntent)
+                        .setContentText(time)
+                        .setContentIntent(pendingIntent)
                     notificationManager.notify(NOTIFICATION_ID, notification.build())
                 }
 //                Log.d(TAG, timeFlow.value)
@@ -133,7 +127,6 @@ class CountUpTimerService : Service() {
         isBound = true
         return mBinder
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
