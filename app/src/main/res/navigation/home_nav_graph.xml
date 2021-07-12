@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_nav_graph"
-    app:startDestination="@id/blankFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/beginSemesterFragment"
@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_addSemesterCoursesFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_addSemesterCoursesFragment_to_readingTimerFragment"
+            app:destination="@id/readingTimerFragment" />
     </fragment>
 
     <fragment
@@ -88,24 +91,48 @@
         android:name="com.android.asa.ui.assignments_and_tests.AssignmentsFragment"
         android:label="fragment_assignments"
         tools:layout="@layout/fragment_assignments" />
+
+
     <fragment
         android:id="@+id/editProfileFragment"
-        tools:layout="@layout/fragment_edit_profile"
         android:name="com.android.asa.ui.profile.EditProfileFragment"
-        android:label="EditProfileFragment" />
+        android:label="EditProfileFragment"
+        tools:layout="@layout/fragment_edit_profile">
+        <action
+            android:id="@+id/action_editProfileFragment_to_readingTimerFragment"
+            app:destination="@id/readingTimerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        tools:layout="@layout/fragment_profile"
         android:name="com.android.asa.ui.profile.ProfileFragment"
-        android:label="ProfileFragment" >
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_readingTimerFragment"
+            app:destination="@id/readingTimerFragment" />
     </fragment>
     <fragment
-        android:id="@+id/blankFragment"
-        android:name="com.android.asa.ui.navigation.BlankFragment"
-        android:label="fragment_blank"
-        tools:layout="@layout/fragment_blank" />
+        android:id="@+id/readingTimerFragment"
+        android:name="com.android.asa.ui.countup_reading_timer_ui.ReadingTimerFragment"
+        android:label="fragment_reading_timer"
+        tools:layout="@layout/fragment_reading_timer">
+
+        <action
+            android:id="@+id/action_readingTimerFragment_to_readingCompleteFragment"
+            app:destination="@id/readingCompleteFragment" />
+        <argument
+            android:name="userCourses"
+            app:argType="com.android.asa.ui.countup_reading_timer_ui.UserCourses" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/readingCompleteFragment"
+        android:name="com.android.asa.ui.countup_reading_timer_ui.ReadingCompleteFragment"
+        android:label="fragment_reading_complete"
+        tools:layout="@layout/fragment_reading_complete" />
+
 
 </navigation>

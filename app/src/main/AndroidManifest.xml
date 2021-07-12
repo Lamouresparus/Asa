@@ -2,12 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.asa">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
+        android:name=".AsaApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".AsaApplication"
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.reading_time_set_up.ReadingTimeActivity"
@@ -25,9 +27,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".ui.countup_reading_timer_ui.NotificationBroadcastReceiver" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppFullScreenTheme" />
+        <service
+            android:name=".ui.countup_reading_timer_ui.ReadingTimerService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

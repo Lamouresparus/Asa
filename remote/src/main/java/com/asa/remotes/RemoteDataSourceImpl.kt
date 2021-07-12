@@ -425,19 +425,22 @@ class RemoteDataSourceImpl @Inject constructor(
                 .get()
                 .addOnCompleteListener { task ->
 
-                    if (task.isSuccessful) {
+                    if (!emitter.isDisposed) {
 
-                        val courses = task.result?.documents?.map {
-                            it.toObject(CourseDomain::class.java)!!
-                        }
+                        if (task.isSuccessful) {
 
-                        if (courses.isNullOrEmpty()) {
-                            emitter.onError(Throwable("No course found"))
+                            val courses = task.result?.documents?.map {
+                                it.toObject(CourseDomain::class.java)!!
+                            }
+
+                            if (courses.isNullOrEmpty()) {
+                                emitter.onError(Throwable("No course found"))
+                            } else {
+                                emitter.onSuccess(courses)
+                            }
                         } else {
-                            emitter.onSuccess(courses)
+                            emitter.onError(task.exception ?: Throwable("Error fetching courses"))
                         }
-                    } else {
-                        emitter.onError(task.exception ?: Throwable("Error fetching courses"))
                     }
 
                 }

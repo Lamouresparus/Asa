@@ -1,8 +1,7 @@
 package com.android.asa.ui.profile
 
 import androidx.recyclerview.widget.DiffUtil
-
-data class UserCourses(val courseCode:String,val CourseProgress:String)
+import com.android.asa.ui.countup_reading_timer_ui.UserCourses
 
 class CoursesDiffUtil : DiffUtil.ItemCallback<UserCourses>() {
     override fun areItemsTheSame(oldItem: UserCourses, newItem: UserCourses): Boolean {

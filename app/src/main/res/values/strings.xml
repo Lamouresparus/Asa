@@ -80,4 +80,14 @@
     <string name="reading_time">Reading Time</string>
     <string name="overall_reading_time">Overall \nreading time</string>
     <string name="average_reading_time">Average \nreading time</string>
+    <string name="title">Extend By</string>
+    <string name="time_suffix">Mins</string>
+    <string name="time_prefix">Hr</string>
+    <string name="extend_by">Extend</string>
+    <string name="time">%02d:%02d:%02d</string>
+    <string name="timer">Timer</string>
+    <string name="btn_stop">Stop</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+
 </resources>
