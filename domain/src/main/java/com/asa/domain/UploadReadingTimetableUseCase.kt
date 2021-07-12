@@ -6,8 +6,7 @@ import io.reactivex.Completable
 import javax.inject.Inject
 
 class UploadReadingTimetableUseCase @Inject constructor(private val readingTimetableRepository: ReadingTimetableRepository) :
-BaseUseCase<UploadReadingTimetableUseCase.Params, Completable>{
-
+    BaseUseCase<UploadReadingTimetableUseCase.Params, Completable> {
 
     override fun execute(param: Params?): Completable {
         param ?: throw UnsupportedOperationException("no course added")
@@ -16,5 +15,7 @@ BaseUseCase<UploadReadingTimetableUseCase.Params, Completable>{
 
     data class Params(
         val readingTimetable: List<ReadingTimeDomain>
-    )
+    ) {
+        constructor() : this(emptyList())
+    }
 }

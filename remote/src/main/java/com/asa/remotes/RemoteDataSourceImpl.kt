@@ -1,5 +1,6 @@
 package com.asa.remotes
 
+import android.util.Log
 import com.asa.data.sources.RemoteDataSource
 import com.asa.domain.AddCourseUseCase
 import com.asa.domain.LogInUseCase
@@ -7,7 +8,10 @@ import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
 import com.asa.domain.UploadReadingTimetableUseCase
 import com.asa.domain.model.CourseDomain
+import com.asa.domain.model.ReadingTimeDomain
+import com.asa.domain.model.ReadingTimeListDomain
 import com.asa.domain.model.ReadingTimePreferencesDomain
+import com.asa.domain.model.ReadingTimetableDomain
 import com.asa.domain.model.SemesterDomain
 import com.asa.domain.model.UserDomain
 import com.google.firebase.auth.FirebaseAuth
@@ -153,6 +157,59 @@ class RemoteDataSourceImpl @Inject constructor(
                         emitter.onError(task.exception ?: Throwable("Error fetching reading preference"))
                     }
                 }
+        }
+    }
+
+    override fun getReadingTimetable(): Single<List<ReadingTimetableDomain>> {
+        val dayOfTheWeek = arrayListOf(
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+        )
+        val listOfReadDays = mutableListOf<ReadingTimetableDomain>()
+        return Single.create { emitter ->
+            val user = firebaseAuth.currentUser
+            if (user == null) {
+                emitter.onError(Throwable("Invalid User"))
+                return@create
+            }
+
+            Log.d("reading", "about to fetch list")
+
+
+            firestore.collection(SEMESTER_COLLECTION_PATH)
+                .document(user.uid)
+                .collection(USER_READING_TIMETABLE_PATH)
+                .document(READING_TIMETABLE_PATH)
+                .get().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("reading", "succesful")
+
+                        val documentSnapShot = task.result
+
+                        if (documentSnapShot != null) {
+                            val result = documentSnapShot.toObject(UploadReadingTimetableUseCase.Params::class.java)?.readingTimetable
+                            Log.d("reading", "List of sorted day is $result")
+
+                            if (!result.isNullOrEmpty()) {
+
+                                for (day in dayOfTheWeek) {
+                                    val course = result.filter { it.day == day }
+                                    if (!course.isNullOrEmpty()) listOfReadDays.add(ReadingTimetableDomain(day, course))
+                                }
+                            }
+                        }
+
+                        emitter.onSuccess(listOfReadDays)
+                    } else {
+                        emitter.onError(Throwable("Error fetching Reading Timetable"))
+                    }
+                }
+
         }
     }
 

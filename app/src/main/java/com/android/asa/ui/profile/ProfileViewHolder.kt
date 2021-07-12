@@ -8,6 +8,7 @@ class ProfileViewHolder (private val binding: LayoutItemForUserCoursesBinding) :
         ViewHolder<UserCourses>(binding){
 
     val cardBackgroundColors = listOf<String>("#00BBBA","#72ED77","#FFAD00","#EB5757","#BB6BD9","#4F4F4F")
+    @ExperimentalStdlibApi
     override fun bind(element: UserCourses) {
         val randomColorIndex = (0..5).random()
         binding.root.setCardBackgroundColor(Color.parseColor(cardBackgroundColors[randomColorIndex]))

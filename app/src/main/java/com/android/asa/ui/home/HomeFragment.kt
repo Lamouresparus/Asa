@@ -47,10 +47,16 @@ class HomeFragment : BaseFragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
-        setUpRv()
+        setUpViews()
         setupBarChart()
         setUpClickListener()
         return binding.root
+    }
+
+    private fun setUpViews() {
+        setNumberOfAssignment()
+        setNumberOfClasses()
+        setUpRv()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +65,6 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setUpRv() {
-        setNumberOfAssignment()
         classesAdapter = TodaysClassesAdapter(todayClasses)
         binding.recyclerView.apply {
             adapter = classesAdapter
