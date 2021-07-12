@@ -76,4 +76,8 @@
     <string name="and">and</string>
     <string name="today_s_classes">Today\'s classes</string>
     <string name="courses">Courses</string>
+    <string name="daily_reading_chart">Daily reading chart</string>
+    <string name="reading_time">Reading Time</string>
+    <string name="overall_reading_time">Overall \nreading time</string>
+    <string name="average_reading_time">Average \nreading time</string>
 </resources>
