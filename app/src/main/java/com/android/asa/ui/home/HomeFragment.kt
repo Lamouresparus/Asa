@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.R
@@ -33,7 +33,7 @@ class HomeFragment : BaseFragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
-    lateinit var classesAdapter: TodaysClassesAdapter
+    private lateinit var classesAdapter: TodaysClassesAdapter
 
     private val todayClasses = mutableListOf<CourseDomain>()
 
@@ -47,10 +47,16 @@ class HomeFragment : BaseFragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
-        setUpRv()
+        setUpViews()
         setupBarChart()
         setUpClickListener()
         return binding.root
+    }
+
+    private fun setUpViews() {
+        setNumberOfAssignment()
+        setNumberOfClasses()
+        setUpRv()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +65,6 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setUpRv() {
-        setNumberOfAssignment()
         classesAdapter = TodaysClassesAdapter(todayClasses)
         binding.recyclerView.apply {
             adapter = classesAdapter
@@ -90,11 +95,13 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setNumberOfClasses(numberOfClasses: String = "0") {
-        binding.numberOfClasses.text = "$numberOfClasses classes"
+        val classes = "$numberOfClasses classes"
+        binding.numberOfClasses.text = classes
     }
 
     private fun setNumberOfAssignment(numberOfAssignment: String = "0") {
-        binding.numberOfAssignments.text = "$numberOfAssignment due assignment"
+        val assignments = "$numberOfAssignment due assignment"
+        binding.numberOfAssignments.text = assignments
     }
 
     private fun setUpClickListener() {

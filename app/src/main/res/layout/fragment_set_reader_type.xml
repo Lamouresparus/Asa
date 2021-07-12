@@ -120,14 +120,14 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
         <Button
-            android:id="@+id/between_lectures"
+            android:id="@+id/week_days"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="78dp"
             android:layout_marginTop="54dp"
             android:layout_marginEnd="78dp"
             android:background="@drawable/input_field_background_colored"
-            android:text="@string/i_can_read_in_between_lecture_breaks"
+            android:text="@string/i_can_read_on_week_days"
             android:textAllCaps="false"
             android:textColor="@color/colorPrimary"
             android:textSize="15sp"
@@ -136,34 +136,19 @@
             app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
         <Button
-            android:id="@+id/button_after_lectures"
+            android:id="@+id/weekends"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="78dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="78dp"
             android:background="@drawable/input_field_background_colored"
-            android:text="@string/i_can_read_after_my_lectures"
+            android:text="@string/i_can_read_on_weekend"
             android:textAllCaps="false"
             android:textColor="@color/colorPrimary"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/between_lectures" />
+            app:layout_constraintTop_toBottomOf="@+id/week_days" />
 
-        <Button
-            android:id="@+id/before_lectures"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="78dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="78dp"
-            android:background="@drawable/input_field_background_colored"
-            android:text="@string/i_can_read_before_my_lectures"
-            android:textAllCaps="false"
-            android:textColor="@color/colorPrimary"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_after_lectures" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>

@@ -67,6 +67,9 @@
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addAllCoursesFragment2"
+            app:destination="@id/addAllCoursesFragment2" />
     </fragment>
     <fragment
         android:id="@+id/readingProgressFragment"

@@ -20,7 +20,6 @@ import com.classic.chatapp.utils.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
-
 @AndroidEntryPoint
 class AddCourseFragment : BaseFragment(), LectureDayListener {
     private lateinit var binding: FragmentAddCourseBinding
@@ -32,8 +31,8 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
     private val viewModel by activityViewModels<AddCoursesViewModel>()
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?,
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentAddCourseBinding.inflate(layoutInflater)
         setUpViews()
@@ -52,6 +51,9 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
     }
 
     private fun setUpClickListeners() {
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
         binding.saveButton.setOnClickListener {
 
             if (binding.courseTitleEt.text.trim().isEmpty()) {
@@ -64,7 +66,7 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
                 return@setOnClickListener
             }
 
-            if (binding.courseCodeEt.text.trim().length!=6) {
+            if (binding.courseCodeEt.text.trim().length != 6) {
                 showToast("invalid course code")
                 return@setOnClickListener
             }
@@ -91,24 +93,34 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
                 if (lectureDay.venue.isEmpty()) {
                     showToast("No venue inputted for $day")
                     return@setOnClickListener
-
                 }
                 if (lectureDay.startTime.isEmpty() || lectureDay.endTime.isEmpty()) {
                     showToast("Lecture time for $day not set")
                     return@setOnClickListener
-
                 }
                 if (splitTime(lectureDay.startTime)[0] >= splitTime(lectureDay.endTime)[0]) {
                     showToast("Invalid lecture time for $day")
                     return@setOnClickListener
-
                 }
             }
 
 
 
             viewModel.saveCourses(getAddCourseParams())
+            clearViews()
         }
+    }
+
+    private fun clearViews() {
+
+        binding.courseTitleEt.text.clear()
+        binding.courseCodeEt.text.clear()
+        binding.courseCodeEt.text.clear()
+        binding.courseDescriptionEt.text.clear()
+        binding.creditUnitEt.text.clear()
+        binding.lecturerNameEt.text.clear()
+        lectureDays.clear()
+        setUpRecyclerViews()
     }
 
     private fun setUpRecyclerViews() {
@@ -140,7 +152,6 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
 
                     hideProgressDialog()
                     Log.d("loading", "success")
-
                 }
 
                 is Result.Error -> {
@@ -151,7 +162,6 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
             }
 
         })
-
     }
 
     override fun isChecked(day: LectureDayDomain) {
@@ -169,16 +179,15 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
         lectureDayOfWeek.remove(dayOfWeek)
     }
 
-
     private fun getAddCourseParams(): AddCourseUseCase.Params {
         val course = CourseDomain(
-                title = binding.courseTitleEt.text.trim().toString(),
-                courseCode = binding.courseCodeEt.text.trim().toString(),
-                creditUnit = binding.creditUnitEt.text.trim().toString().toInt(),
-                description = binding.courseDescriptionEt.text.trim().toString(),
-                lecturer = binding.lecturerNameEt.text.trim().toString(),
-                lectureDayOfWeek = lectureDayOfWeek,
-                lectureDays = lectureDays
+            title = binding.courseTitleEt.text.trim().toString(),
+            courseCode = binding.courseCodeEt.text.trim().toString(),
+            creditUnit = binding.creditUnitEt.text.trim().toString().toInt(),
+            description = binding.courseDescriptionEt.text.trim().toString(),
+            lecturer = binding.lecturerNameEt.text.trim().toString(),
+            lectureDayOfWeek = lectureDayOfWeek,
+            lectureDays = lectureDays
 
         )
         return AddCourseUseCase.Params(course)
@@ -186,10 +195,8 @@ class AddCourseFragment : BaseFragment(), LectureDayListener {
 
     private fun splitTime(time: String): ArrayList<Int> {
         val arr = time.split(":").toTypedArray()
-        val arrInt : ArrayList<Int> = arrayListOf()
-        for(time: String in arr) arrInt.add(time.toInt())
+        val arrInt: ArrayList<Int> = arrayListOf()
+        for (time: String in arr) arrInt.add(time.toInt())
         return arrInt
-
     }
-
 }
