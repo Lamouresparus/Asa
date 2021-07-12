@@ -10,13 +10,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.MainActivity
+import com.android.asa.R
 import com.android.asa.databinding.FragmentAddAllCoursesBinding
 import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
 import com.android.asa.utils.Result
+import com.asa.domain.model.CourseDomain
+import com.classic.chatapp.utils.EventObserver
 
 class ViewAllCoursesAddedFragment : BaseFragment() {
 
+    private lateinit var allCourses: List<CourseDomain>
     private lateinit var binding: FragmentAddAllCoursesBinding
 
     private var allCoursesAdapter = AllCoursesAdapter()
@@ -58,10 +62,11 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
 
                 is Result.Success -> {
                     val listOfCourses = result.data
-                    if (listOfCourses != null) allCoursesAdapter.setCourses(listOfCourses)
-                    else showToast("you have no courses added yet")
+                    if (listOfCourses != null) {
+                        allCoursesAdapter.setCourses(listOfCourses)
+                        allCourses = listOfCourses
+                    } else showToast("you have no courses added yet")
                     hideProgressDialog()
-
                 }
                 is Result.Error -> {
                     showToast(result.errorMessage)
@@ -71,22 +76,44 @@ class ViewAllCoursesAddedFragment : BaseFragment() {
 
         })
 
-    }
 
+        viewModel.uploadReadingTimetable.observe(viewLifecycleOwner, EventObserver { result ->
+            when (result) {
+                is Result.Loading -> {
+                    showProgressDialog("Creating Your Personalized Reading Timetable...")
+                }
+
+                is Result.Success -> {
+
+                    hideProgressDialog()
+
+                    showToast("Reading Timetable Generated Successfully")
+
+                    requireActivity().apply {
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    }
+                }
+
+                is Result.Error -> {
+                    showToast(result.errorMessage)
+                    hideProgressDialog()
+                }
+            }
+
+        })
+    }
 
     private fun setUpClickListeners() {
         binding.addCoursesIv.setOnClickListener {
+            findNavController().navigate(R.id.action_addAllCoursesFragment2_to_addCourseFragment)
+        }
+        binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
+
         }
         binding.doneButton.setOnClickListener {
-            requireActivity().apply {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }
-//            findNavController()
-//                .navigate(ViewAllCoursesAddedFragmentDirections.actionAddAllCoursesFragment2ToHomeFragment(),
-//                    navOptions { popUpTo = R.id.homeFragment })
+            viewModel.generateAndUploadReadingTimetable(allCourses)
         }
     }
-
 }

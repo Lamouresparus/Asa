@@ -139,22 +139,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
     <Button
-        android:id="@+id/button_afternoon"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="78dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="78dp"
-        android:background="@drawable/input_field_background_colored"
-        android:text="@string/afternoon"
-        android:textAllCaps="false"
-        android:textColor="@color/colorPrimary"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_morning" />
-
-    <Button
         android:id="@+id/button_night"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -168,5 +152,6 @@
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_afternoon" />
+        app:layout_constraintTop_toBottomOf="@+id/button_morning" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

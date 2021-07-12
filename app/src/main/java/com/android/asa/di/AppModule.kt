@@ -1,9 +1,11 @@
 package com.android.asa.di
 
 import com.asa.data.repository.CourseRepositoryImpl
+import com.asa.data.repository.ReadingTimetableRepositoryImpl
 import com.asa.data.repository.SemesterRepositoryImpl
 import com.asa.data.repository.UserRepositoryImpl
 import com.asa.domain.repository.CourseRepository
+import com.asa.domain.repository.ReadingTimetableRepository
 import com.asa.domain.repository.SemesterRepository
 import com.asa.domain.repository.UserRepository
 import dagger.Binds
@@ -26,4 +28,8 @@ abstract class AppModule {
     @Binds
     @Singleton
     abstract fun provideSemesterRepository(semesterRepositoryImpl: SemesterRepositoryImpl): SemesterRepository
+
+    @Binds
+    @Singleton
+    abstract fun provideReadingTimetableRepository(readingTimetableRepositoryImpl: ReadingTimetableRepositoryImpl) : ReadingTimetableRepository
 }

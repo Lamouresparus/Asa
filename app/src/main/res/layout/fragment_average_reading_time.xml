@@ -127,27 +127,11 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <Button
-        android:id="@+id/half_to_one_hour"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="78dp"
-        android:layout_marginTop="54dp"
-        android:layout_marginEnd="78dp"
-        android:background="@drawable/input_field_background_colored"
-        android:text="@string/_0_5_to_1_hour"
-        android:textAllCaps="false"
-        android:textColor="@color/colorPrimary"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
-
-    <Button
         android:id="@+id/one_to_two_hours"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="78dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="54dp"
         android:layout_marginEnd="78dp"
         android:background="@drawable/input_field_background_colored"
         android:text="@string/_1_to_2_hours"
@@ -156,21 +140,22 @@
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/half_to_one_hour" />
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
     <Button
-        android:id="@+id/two_to_four_hours"
+        android:id="@+id/three_to_four_hours"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="78dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="78dp"
         android:background="@drawable/input_field_background_colored"
-        android:text="@string/_2_to_4_hours"
+        android:text="@string/_3_to_4_hours"
         android:textAllCaps="false"
         android:textColor="@color/colorPrimary"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/one_to_two_hours" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

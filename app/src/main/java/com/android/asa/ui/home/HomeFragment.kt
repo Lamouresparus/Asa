@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.R
@@ -17,7 +17,6 @@ import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
 import com.android.asa.utils.Result
 import com.asa.domain.model.CourseDomain
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -34,7 +33,7 @@ class HomeFragment : BaseFragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
-    lateinit var classesAdapter: TodaysClassesAdapter
+    private lateinit var classesAdapter: TodaysClassesAdapter
 
     private val todayClasses = mutableListOf<CourseDomain>()
 
@@ -81,7 +80,6 @@ class HomeFragment : BaseFragment() {
                     }
                     classesAdapter.notifyDataSetChanged()
                     binding.progressBar.makeInvisible()
-
                 }
                 is Result.Error -> {
                     binding.progressBar.makeInvisible()
@@ -92,11 +90,13 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setNumberOfClasses(numberOfClasses: String = "0") {
-        binding.numberOfClasses.text = "$numberOfClasses classes"
+        val classes = "$numberOfClasses classes"
+        binding.numberOfClasses.text = classes
     }
 
     private fun setNumberOfAssignment(numberOfAssignment: String = "0") {
-        binding.numberOfAssignments.text = "$numberOfAssignment due assignment"
+        val assignments = "$numberOfAssignment due assignment"
+        binding.numberOfAssignments.text = assignments
     }
 
     private fun setUpClickListener() {
@@ -118,7 +118,6 @@ class HomeFragment : BaseFragment() {
         entries.add(BarEntry(6f, 5f))
 
         val barDataSet = BarDataSet(entries, "Cells")
-
 
         val labels = ArrayList<String>()
         //the first label is ignored.
@@ -146,6 +145,4 @@ class HomeFragment : BaseFragment() {
             }
         }
     }
-
-
 }
