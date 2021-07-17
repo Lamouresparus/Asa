@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.R
+import com.android.asa.utils.ColorUtils
 import com.asa.domain.model.CourseDomain
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import java.time.LocalDate
@@ -16,8 +17,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class TodaysClassesAdapter(private val courses: MutableList<CourseDomain>) : RecyclerView.Adapter<TodaysClassesAdapter.ViewHolder>() {
-
-    private val colors: List<String> = listOf("#00BBBA", "#72ED77", "#FFAD00", "#EB5757", "#BB6BD9", "#4F4F4F")
 
     inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         RecyclerView.ViewHolder(inflater.inflate(R.layout.todays_classes_itemview, parent, false)) {
@@ -80,12 +79,7 @@ class TodaysClassesAdapter(private val courses: MutableList<CourseDomain>) : Rec
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val course = courses[position]
-        var colorPosition = position
-        if (colorPosition > colors.size - 1) {
-            colorPosition = (position - 1) % (colors.size - 1)
-        }
-        val courseColor = colors[colorPosition]
-
+        val courseColor = ColorUtils.getCourseCardColor(position)
         holder.bind(course, courseColor)
     }
 
