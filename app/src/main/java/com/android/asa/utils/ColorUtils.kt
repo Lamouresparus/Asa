@@ -1,7 +1,6 @@
 package com.android.asa.utils
 
 object ColorUtils {
-
     //ASA course card colors
     private val colors = listOf("#00BBBA", "#72ED77", "#FFAD00", "#EB5757", "#BB6BD9", "#4F4F4F")
 
