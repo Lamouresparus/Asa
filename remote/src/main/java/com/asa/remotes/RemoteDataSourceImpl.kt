@@ -287,40 +287,6 @@ class RemoteDataSourceImpl @Inject constructor(
         }.flatMap {
             getSemesterInformation(it.uid)
         }
-
-//        return Single.create { emitter ->
-//
-//            val user = firebaseAuth.currentUser
-//            if (user == null) {
-//                emitter.onError(Throwable("Invalid user"))
-//                return@create
-//            }
-//
-//            val addCourseRef = firestore
-//                .collection(SEMESTER_COLLECTION_PATH)
-//                .document(user.uid)
-//                .collection(USER_COURSES_COLLECTION_PATH)
-//                .document(params.course.courseCode)
-//
-//            val semesterRef = firestore
-//                .collection(SEMESTER_COLLECTION_PATH)
-//                .document(user.uid)
-//            val courseCreditUnit = params.course.creditUnit.toLong()
-//
-//            firestore.runBatch { batch ->
-//
-//                batch.set(addCourseRef, params.course)
-//                batch.update(semesterRef, "noOfCoursesOffered", FieldValue.increment(1))
-//                batch.update(semesterRef, "totalCreditUnit", FieldValue.increment(courseCreditUnit))
-//
-//            }.addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    emitter.onComplete()
-//                } else {
-//                    emitter.onError(task.exception ?: Throwable("Error adding courses"))
-//                }
-//            }
-//        }
     }
 
     private fun getDayOfTheWeek(): String {
