@@ -12,7 +12,7 @@ data class UserDomain(
     val level: Int? = null,
     val imageUrl: String? = null,
     val userBio: String? = null,
-    val school: String? = null,
+    val institution: String? = null,
     val department: String? = null
 ) {
     constructor() : this("", "", -1, false)

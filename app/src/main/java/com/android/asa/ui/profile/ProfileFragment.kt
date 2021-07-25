@@ -70,7 +70,7 @@ class ProfileFragment : BaseFragment() {
             }
         })
 
-        viewModel.user.observe(viewLifecycleOwner, Observer {
+        viewModel.user.observe(viewLifecycleOwner, {
             bindUserDataToUI(it)
         })
     }
@@ -78,7 +78,13 @@ class ProfileFragment : BaseFragment() {
     private fun bindUserDataToUI(user: UserDomain) {
         binding.shapeableImageView.loadImage(user.imageUrl)
         binding.userBio.text = user.userBio
-        binding.userName.text = String.format("%s %s", user.firstName, user.lastName)
+        if (user.firstName != null && user.lastName != null) {
+            binding.userName.text = String.format("%s, %s", user.lastName, user.firstName)
+        }
+
+        if (user.department != null && user.institution != null) {
+            binding.userInstitution.text = String.format("%s, %s", user.department, user.institution)
+        }
     }
 
     private fun bindSemesterInfoToUI(semesterDomain: SemesterDomain) {

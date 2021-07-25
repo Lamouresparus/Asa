@@ -138,12 +138,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/lato_regular"
-            android:text="Mech engr, University of Uyo"
             android:textColor="@color/grey"
-            android:textFontWeight="500"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
-            app:layout_constraintTop_toBottomOf="@+id/user_name" />
+            app:layout_constraintTop_toBottomOf="@+id/user_name"
+            tools:text="Mech engr, University of Uyo" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/materialCardView"

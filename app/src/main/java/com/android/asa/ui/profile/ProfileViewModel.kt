@@ -76,7 +76,7 @@ class ProfileViewModel @Inject constructor(
         CourseProgress = CourseProgress
     )
 
-    fun UserCoursesDomain.toUserCourse() = UserCourses(
+    private fun UserCoursesDomain.toUserCourse() = UserCourses(
         courseCode = courseCode,
         CourseProgress = CourseProgress
     )
