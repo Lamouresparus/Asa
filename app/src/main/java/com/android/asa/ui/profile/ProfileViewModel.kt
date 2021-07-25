@@ -18,6 +18,8 @@ import com.asa.domain.model.UserCoursesDomain
 import com.asa.domain.model.UserDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -60,6 +62,8 @@ class ProfileViewModel @Inject constructor(
         getReadingTimeTableUseCase
             .execute()
             .doOnSubscribe { _viewContent.postValue(ViewState.Loading) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .flatMap {
                 Single.just(getTotalReadingTimeUseCase.execute(it))
             }.subscribe({

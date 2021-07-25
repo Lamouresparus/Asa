@@ -13,9 +13,12 @@ import com.asa.domain.model.ReadingTimetableDomain
 import com.asa.domain.model.SemesterDomain
 import com.asa.domain.model.UserDomain
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import durdinapps.rxfirebase2.RxFirebaseAuth
+import durdinapps.rxfirebase2.RxFirebaseUser
 import durdinapps.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -254,15 +257,16 @@ class RemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override fun saveCourses(params: AddCourseUseCase.Params): Completable {
-        return Completable.create { emitter ->
+    override fun saveCourses(params: AddCourseUseCase.Params): Single<SemesterDomain> {
 
+        return Single.create<FirebaseUser> { emitter ->
             val user = firebaseAuth.currentUser
             if (user == null) {
                 emitter.onError(Throwable("Invalid user"))
                 return@create
             }
-
+            emitter.onSuccess(user)
+        }.flatMap { user ->
             val addCourseRef = firestore
                 .collection(SEMESTER_COLLECTION_PATH)
                 .document(user.uid)
@@ -274,20 +278,49 @@ class RemoteDataSourceImpl @Inject constructor(
                 .document(user.uid)
             val courseCreditUnit = params.course.creditUnit.toLong()
 
-            firestore.runBatch { batch ->
-
-                batch.set(addCourseRef, params.course)
-                batch.update(semesterRef, "noOfCoursesOffered", FieldValue.increment(1))
-                batch.update(semesterRef, "totalCreditUnit", FieldValue.increment(courseCreditUnit))
-
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    emitter.onComplete()
-                } else {
-                    emitter.onError(task.exception ?: Throwable("Error adding courses"))
-                }
-            }
+            val batches = listOf(
+                firestore.batch().set(addCourseRef, params.course),
+                firestore.batch().update(semesterRef, "noOfCoursesOffered", FieldValue.increment(1)),
+                firestore.batch().update(semesterRef, "totalCreditUnit", FieldValue.increment(courseCreditUnit))
+            )
+            RxFirestore.atomicOperation(batches).toSingle { user }
+        }.flatMap {
+            getSemesterInformation(it.uid)
         }
+
+//        return Single.create { emitter ->
+//
+//            val user = firebaseAuth.currentUser
+//            if (user == null) {
+//                emitter.onError(Throwable("Invalid user"))
+//                return@create
+//            }
+//
+//            val addCourseRef = firestore
+//                .collection(SEMESTER_COLLECTION_PATH)
+//                .document(user.uid)
+//                .collection(USER_COURSES_COLLECTION_PATH)
+//                .document(params.course.courseCode)
+//
+//            val semesterRef = firestore
+//                .collection(SEMESTER_COLLECTION_PATH)
+//                .document(user.uid)
+//            val courseCreditUnit = params.course.creditUnit.toLong()
+//
+//            firestore.runBatch { batch ->
+//
+//                batch.set(addCourseRef, params.course)
+//                batch.update(semesterRef, "noOfCoursesOffered", FieldValue.increment(1))
+//                batch.update(semesterRef, "totalCreditUnit", FieldValue.increment(courseCreditUnit))
+//
+//            }.addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    emitter.onComplete()
+//                } else {
+//                    emitter.onError(task.exception ?: Throwable("Error adding courses"))
+//                }
+//            }
+//        }
     }
 
     private fun getDayOfTheWeek(): String {
@@ -380,6 +413,11 @@ class RemoteDataSourceImpl @Inject constructor(
                     emitter.onError(task.exception ?: Throwable("Error adding courses"))
                 }
             }
+    }
+
+    override fun updateUserData(param: UserDomain): Single<UserDomain> {
+        val userDocRef = firestore.collection(USERS_COLLECTION_PATH).document(param.userId)
+        return RxFirestore.setDocument(userDocRef, param).andThen(getUser(param.userId))
     }
 
     companion object {

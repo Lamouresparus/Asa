@@ -70,13 +70,13 @@ class ProfileFragment : BaseFragment() {
             }
         })
 
-        viewModel.user.observe(viewLifecycleOwner, {
+        viewModel.user.observe(viewLifecycleOwner, Observer {
             bindUserDataToUI(it)
         })
     }
 
     private fun bindUserDataToUI(user: UserDomain) {
-        binding.shapeableImageView.loadImage(user.imageUrl)
+        binding.shapeableImageView.loadImage(user.imageUrl, placeholder = R.drawable.user_profile_img)
         binding.userBio.text = user.userBio
         if (user.firstName != null && user.lastName != null) {
             binding.userName.text = String.format("%s, %s", user.lastName, user.firstName)
