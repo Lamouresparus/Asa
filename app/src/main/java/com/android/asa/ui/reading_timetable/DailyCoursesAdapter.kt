@@ -7,10 +7,10 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.R
+import com.android.asa.utils.ColorUtils
 import com.asa.domain.model.ReadingTimeDomain
 
 class DailyCoursesAdapter(private val courses: List<ReadingTimeDomain>) : RecyclerView.Adapter<DailyCoursesAdapter.ViewHolder>() {
-    private val colors: List<String> = listOf("#00BBBA", "#FFAD00", "#EB5757", "#72ED77", "#4F4F4F", "#BB6BD9", "#4F4F4F")
 
     inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         RecyclerView.ViewHolder(inflater.inflate(R.layout.reading_timetable_daily_courses_item_view, parent, false)) {
@@ -21,8 +21,7 @@ class DailyCoursesAdapter(private val courses: List<ReadingTimeDomain>) : Recycl
         fun bind(readingTimeDomain: ReadingTimeDomain) {
             courseCode.text = readingTimeDomain.courseCode
             readTime.text = convertTime(readingTimeDomain.startTime).plus("-").plus(convertTime(readingTimeDomain.endTime))
-            cardView.setCardBackgroundColor(Color.parseColor(getBackgroundColor(colorPosition)))
-            colorPosition++
+            cardView.setCardBackgroundColor(Color.parseColor(ColorUtils.getCourseCardColor(absoluteAdapterPosition)))
         }
 
         private fun convertTime(time: Int): String {
@@ -37,13 +36,6 @@ class DailyCoursesAdapter(private val courses: List<ReadingTimeDomain>) : Recycl
             return timeString.plus(meridian)
         }
 
-        private fun getBackgroundColor(number: Int): String {
-            var index = number
-            if (index > colors.size - 1) {
-                index %= (colors.size - 1)
-            }
-            return colors[index]
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -58,9 +50,5 @@ class DailyCoursesAdapter(private val courses: List<ReadingTimeDomain>) : Recycl
 
     override fun getItemCount(): Int {
         return courses.size
-    }
-
-    companion object {
-        private var colorPosition = 0
     }
 }

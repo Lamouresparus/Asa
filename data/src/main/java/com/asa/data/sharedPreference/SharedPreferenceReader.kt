@@ -15,7 +15,7 @@ interface SharedPreferenceReader {
 
     fun getUserData(): UserDomain?
 
-    fun getSemesterInformation(): SemesterDomain
+    fun getSemesterInformation(): SemesterDomain?
 
     fun isNotificationEnabled(): Boolean
 

@@ -60,9 +60,6 @@ class EditProfileFragment : BaseFragment() {
             adapter = coursesAdapter
             layoutManager = GridLayoutManager(requireContext(),3, LinearLayoutManager.VERTICAL,false)
         }
-
-        coursesAdapter.submitList(viewModel.coursesList)
-
     }
 
     private fun setProfileImage(uri: Uri?) {

@@ -24,13 +24,12 @@ class CourseRepositoryImpl @Inject constructor(
             val semesterInfo = prefReader.getSemesterInformation()
             val updatedSemesterInfo =
                 SemesterDomain(
-                    semesterInfo.hasSemesterBegun,
-                    semesterInfo.noOfCoursesOffered + 1
+                    semesterInfo?.hasSemesterBegun ?: false,
+                    semesterInfo?.noOfCoursesOffered ?: 0 + 1
                 )
             prefWriter.saveSemesterInformation(updatedSemesterInfo)
         }
     }
-
 
     override fun getCoursesForToday(): Single<List<CourseDomain>> {
         return dataSource.remote().getCoursesForToday()

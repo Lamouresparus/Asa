@@ -37,51 +37,6 @@ class RemoteDataSourceImpl @Inject constructor(
                     Pair(_user, semester)
                 })
             }
-
-//        return Single.create { emitter ->
-//            firebaseAuth
-//                .signInWithEmailAndPassword(params.email, params.password)
-//                .addOnCompleteListener { task ->
-//
-//                    if (task.isSuccessful) {
-//                        val fireBaseUser = task.result?.user
-//                        val email = fireBaseUser?.email
-//                        if (fireBaseUser == null || email == null) {
-//                            emitter.onError(Throwable("user does not exist"))
-//                            return@addOnCompleteListener
-//                        }
-//
-//                        firestore
-//                            .collection(USERS_COLLECTION_PATH)
-//                            .document(fireBaseUser.uid)
-//                            .get()
-//                            .addOnCompleteListener {
-//                                if (it.isSuccessful) {
-//                                    val user = it.result?.toObject(UserDomain::class.java)
-//
-//                                    if (user != null) {
-//                                        if (user.userType == params.userType) {
-//                                            emitter.onSuccess(user)
-//                                        } else {
-//                                            emitter.onError(Throwable("Invalid login details"))
-//                                        }
-//                                    } else emitter.onError(
-//                                        it.exception
-//                                            ?: Throwable("Error logging in")
-//                                    )
-//                                } else {
-//                                    emitter.onError(
-//                                        it.exception
-//                                            ?: Throwable("Error logging in")
-//                                    )
-//                                }
-//                            }
-//                    } else {
-//                        emitter.onError(task.exception ?: Throwable("Error logging in"))
-//                    }
-//
-//                }
-//        }
     }
 
     private fun getUser(userId: String): Single<UserDomain> {
@@ -250,67 +205,6 @@ class RemoteDataSourceImpl @Inject constructor(
                 )
                 RxFirestore.atomicOperation(batches).toSingle { user }
             }.flatMap { getUser(it.uid) }
-
-//        return Single.create { emitter ->
-//
-//            firebaseAuth
-//                .createUserWithEmailAndPassword(param.email, param.password)
-//                .addOnCompleteListener { task ->
-//
-//                    if (task.isSuccessful) {
-//                        val fireBaseUser = task.result?.user
-//                        val email = fireBaseUser?.email
-//                        if (fireBaseUser == null || email == null) {
-//                            emitter.onError(Throwable("user does not exist"))
-//                            return@addOnCompleteListener
-//                        }
-//
-//                        firestore
-//                            .collection(USERS_COLLECTION_PATH)
-//                            .document(fireBaseUser.uid)
-//                            .set(param)
-//                            .addOnCompleteListener { dbTask ->
-//
-//                                if (dbTask.isSuccessful) {
-//
-//                                    val user = when (param) {
-//                                        is RegisterUseCase.StudentParams -> {
-//                                            UserDomain(
-//                                                fireBaseUser.uid,
-//                                                email,
-//                                                0,
-//                                                regNumber = param.studentRegistrationNumber,
-//                                                firstName = param.firstName,
-//                                                lastName = param.lastName
-//                                            )
-//                                        }
-//                                        is RegisterUseCase.StaffParams -> {
-//                                            UserDomain(
-//                                                fireBaseUser.uid,
-//                                                email,
-//                                                1,
-//                                                staffId = param.staffIdentificationNumber
-//                                            )
-//                                        }
-//                                        else -> throw UnsupportedOperationException("Invalid user type")
-//                                    }
-//
-//                                    emitter.onSuccess(user)
-//                                } else {
-//                                    emitter.onError(
-//                                        dbTask.exception
-//                                            ?: Throwable("Error creating user")
-//                                    )
-//                                }
-//                            }
-//
-//                    } else {
-//                        emitter.onError(task.exception ?: Throwable("Error login in"))
-//                    }
-//
-//                }
-//
-//        }
     }
 
     override fun saveReadingTime(params: ReadingTimeSetUpUseCase.Params): Completable {
@@ -378,11 +272,13 @@ class RemoteDataSourceImpl @Inject constructor(
             val semesterRef = firestore
                 .collection(SEMESTER_COLLECTION_PATH)
                 .document(user.uid)
+            val courseCreditUnit = params.course.creditUnit.toLong()
 
             firestore.runBatch { batch ->
 
                 batch.set(addCourseRef, params.course)
                 batch.update(semesterRef, "noOfCoursesOffered", FieldValue.increment(1))
+                batch.update(semesterRef, "totalCreditUnit", FieldValue.increment(courseCreditUnit))
 
             }.addOnCompleteListener { task ->
                 if (task.isSuccessful) {

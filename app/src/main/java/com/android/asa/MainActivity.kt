@@ -72,6 +72,8 @@ class MainActivity : AppCompatActivity() {
         navController = Navigation.findNavController(this, R.id.nav_container)
 
         with(prefReader.getSemesterInformation()) {
+            if (this == null) throw IllegalStateException("no course information found")
+
             val navGraph = if (hasSemesterBegun && noOfCoursesOffered > 0) {
                 binding.buttomNavigation.inflateMenu(R.menu.home_navigation_menu)
                 navController.navInflater.inflate(R.navigation.home_nav_graph).apply {
