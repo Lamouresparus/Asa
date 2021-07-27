@@ -13,24 +13,13 @@ import javax.inject.Inject
 
 class CourseRepositoryImpl @Inject constructor(
     private val dataSource: DataSourceFactory,
-    private val prefWriter: SharedPreferenceWriter,
-    private val prefReader: SharedPreferenceReader
+    private val prefWriter: SharedPreferenceWriter
 ) : CourseRepository {
     override fun saveCourses(params: AddCourseUseCase.Params): Completable {
-        return dataSource.remote().saveCourses(params).doOnComplete {
-            /**
-             * increment the noOfCoursesOffered locally when a course was successfully added
-             */
-            val semesterInfo = prefReader.getSemesterInformation()
-            val updatedSemesterInfo =
-                SemesterDomain(
-                    semesterInfo.hasSemesterBegun,
-                    semesterInfo.noOfCoursesOffered + 1
-                )
-            prefWriter.saveSemesterInformation(updatedSemesterInfo)
-        }
+        return dataSource.remote().saveCourses(params).doOnSuccess {
+            prefWriter.saveSemesterInformation(it)
+        }.ignoreElement()
     }
-
 
     override fun getCoursesForToday(): Single<List<CourseDomain>> {
         return dataSource.remote().getCoursesForToday()

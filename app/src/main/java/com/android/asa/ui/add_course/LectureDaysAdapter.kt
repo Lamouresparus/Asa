@@ -10,7 +10,7 @@ import com.asa.domain.model.LectureDayDomain
 
 class LectureDaysAdapter(private val lectureDayListener: LectureDayListener) : RecyclerView.Adapter<LectureDaysAdapter.ViewHolder>() {
 
-    private val lectureDays: ArrayList<String> = arrayListOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+    private val lectureDays: ArrayList<String> = arrayListOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
 
 
     inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :

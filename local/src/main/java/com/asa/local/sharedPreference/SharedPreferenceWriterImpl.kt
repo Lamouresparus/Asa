@@ -6,11 +6,14 @@ import com.asa.data.sharedPreference.SharedPreferenceWriter
 import com.asa.domain.model.SemesterDomain
 import com.asa.domain.model.UserCoursesDomain
 import com.asa.domain.model.UserDomain
+import com.google.gson.Gson
+import org.json.JSONStringer
 import javax.inject.Inject
 
 class SharedPreferenceWriterImpl @Inject constructor(
     sharedPreferences: SharedPreferences,
-    private val keys: SharedPreferenceKeys
+    private val keys: SharedPreferenceKeys,
+    private val gson: Gson
 ) : SharedPreferenceWriter {
 
     private val editor: SharedPreferences.Editor = sharedPreferences.edit()
@@ -20,17 +23,13 @@ class SharedPreferenceWriterImpl @Inject constructor(
     }
 
     override fun saveUser(user: UserDomain) {
-        saveString(keys.KEY_USER_ID, user.userId)
-        saveInt(keys.KEY_USER_TYPE, user.userType)
-        saveString(keys.KEY_USER_EMAIL, user.email)
-        saveString(keys.KEY_USER_FIRST_NAME, user.firstName)
-        saveString(keys.KEY_USER_LAST_NAME, user.lastName)
-        saveBoolean(keys.KEY_USER_REGISTRATION_STATUS, user.isRegistrationComplete)
+        val jsonString = gson.toJson(user, UserDomain::class.java)
+        saveString(keys.KEY_USER, jsonString)
     }
 
     override fun saveSemesterInformation(semester: SemesterDomain) {
-        saveBoolean(keys.KEY_HAS_BEGUN_SEMESTER, semester.hasSemesterBegun)
-        saveInt(keys.KEY_NO_OF_COURSES_OFFERED, semester.noOfCoursesOffered)
+        val jsonString = gson.toJson(semester, SemesterDomain::class.java)
+        saveString(keys.KEY_SEMESTER_INFORMATION, jsonString)
     }
 
     override fun saveUserCourse(userCoursesDomain: UserCoursesDomain) {
@@ -49,7 +48,6 @@ class SharedPreferenceWriterImpl @Inject constructor(
     override fun saveUserDescription(description: String) {
         saveString(keys.KEY_USER_DESCRIPTION, description)
     }
-
 
     override fun clearKeys(keys: List<String>) {
         for (key: String in keys) {

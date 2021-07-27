@@ -18,9 +18,9 @@ class GetTotalReadingTimeUseCase @Inject constructor() : BaseUseCase<List<Readin
                     readTimes.add(readTime)
                 }
             }
-            courses.distinct()
+            val courseListWithNoDuplication = courses.distinct()
             var totalReadTime = 0.0
-            for (course in courses) {
+            for (course in courseListWithNoDuplication) {
                 for (readTime in readTimes) {
                     if (readTime.courseCode == course) {
                         totalReadTime += readTime.totalReadingHours

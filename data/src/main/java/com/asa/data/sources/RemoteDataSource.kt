@@ -18,11 +18,12 @@ interface RemoteDataSource {
     fun register(param: RegisterUseCase.Params): Single<UserDomain>
     fun logOut(): Completable
     fun saveReadingTime(params: ReadingTimeSetUpUseCase.Params): Completable
-    fun saveCourses(params: AddCourseUseCase.Params): Completable
+    fun saveCourses(params: AddCourseUseCase.Params): Single<SemesterDomain>
     fun getCoursesForToday(): Single<List<CourseDomain>>
     fun getUserCourses(): Single<List<CourseDomain>>
     fun startNewSemester(userId: String): Completable
     fun uploadReadingTimetable(params: UploadReadingTimetableUseCase.Params): Completable
     fun getReadingPreferences(): Single<ReadingTimePreferencesDomain>
     fun getReadingTimetable(): Single<List<ReadingTimetableDomain>>
+    fun updateUserData(param: UserDomain): Single<UserDomain>
 }

@@ -13,9 +13,12 @@ import com.asa.domain.model.ReadingTimetableDomain
 import com.asa.domain.model.SemesterDomain
 import com.asa.domain.model.UserDomain
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import durdinapps.rxfirebase2.RxFirebaseAuth
+import durdinapps.rxfirebase2.RxFirebaseUser
 import durdinapps.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -37,51 +40,6 @@ class RemoteDataSourceImpl @Inject constructor(
                     Pair(_user, semester)
                 })
             }
-
-//        return Single.create { emitter ->
-//            firebaseAuth
-//                .signInWithEmailAndPassword(params.email, params.password)
-//                .addOnCompleteListener { task ->
-//
-//                    if (task.isSuccessful) {
-//                        val fireBaseUser = task.result?.user
-//                        val email = fireBaseUser?.email
-//                        if (fireBaseUser == null || email == null) {
-//                            emitter.onError(Throwable("user does not exist"))
-//                            return@addOnCompleteListener
-//                        }
-//
-//                        firestore
-//                            .collection(USERS_COLLECTION_PATH)
-//                            .document(fireBaseUser.uid)
-//                            .get()
-//                            .addOnCompleteListener {
-//                                if (it.isSuccessful) {
-//                                    val user = it.result?.toObject(UserDomain::class.java)
-//
-//                                    if (user != null) {
-//                                        if (user.userType == params.userType) {
-//                                            emitter.onSuccess(user)
-//                                        } else {
-//                                            emitter.onError(Throwable("Invalid login details"))
-//                                        }
-//                                    } else emitter.onError(
-//                                        it.exception
-//                                            ?: Throwable("Error logging in")
-//                                    )
-//                                } else {
-//                                    emitter.onError(
-//                                        it.exception
-//                                            ?: Throwable("Error logging in")
-//                                    )
-//                                }
-//                            }
-//                    } else {
-//                        emitter.onError(task.exception ?: Throwable("Error logging in"))
-//                    }
-//
-//                }
-//        }
     }
 
     private fun getUser(userId: String): Single<UserDomain> {
@@ -250,67 +208,6 @@ class RemoteDataSourceImpl @Inject constructor(
                 )
                 RxFirestore.atomicOperation(batches).toSingle { user }
             }.flatMap { getUser(it.uid) }
-
-//        return Single.create { emitter ->
-//
-//            firebaseAuth
-//                .createUserWithEmailAndPassword(param.email, param.password)
-//                .addOnCompleteListener { task ->
-//
-//                    if (task.isSuccessful) {
-//                        val fireBaseUser = task.result?.user
-//                        val email = fireBaseUser?.email
-//                        if (fireBaseUser == null || email == null) {
-//                            emitter.onError(Throwable("user does not exist"))
-//                            return@addOnCompleteListener
-//                        }
-//
-//                        firestore
-//                            .collection(USERS_COLLECTION_PATH)
-//                            .document(fireBaseUser.uid)
-//                            .set(param)
-//                            .addOnCompleteListener { dbTask ->
-//
-//                                if (dbTask.isSuccessful) {
-//
-//                                    val user = when (param) {
-//                                        is RegisterUseCase.StudentParams -> {
-//                                            UserDomain(
-//                                                fireBaseUser.uid,
-//                                                email,
-//                                                0,
-//                                                regNumber = param.studentRegistrationNumber,
-//                                                firstName = param.firstName,
-//                                                lastName = param.lastName
-//                                            )
-//                                        }
-//                                        is RegisterUseCase.StaffParams -> {
-//                                            UserDomain(
-//                                                fireBaseUser.uid,
-//                                                email,
-//                                                1,
-//                                                staffId = param.staffIdentificationNumber
-//                                            )
-//                                        }
-//                                        else -> throw UnsupportedOperationException("Invalid user type")
-//                                    }
-//
-//                                    emitter.onSuccess(user)
-//                                } else {
-//                                    emitter.onError(
-//                                        dbTask.exception
-//                                            ?: Throwable("Error creating user")
-//                                    )
-//                                }
-//                            }
-//
-//                    } else {
-//                        emitter.onError(task.exception ?: Throwable("Error login in"))
-//                    }
-//
-//                }
-//
-//        }
     }
 
     override fun saveReadingTime(params: ReadingTimeSetUpUseCase.Params): Completable {
@@ -360,15 +257,16 @@ class RemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override fun saveCourses(params: AddCourseUseCase.Params): Completable {
-        return Completable.create { emitter ->
+    override fun saveCourses(params: AddCourseUseCase.Params): Single<SemesterDomain> {
 
+        return Single.create<FirebaseUser> { emitter ->
             val user = firebaseAuth.currentUser
             if (user == null) {
                 emitter.onError(Throwable("Invalid user"))
                 return@create
             }
-
+            emitter.onSuccess(user)
+        }.flatMap { user ->
             val addCourseRef = firestore
                 .collection(SEMESTER_COLLECTION_PATH)
                 .document(user.uid)
@@ -378,19 +276,16 @@ class RemoteDataSourceImpl @Inject constructor(
             val semesterRef = firestore
                 .collection(SEMESTER_COLLECTION_PATH)
                 .document(user.uid)
+            val courseCreditUnit = params.course.creditUnit.toLong()
 
-            firestore.runBatch { batch ->
-
-                batch.set(addCourseRef, params.course)
-                batch.update(semesterRef, "noOfCoursesOffered", FieldValue.increment(1))
-
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    emitter.onComplete()
-                } else {
-                    emitter.onError(task.exception ?: Throwable("Error adding courses"))
-                }
-            }
+            val batches = listOf(
+                firestore.batch().set(addCourseRef, params.course),
+                firestore.batch().update(semesterRef, "noOfCoursesOffered", FieldValue.increment(1)),
+                firestore.batch().update(semesterRef, "totalCreditUnit", FieldValue.increment(courseCreditUnit))
+            )
+            RxFirestore.atomicOperation(batches).toSingle { user }
+        }.flatMap {
+            getSemesterInformation(it.uid)
         }
     }
 
@@ -484,6 +379,11 @@ class RemoteDataSourceImpl @Inject constructor(
                     emitter.onError(task.exception ?: Throwable("Error adding courses"))
                 }
             }
+    }
+
+    override fun updateUserData(param: UserDomain): Single<UserDomain> {
+        val userDocRef = firestore.collection(USERS_COLLECTION_PATH).document(param.userId)
+        return RxFirestore.setDocument(userDocRef, param).andThen(getUser(param.userId))
     }
 
     companion object {

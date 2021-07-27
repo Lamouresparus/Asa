@@ -89,5 +89,9 @@
     <string name="btn_stop">Stop</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
+    <string name="bio">Bio</string>
+    <string name="save_changes">Save changes</string>
+    <string name="department">Department</string>
+    <string name="school">School</string>
 
 </resources>

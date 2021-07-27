@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="47dp" />
+            app:layout_constraintGuide_begin="32dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline10"
@@ -61,13 +61,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="31dp"
-            android:text="Samuel, Kevin"
-            android:textColor="@color/colorTextPrimary"
-            android:textFontWeight="900"
-            android:textSize="20sp"
             android:fontFamily="@font/lato_regular"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
-            app:layout_constraintTop_toBottomOf="@+id/user_image" />
+            app:layout_constraintTop_toBottomOf="@+id/user_image"
+            tools:text="Samuel, Kevin" />
 
         <EditText
             android:id="@+id/user_institution"
@@ -77,13 +77,13 @@
             android:backgroundTint="@color/ash"
             android:fontFamily="@font/lato_regular"
             android:inputType="text"
-            android:text="University of Uyo"
             android:textColor="@color/colorTextPrimary"
             android:textCursorDrawable="@null"
             app:layout_constraintEnd_toStartOf="@+id/guideline10"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintTop_toBottomOf="@+id/textView23"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            tools:text="University of Uyo" />
 
         <TextView
             android:id="@+id/materialCardView"
@@ -91,10 +91,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:fontFamily="@font/lato_regular"
-            android:text="Department"
+            android:text="@string/department"
             android:textColor="@color/colorTextPrimary"
-            android:textFontWeight="900"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintTop_toBottomOf="@+id/user_institution" />
 
@@ -104,7 +104,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Mechanical  engineering"
             android:backgroundTint="@color/ash"
             android:importantForAutofill="no"
             android:inputType="textCapCharacters"
@@ -113,7 +112,8 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline10"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
-            app:layout_constraintTop_toBottomOf="@+id/materialCardView"/>
+            app:layout_constraintTop_toBottomOf="@+id/materialCardView"
+            tools:text="Mechanical  engineering" />
 
 
         <androidx.cardview.widget.CardView
@@ -136,10 +136,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lato_regular"
-                    android:text="Save changes"
+                    android:text="@string/save_changes"
                     android:textColor="@color/white"
-                    android:textFontWeight="900"
                     android:textSize="17sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -154,10 +154,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
             android:fontFamily="@font/lato_regular"
-            android:text="Bio"
+            android:text="@string/bio"
             android:textColor="@color/colorTextPrimary"
-            android:textFontWeight="900"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintTop_toBottomOf="@+id/user_department" />
 
@@ -166,19 +166,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:fontFamily="@font/lato_regular"
-            android:textAlignment="textStart"
             android:backgroundTint="@color/ash"
+            android:fontFamily="@font/lato_regular"
             android:importantForAutofill="no"
             android:inputType="textMultiLine"
+            android:textAlignment="textStart"
             android:textColor="@color/colorTextPrimary"
             android:textCursorDrawable="@null"
-            android:textFontWeight="500"
-            android:text="Ipsum occaecat labore duis nulla aute cillum reprehenderit et magna est esse."
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline10"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
-            app:layout_constraintTop_toBottomOf="@+id/textView33"/>
+            app:layout_constraintTop_toBottomOf="@+id/textView33"
+            tools:text="Ipsum occaecat labore duis nulla aute cillum reprehenderit et magna est esse." />
 
 
         <TextView
@@ -187,9 +186,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:fontFamily="@font/lato_regular"
-            android:text="Courses offered"
-            android:textFontWeight="900"
+            android:text="@string/courses_offered"
             android:textSize="20sp"
+            android:visibility="invisible"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintTop_toBottomOf="@+id/user_bio" />
 
@@ -213,10 +213,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:fontFamily="@font/lato_regular"
-            android:text="School"
+            android:text="@string/school"
             android:textColor="@color/colorTextPrimary"
-            android:textFontWeight="900"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintTop_toBottomOf="@+id/user_name" />
 

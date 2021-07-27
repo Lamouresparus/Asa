@@ -7,12 +7,11 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.R
+import com.android.asa.utils.ColorUtils
 import com.asa.domain.model.CourseTotalReadingHoursDomain
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 class ReadTimeTableCoursesAdapter(private val totalReadingHours: List<CourseTotalReadingHoursDomain>) : RecyclerView.Adapter<ReadTimeTableCoursesAdapter.ViewHolder>() {
-
-    private val colors: List<String> = listOf("#00BBBA", "#72ED77", "#FFAD00", "#EB5757", "#BB6BD9", "#4F4F4F")
 
     inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) : RecyclerView.ViewHolder(inflater.inflate(R.layout.reading_timetable_courses_item_view, parent, false)) {
         val cardView: CardView = itemView.findViewById(R.id.reading_courses_card)
@@ -36,11 +35,7 @@ class ReadTimeTableCoursesAdapter(private val totalReadingHours: List<CourseTota
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val courseReadingHour = totalReadingHours[position]
-        var colorPosition = position
-        if (colorPosition > colors.size - 1) {
-            colorPosition = (position - 1) % (colors.size - 1)
-        }
-        val courseColor = colors[colorPosition]
+        val courseColor = ColorUtils.getCourseCardColor(position)
         holder.bind(courseReadingHour, courseColor)
     }
 

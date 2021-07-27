@@ -8,8 +8,11 @@ import com.asa.domain.repository.CourseRepository
 import com.asa.domain.repository.ReadingTimetableRepository
 import com.asa.domain.repository.SemesterRepository
 import com.asa.domain.repository.UserRepository
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -31,5 +34,14 @@ abstract class AppModule {
 
     @Binds
     @Singleton
-    abstract fun provideReadingTimetableRepository(readingTimetableRepositoryImpl: ReadingTimetableRepositoryImpl) : ReadingTimetableRepository
+    abstract fun provideReadingTimetableRepository(readingTimetableRepositoryImpl: ReadingTimetableRepositoryImpl): ReadingTimetableRepository
+
+    companion object {
+
+        @Singleton
+        @Provides
+        fun provideGson(): Gson {
+            return GsonBuilder().create()
+        }
+    }
 }
