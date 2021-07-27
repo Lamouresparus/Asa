@@ -15,14 +15,16 @@ import com.asa.domain.RegisterUseCase
 import com.classic.chatapp.utils.EventObserver
 
 
-class StaffAdviserSignUpFragment : BaseFragment() {
+class fvStaffAdviserSignUpFragment : BaseFragment() {
 
     private lateinit var binding: FragmentStaffAdviserSignUpBinding
 
     private val viewModel by activityViewModels<AuthViewModel>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentStaffAdviserSignUpBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -55,6 +57,7 @@ class StaffAdviserSignUpFragment : BaseFragment() {
 
                 is Result.Success -> {
                     progressDialog.dismiss()
+                    // TODO navigate to staff dash board
                 }
 
                 is Result.Error -> {

@@ -1,6 +1,5 @@
 package com.android.asa.ui.home
 
-
 import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
@@ -10,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.R
+import com.android.asa.utils.ColorUtils
 import com.asa.domain.model.CourseDomain
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import java.time.LocalDate
@@ -18,13 +18,8 @@ import kotlin.collections.ArrayList
 
 class TodaysClassesAdapter(private val courses: MutableList<CourseDomain>) : RecyclerView.Adapter<TodaysClassesAdapter.ViewHolder>() {
 
-    private val colors: List<String> = listOf("#00BBBA", "#72ED77", "#FFAD00", "#EB5757", "#BB6BD9", "#4F4F4F")
-
-
-
     inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
-            RecyclerView.ViewHolder(inflater.inflate(R.layout.todays_classes_itemview, parent, false)) {
-
+        RecyclerView.ViewHolder(inflater.inflate(R.layout.todays_classes_itemview, parent, false)) {
 
         var progressIndicator: CircularProgressIndicator = itemView.findViewById(R.id.attended_classes_progress)
         var progressText: TextView = itemView.findViewById(R.id.progress_text)
@@ -34,30 +29,29 @@ class TodaysClassesAdapter(private val courses: MutableList<CourseDomain>) : Rec
         private var lecturer: TextView = itemView.findViewById(R.id.lecturers_name)
         private var card: CardView = itemView.findViewById(R.id.todays_classes_card)
 
-
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(course: CourseDomain, color: String) {
             card.setCardBackgroundColor(Color.parseColor(color))
             val day = LocalDate.now().dayOfWeek.name.toLowerCase(Locale.ROOT)
-            val lecture = course.lectureDays.filter { it.dayOfWeek == day.capitalize()}
+            val lecture = course.lectureDays.filter { it.dayOfWeek == day.capitalize() }
 
 
             classVenue.text = lecture[0].venue
 
-            lecturer.text= course.lecturer
+            lecturer.text = course.lecturer
 
             var courseCode = course.courseCode.toUpperCase(Locale.ROOT)
             val courseStartTime = splitTime(lecture[0].startTime)
             val courseEndTime = splitTime(lecture[0].endTime)
             var meridian = "AM"
-            courseCode = courseCode.substring(0,3)+" "+courseCode.substring(3, 6)
+            courseCode = courseCode.substring(0, 3) + " " + courseCode.substring(3, 6)
             courseTitle.text = courseCode
 
-            if(courseStartTime[0]>12 || courseEndTime[0]>12){
+            if (courseStartTime[0] > 12)
                 courseStartTime[0] -= 12
-                courseEndTime [0]-= 12
+            if (courseEndTime[0] > 12) {
+                courseEndTime[0] -= 12
                 meridian = "PM"
-
             }
             val courseStartTimeHr = courseStartTime[0]
             val courseStartTimeMin = courseStartTime[1]
@@ -65,18 +59,15 @@ class TodaysClassesAdapter(private val courses: MutableList<CourseDomain>) : Rec
             val courseEndTimeMin = courseEndTime[1]
 
             "$courseStartTimeHr:$courseStartTimeMin-$courseEndTimeHr:$courseEndTimeMin $meridian".also { classTime.text = it }
-
-
         }
 
         private fun splitTime(time: String): ArrayList<Int> {
             val arr = time.split(":").toTypedArray()
-            val arrInt : ArrayList<Int> = arrayListOf()
+            val arrInt: ArrayList<Int> = arrayListOf()
             arr.forEach { time: String ->
                 arrInt.add(time.toInt())
             }
             return arrInt
-
         }
     }
 
@@ -88,18 +79,11 @@ class TodaysClassesAdapter(private val courses: MutableList<CourseDomain>) : Rec
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val course = courses[position]
-        var colorPosition = position
-        if(colorPosition>colors.size-1){
-            colorPosition =  (position-1)%(colors.size-1)
-
-        }
-        val courseColor = colors[colorPosition]
-
+        val courseColor = ColorUtils.getCourseCardColor(position)
         holder.bind(course, courseColor)
     }
 
     override fun getItemCount(): Int {
         return courses.size
     }
-
 }

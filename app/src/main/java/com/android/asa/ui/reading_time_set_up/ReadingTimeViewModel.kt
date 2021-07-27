@@ -41,8 +41,8 @@ class ReadingTimeViewModel @Inject constructor(
     }
 
     companion object {
-        var preferredReadingPeriod = ""
-        var kindOfReader = ""
-        var averageReadingTime = ""
+        var preferredReadDay = 0
+        var preferredReadTime = 0
+        var averageReadingHours = 0
     }
 }

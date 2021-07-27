@@ -6,6 +6,7 @@ import com.asa.domain.LogInUseCase
 import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
 import com.asa.domain.model.SemesterDomain
+import com.asa.domain.model.UserDomain
 import com.asa.domain.repository.UserRepository
 import io.reactivex.Completable
 import javax.inject.Inject
@@ -37,9 +38,15 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-
     override fun saveReadingTime(params: ReadingTimeSetUpUseCase.Params): Completable {
 
         return dataSource.remote().saveReadingTime(params)
+    }
+
+    override fun updateUserData(param: UserDomain): Completable {
+        return dataSource.remote().updateUserData(param)
+            .doOnSuccess {
+                prefWriter.saveUser(it)
+            }.ignoreElement()
     }
 }

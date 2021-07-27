@@ -4,12 +4,15 @@ import android.content.SharedPreferences
 import com.asa.data.sharedPreference.SharedPreferenceKeys
 import com.asa.data.sharedPreference.SharedPreferenceReader
 import com.asa.domain.model.SemesterDomain
+import com.asa.domain.model.UserCoursesDomain
 import com.asa.domain.model.UserDomain
+import com.google.gson.Gson
 import javax.inject.Inject
 
 class SharedPreferenceReaderImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-    private val keys: SharedPreferenceKeys
+    private val keys: SharedPreferenceKeys,
+    private val gson: Gson
 ) : SharedPreferenceReader {
 
     override fun isAppFirstLaunch(): Boolean {
@@ -20,39 +23,29 @@ class SharedPreferenceReaderImpl @Inject constructor(
         return getUserData() != null
     }
 
-    override fun getSemesterInformation(): SemesterDomain {
-        val hasSemesterBegun = getBoolean(keys.KEY_HAS_BEGUN_SEMESTER)
-        val numOfCoursesRegistered = getInt(keys.KEY_NO_OF_COURSES_OFFERED)
-        return SemesterDomain(hasSemesterBegun, numOfCoursesRegistered)
+    override fun getSemesterInformation(): SemesterDomain? {
+        val jsonString = sharedPreferences.getString(keys.KEY_SEMESTER_INFORMATION, null)
+        return gson.fromJson(jsonString, SemesterDomain::class.java)
     }
 
     override fun getUserData(): UserDomain? {
-        val userType: Int = getInt(keys.KEY_USER_TYPE, -1)
-        val email: String? = getString(keys.KEY_USER_EMAIL)
-        val userId: String? = getString(keys.KEY_USER_ID)
-        val userFirstName: String? = getString(keys.KEY_USER_FIRST_NAME)
-        val userLastName: String? = getString(keys.KEY_USER_LAST_NAME)
-        val isRegistrationComplete = getBoolean(keys.KEY_USER_REGISTRATION_STATUS)
-        val registrationNumber = getString(keys.KEY_USER_REGISTRATION_NUMBER)
-        val staffId = getString(keys.KEY_USER_STAFF_ID)
-
-
-
-        return if (userId.isNullOrEmpty() || email.isNullOrEmpty()) null
-        else UserDomain(
-            userId,
-            email,
-            userType,
-            isRegistrationComplete,
-            registrationNumber,
-            staffId,
-            userFirstName,
-            userLastName
-        )
+        val jsonString = sharedPreferences.getString(keys.KEY_USER, null)
+        return gson.fromJson(jsonString, UserDomain::class.java)
     }
 
     override fun isNotificationEnabled(): Boolean {
         return sharedPreferences.getBoolean(keys.KEY_ENABLE_NOTIFICATION, true)
+    }
+
+    override fun getCourseDetail(): UserCoursesDomain? {
+        val courseCode: String? = getString(keys.KEY_USER_COURSE_CODE)
+        val CourseProgress: String? = getString(keys.KEY_USER_COURSE_PROGRESS)
+
+        return if (courseCode.isNullOrEmpty() || CourseProgress.isNullOrEmpty()) null
+        else UserCoursesDomain(
+            courseCode,
+            CourseProgress
+        )
     }
 
     override fun getUserId(): String? {

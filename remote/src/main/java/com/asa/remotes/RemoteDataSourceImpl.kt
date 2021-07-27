@@ -1,87 +1,45 @@
 package com.asa.remotes
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.asa.data.sources.RemoteDataSource
 import com.asa.domain.AddCourseUseCase
 import com.asa.domain.LogInUseCase
 import com.asa.domain.ReadingTimeSetUpUseCase
 import com.asa.domain.RegisterUseCase
+import com.asa.domain.UploadReadingTimetableUseCase
 import com.asa.domain.model.CourseDomain
+import com.asa.domain.model.ReadingTimePreferencesDomain
+import com.asa.domain.model.ReadingTimetableDomain
 import com.asa.domain.model.SemesterDomain
 import com.asa.domain.model.UserDomain
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import durdinapps.rxfirebase2.RxFirebaseAuth
+import durdinapps.rxfirebase2.RxFirebaseUser
 import durdinapps.rxfirebase2.RxFirestore
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
-import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
 
 class RemoteDataSourceImpl @Inject constructor(
-        private val firebaseAuth: FirebaseAuth,
-        private val firestore: FirebaseFirestore,
+    private val firebaseAuth: FirebaseAuth,
+    private val firestore: FirebaseFirestore,
 ) : RemoteDataSource {
 
     override fun login(params: LogInUseCase.Params): Single<Pair<UserDomain, SemesterDomain>> {
         return RxFirebaseAuth
-                .signInWithEmailAndPassword(firebaseAuth, params.email, params.password)
-                .flatMapSingle {
-                    val user = it.user ?: throw Throwable("user does not exist")
-                    Single.zip(getUser(user.uid), getSemesterInformation(user.uid), { _user, semester ->
-                        Pair(_user, semester)
-                    })
-                }
-
-//        return Single.create { emitter ->
-//            firebaseAuth
-//                .signInWithEmailAndPassword(params.email, params.password)
-//                .addOnCompleteListener { task ->
-//
-//                    if (task.isSuccessful) {
-//                        val fireBaseUser = task.result?.user
-//                        val email = fireBaseUser?.email
-//                        if (fireBaseUser == null || email == null) {
-//                            emitter.onError(Throwable("user does not exist"))
-//                            return@addOnCompleteListener
-//                        }
-//
-//                        firestore
-//                            .collection(USERS_COLLECTION_PATH)
-//                            .document(fireBaseUser.uid)
-//                            .get()
-//                            .addOnCompleteListener {
-//                                if (it.isSuccessful) {
-//                                    val user = it.result?.toObject(UserDomain::class.java)
-//
-//                                    if (user != null) {
-//                                        if (user.userType == params.userType) {
-//                                            emitter.onSuccess(user)
-//                                        } else {
-//                                            emitter.onError(Throwable("Invalid login details"))
-//                                        }
-//                                    } else emitter.onError(
-//                                        it.exception
-//                                            ?: Throwable("Error logging in")
-//                                    )
-//                                } else {
-//                                    emitter.onError(
-//                                        it.exception
-//                                            ?: Throwable("Error logging in")
-//                                    )
-//                                }
-//                            }
-//                    } else {
-//                        emitter.onError(task.exception ?: Throwable("Error logging in"))
-//                    }
-//
-//                }
-//        }
+            .signInWithEmailAndPassword(firebaseAuth, params.email, params.password)
+            .flatMapSingle {
+                val user = it.user ?: throw Throwable("user does not exist")
+                Single.zip(getUser(user.uid), getSemesterInformation(user.uid), { _user, semester ->
+                    Pair(_user, semester)
+                })
+            }
     }
 
     private fun getUser(userId: String): Single<UserDomain> {
@@ -91,119 +49,166 @@ class RemoteDataSourceImpl @Inject constructor(
 
     private fun getSemesterInformation(userId: String): Single<SemesterDomain> {
         val semesterDocRef =
-                firestore.collection(SEMESTER_COLLECTION_PATH).document(userId)
+            firestore.collection(SEMESTER_COLLECTION_PATH).document(userId)
         return RxFirestore.getDocument(semesterDocRef, SemesterDomain::class.java).toSingle()
     }
 
-
     override fun startNewSemester(userId: String): Completable {
         val semesterDocRef =
-                firestore.collection(SEMESTER_COLLECTION_PATH).document(userId)
+            firestore.collection(SEMESTER_COLLECTION_PATH).document(userId)
         return RxFirestore.updateDocument(semesterDocRef, "hasSemesterBegun", true)
+    }
+
+    override fun uploadReadingTimetable(params: UploadReadingTimetableUseCase.Params): Completable {
+
+        return Completable.create { emitter ->
+
+            val user = firebaseAuth.currentUser
+            if (user == null) {
+                emitter.onError(Throwable("Invalid user"))
+
+                return@create
+            }
+
+            firestore
+                .collection(SEMESTER_COLLECTION_PATH)
+                .document(user.uid)
+                .collection(USER_READING_TIMETABLE_PATH)
+                .document(READING_TIMETABLE_PATH)
+                .set(params)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        emitter.onComplete()
+                    } else {
+
+                        emitter.onError(task.exception ?: Throwable("Error uploading reading timetable"))
+                    }
+                }
+        }
+    }
+
+    override fun getReadingPreferences(): Single<ReadingTimePreferencesDomain> {
+
+        return Single.create { emitter ->
+
+            val user = firebaseAuth.currentUser
+            if (user == null) {
+                emitter.onError(Throwable("Invalid user"))
+
+                return@create
+            }
+            firestore.collection(USERS_READING_TIME_COLLECTION_PATH).document(user.uid)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+
+                        val readingPref = task.result?.toObject(ReadingTimePreferencesDomain::class.java)
+
+                        if (readingPref == null) {
+                            emitter.onError(Throwable("No reading preference found"))
+                        } else {
+                            emitter.onSuccess(readingPref)
+                        }
+                    } else {
+                        emitter.onError(task.exception ?: Throwable("Error fetching reading preference"))
+                    }
+                }
+        }
+    }
+
+    override fun getReadingTimetable(): Single<List<ReadingTimetableDomain>> {
+        val dayOfTheWeek = arrayListOf(
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+        )
+        val listOfReadDays = mutableListOf<ReadingTimetableDomain>()
+        return Single.create { emitter ->
+            val user = firebaseAuth.currentUser
+            if (user == null) {
+                emitter.onError(Throwable("Invalid User"))
+                return@create
+            }
+
+            Log.d("reading", "about to fetch list")
+
+
+            firestore.collection(SEMESTER_COLLECTION_PATH)
+                .document(user.uid)
+                .collection(USER_READING_TIMETABLE_PATH)
+                .document(READING_TIMETABLE_PATH)
+                .get().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("reading", "succesful")
+
+                        val documentSnapShot = task.result
+
+                        if (documentSnapShot != null) {
+                            val result = documentSnapShot.toObject(UploadReadingTimetableUseCase.Params::class.java)?.readingTimetable
+                            Log.d("reading", "List of sorted day is $result")
+
+                            if (!result.isNullOrEmpty()) {
+
+                                for (day in dayOfTheWeek) {
+                                    val course = result.filter { it.day == day }
+                                    if (!course.isNullOrEmpty()) listOfReadDays.add(ReadingTimetableDomain(day, course))
+                                }
+                            }
+                        }
+
+                        emitter.onSuccess(listOfReadDays)
+                    } else {
+                        emitter.onError(Throwable("Error fetching Reading Timetable"))
+                    }
+                }
+
+        }
     }
 
     override fun register(param: RegisterUseCase.Params): Single<UserDomain> {
         return RxFirebaseAuth
-                .createUserWithEmailAndPassword(firebaseAuth, param.email, param.password)
-                .flatMapSingle {
-                    val user = it.user ?: throw Throwable("user does not exist")
+            .createUserWithEmailAndPassword(firebaseAuth, param.email, param.password)
+            .flatMapSingle {
+                val user = it.user ?: throw Throwable("user does not exist")
 
-                    val userObject = when (param) {
-                        is RegisterUseCase.StudentParams -> {
-                            UserDomain(
-                                    userId = user.uid,
-                                    email = param.email,
-                                    0,
-                                    regNumber = param.studentRegistrationNumber,
-                                    firstName = param.firstName,
-                                    lastName = param.lastName,
-                                    level = param.level,
-                                    isRegistrationComplete = false
-                            )
-                        }
-                        is RegisterUseCase.StaffParams -> {
-                            UserDomain(
-                                    userId = user.uid,
-                                    email = param.email,
-                                    1,
-                                    staffId = param.staffIdentificationNumber
-                            )
-                        }
-                        else -> throw UnsupportedOperationException("Invalid user type")
+                val userObject = when (param) {
+                    is RegisterUseCase.StudentParams -> {
+                        UserDomain(
+                            userId = user.uid,
+                            email = param.email,
+                            0,
+                            regNumber = param.studentRegistrationNumber,
+                            firstName = param.firstName,
+                            lastName = param.lastName,
+                            level = param.level,
+                            isRegistrationComplete = false
+                        )
                     }
+                    is RegisterUseCase.StaffParams -> {
+                        UserDomain(
+                            userId = user.uid,
+                            email = param.email,
+                            1,
+                            staffId = param.staffIdentificationNumber
+                        )
+                    }
+                    else -> throw UnsupportedOperationException("Invalid user type")
+                }
 
-                    val userDocRef = firestore.collection(USERS_COLLECTION_PATH).document(user.uid)
-                    val semesterDocRef =
-                            firestore.collection(SEMESTER_COLLECTION_PATH).document(user.uid)
-                    val batches = listOf(
-                            firestore.batch().set(userDocRef, userObject),
-                            firestore.batch().set(semesterDocRef, SemesterDomain())
-                    )
-                    RxFirestore.atomicOperation(batches).toSingle { user }
-                }.flatMap { getUser(it.uid) }
-
-//        return Single.create { emitter ->
-//
-//            firebaseAuth
-//                .createUserWithEmailAndPassword(param.email, param.password)
-//                .addOnCompleteListener { task ->
-//
-//                    if (task.isSuccessful) {
-//                        val fireBaseUser = task.result?.user
-//                        val email = fireBaseUser?.email
-//                        if (fireBaseUser == null || email == null) {
-//                            emitter.onError(Throwable("user does not exist"))
-//                            return@addOnCompleteListener
-//                        }
-//
-//                        firestore
-//                            .collection(USERS_COLLECTION_PATH)
-//                            .document(fireBaseUser.uid)
-//                            .set(param)
-//                            .addOnCompleteListener { dbTask ->
-//
-//                                if (dbTask.isSuccessful) {
-//
-//                                    val user = when (param) {
-//                                        is RegisterUseCase.StudentParams -> {
-//                                            UserDomain(
-//                                                fireBaseUser.uid,
-//                                                email,
-//                                                0,
-//                                                regNumber = param.studentRegistrationNumber,
-//                                                firstName = param.firstName,
-//                                                lastName = param.lastName
-//                                            )
-//                                        }
-//                                        is RegisterUseCase.StaffParams -> {
-//                                            UserDomain(
-//                                                fireBaseUser.uid,
-//                                                email,
-//                                                1,
-//                                                staffId = param.staffIdentificationNumber
-//                                            )
-//                                        }
-//                                        else -> throw UnsupportedOperationException("Invalid user type")
-//                                    }
-//
-//                                    emitter.onSuccess(user)
-//                                } else {
-//                                    emitter.onError(
-//                                        dbTask.exception
-//                                            ?: Throwable("Error creating user")
-//                                    )
-//                                }
-//                            }
-//
-//                    } else {
-//                        emitter.onError(task.exception ?: Throwable("Error login in"))
-//                    }
-//
-//                }
-//
-//        }
+                val userDocRef = firestore.collection(USERS_COLLECTION_PATH).document(user.uid)
+                val semesterDocRef =
+                    firestore.collection(SEMESTER_COLLECTION_PATH).document(user.uid)
+                val batches = listOf(
+                    firestore.batch().set(userDocRef, userObject),
+                    firestore.batch().set(semesterDocRef, SemesterDomain())
+                )
+                RxFirestore.atomicOperation(batches).toSingle { user }
+            }.flatMap { getUser(it.uid) }
     }
-
 
     override fun saveReadingTime(params: ReadingTimeSetUpUseCase.Params): Completable {
         return Completable.create { emitter ->
@@ -214,36 +219,34 @@ class RemoteDataSourceImpl @Inject constructor(
             }
 
             firestore
-                    .collection(USERS_READING_TIME_COLLECTION_PATH)
-                    .document(user.uid)
-                    .set(params)
-                    .addOnCompleteListener { dbTask ->
+                .collection(USERS_READING_TIME_COLLECTION_PATH)
+                .document(user.uid)
+                .set(params)
+                .addOnCompleteListener { dbTask ->
 
-                        if (dbTask.isSuccessful) {
+                    if (dbTask.isSuccessful) {
 
-                            firestore
-                                    .collection(USERS_COLLECTION_PATH)
-                                    .document(user.uid)
-                                    .update("registrationComplete", true)
-                                    .addOnCompleteListener {
-                                        if (it.isSuccessful) {
-                                            emitter.onComplete()
-
-                                        } else {
-                                            emitter.onError(
-                                                    it.exception
-                                                            ?: Throwable("Error creating user")
-                                            )
-                                        }
-                                    }
-
-                        } else {
-                            emitter.onError(
-                                    dbTask.exception
+                        firestore
+                            .collection(USERS_COLLECTION_PATH)
+                            .document(user.uid)
+                            .update("registrationComplete", true)
+                            .addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    emitter.onComplete()
+                                } else {
+                                    emitter.onError(
+                                        it.exception
                                             ?: Throwable("Error creating user")
-                            )
-                        }
+                                    )
+                                }
+                            }
+                    } else {
+                        emitter.onError(
+                            dbTask.exception
+                                ?: Throwable("Error creating user")
+                        )
                     }
+                }
 
         }
     }
@@ -254,47 +257,55 @@ class RemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override fun saveCourses(params: AddCourseUseCase.Params): Completable {
-        return Completable.create { emitter ->
+    override fun saveCourses(params: AddCourseUseCase.Params): Single<SemesterDomain> {
 
+        return Single.create<FirebaseUser> { emitter ->
             val user = firebaseAuth.currentUser
             if (user == null) {
                 emitter.onError(Throwable("Invalid user"))
                 return@create
             }
-
+            emitter.onSuccess(user)
+        }.flatMap { user ->
             val addCourseRef = firestore
-                    .collection(SEMESTER_COLLECTION_PATH)
-                    .document(user.uid)
-                    .collection(USER_COURSES_COLLECTION_PATH)
-                    .document(params.course.courseCode)
+                .collection(SEMESTER_COLLECTION_PATH)
+                .document(user.uid)
+                .collection(USER_COURSES_COLLECTION_PATH)
+                .document(params.course.courseCode)
 
             val semesterRef = firestore
-                    .collection(SEMESTER_COLLECTION_PATH)
-                    .document(user.uid)
+                .collection(SEMESTER_COLLECTION_PATH)
+                .document(user.uid)
+            val courseCreditUnit = params.course.creditUnit.toLong()
 
-            firestore.runBatch { batch ->
-
-                batch.set(addCourseRef, params.course)
-                batch.update(semesterRef, "noOfCoursesOffered", FieldValue.increment(1))
-
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    emitter.onComplete()
-                } else {
-                    emitter.onError(task.exception ?: Throwable("Error adding courses"))
-                }
-            }
+            val batches = listOf(
+                firestore.batch().set(addCourseRef, params.course),
+                firestore.batch().update(semesterRef, "noOfCoursesOffered", FieldValue.increment(1)),
+                firestore.batch().update(semesterRef, "totalCreditUnit", FieldValue.increment(courseCreditUnit))
+            )
+            RxFirestore.atomicOperation(batches).toSingle { user }
+        }.flatMap {
+            getSemesterInformation(it.uid)
         }
     }
 
+    private fun getDayOfTheWeek(): String {
+        val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+        val daysOfTheWeek = arrayListOf(
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        )
+        return daysOfTheWeek[dayOfWeek - 1]
+    }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun getCoursesForToday(): Single<List<CourseDomain>> {
+        val day = getDayOfTheWeek()
 
-        val day = LocalDate.now().dayOfWeek.name.toLowerCase(Locale.ROOT)
-
-        Log.d("day is", day)
         return Single.create { emitter ->
             val user = firebaseAuth.currentUser
             if (user == null) {
@@ -303,11 +314,13 @@ class RemoteDataSourceImpl @Inject constructor(
             }
 
             firestore.collection(SEMESTER_COLLECTION_PATH)
-                    .document(user.uid)
-                    .collection(USER_COURSES_COLLECTION_PATH)
-                    .whereArrayContains("lectureDayOfWeek", day.capitalize())
-                    .get()
-                    .addOnCompleteListener { task ->
+                .document(user.uid)
+                .collection(USER_COURSES_COLLECTION_PATH)
+                .whereArrayContains("lectureDayOfWeek", day)
+                .get()
+                .addOnCompleteListener { task ->
+
+                    if (!emitter.isDisposed) {
 
                         if (task.isSuccessful) {
 
@@ -320,17 +333,15 @@ class RemoteDataSourceImpl @Inject constructor(
                             } else {
                                 emitter.onSuccess(courses)
                             }
-
-
                         } else {
                             emitter.onError(task.exception ?: Throwable("Error fetching courses"))
                         }
-
                     }
+
+                }
 
         }
     }
-
 
     override fun getUserCourses(): Single<List<CourseDomain>> {
 
@@ -348,38 +359,39 @@ class RemoteDataSourceImpl @Inject constructor(
 
     private fun getCourses(userId: String, emitter: SingleEmitter<List<CourseDomain>>) {
         firestore
-                .collection(SEMESTER_COLLECTION_PATH)
-                .document(userId)
-                .collection(USER_COURSES_COLLECTION_PATH)
-                .get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
+            .collection(SEMESTER_COLLECTION_PATH)
+            .document(userId)
+            .collection(USER_COURSES_COLLECTION_PATH)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
 
-                        val courses = task.result?.documents?.map {
-                            it.toObject(CourseDomain::class.java)!!
-                        }
-
-                        if (courses.isNullOrEmpty()) {
-                            emitter.onError(Throwable("No course found"))
-                        } else {
-                            emitter.onSuccess(courses)
-                        }
-
-                    } else {
-                        emitter.onError(task.exception ?: Throwable("Error adding courses"))
+                    val courses = task.result?.documents?.map {
+                        it.toObject(CourseDomain::class.java)!!
                     }
-                }
 
+                    if (courses.isNullOrEmpty()) {
+                        emitter.onError(Throwable("No course found"))
+                    } else {
+                        emitter.onSuccess(courses)
+                    }
+                } else {
+                    emitter.onError(task.exception ?: Throwable("Error adding courses"))
+                }
+            }
     }
 
-    data class CourseAndLectureDaysWrapper(
-            val course: List<CourseDomain>,
-    )
+    override fun updateUserData(param: UserDomain): Single<UserDomain> {
+        val userDocRef = firestore.collection(USERS_COLLECTION_PATH).document(param.userId)
+        return RxFirestore.setDocument(userDocRef, param).andThen(getUser(param.userId))
+    }
 
     companion object {
         private const val USERS_COLLECTION_PATH = "users"
         private const val USERS_READING_TIME_COLLECTION_PATH = "users_reading_time"
         private const val SEMESTER_COLLECTION_PATH = "semester_information"
         private const val USER_COURSES_COLLECTION_PATH = "user_courses"
+        private const val USER_READING_TIMETABLE_PATH = "user_reading_timetable"
+        private const val READING_TIMETABLE_PATH = "timetable"
     }
 }

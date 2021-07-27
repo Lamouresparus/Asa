@@ -24,6 +24,7 @@ class SignUpSuccessFragment : Fragment() {
     private fun setUpOnClick() {
         binding.buttonContinue.setOnClickListener {
             startActivity(Intent(requireContext(), ReadingTimeActivity::class.java))
+            requireActivity().finish()
         }
     }
 

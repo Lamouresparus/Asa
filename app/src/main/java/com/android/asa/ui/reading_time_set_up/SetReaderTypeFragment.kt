@@ -10,36 +10,30 @@ import com.android.asa.databinding.FragmentSetReaderTypeBinding
 
 class SetReaderTypeFragment : Fragment() {
 
-
     private lateinit var binding: FragmentSetReaderTypeBinding
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentSetReaderTypeBinding.inflate(layoutInflater)
         setUpOnClicks()
         return binding.root
     }
+
     private fun setUpOnClicks() {
-        binding.beforeLectures.setOnClickListener {
-            ReadingTimeViewModel.kindOfReader = "before lectures"
+        binding.weekDays.setOnClickListener {
+            ReadingTimeViewModel.preferredReadDay = 1
             navigateToNextScreen()
         }
 
-        binding.betweenLectures.setOnClickListener {
-            ReadingTimeViewModel.kindOfReader = "between lectures"
-            navigateToNextScreen()
-
-        }
-
-        binding.buttonAfterLectures.setOnClickListener {
-            ReadingTimeViewModel.kindOfReader = "after lectures"
+        binding.weekends.setOnClickListener {
+            ReadingTimeViewModel.preferredReadDay = 0
             navigateToNextScreen()
 
         }
     }
-
 
     private fun navigateToNextScreen() {
         findNavController().navigate(SetReaderTypeFragmentDirections.actionSetReaderTypeFragmentToAverageReadingTimeFragment())
     }
-
 }

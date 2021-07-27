@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/addSemesterCoursesFragment"
+        android:icon="@drawable/icon_home_selector"
+        android:title="" />
+
+    <item
+        android:id="@+id/readingProgressFragment"
+        android:icon="@drawable/icon_reading_progress_selector"
+        android:title="" />
+
+    <item
+        android:id="@+id/readingTimetableFragment"
+        android:icon="@drawable/icon_reading_timetable_selector"
+        android:title="" />
+
+    <item
+        android:id="@+id/cgpaProjectorFragment"
+        android:icon="@drawable/icon_cgpa_projector_selector"
+        android:title="" />
+    <item
+        android:id="@+id/assignmentsFragment"
+        android:icon="@drawable/icon_assignments_selector"
+        android:title="" />
+
+</menu>
