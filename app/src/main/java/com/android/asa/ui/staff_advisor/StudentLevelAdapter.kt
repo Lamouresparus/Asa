@@ -14,6 +14,8 @@ class StudentLevelAdapter constructor(
     private val levelsInfo: List<StudentLevelInfo>
 ) : RecyclerView.Adapter<StudentLevelAdapter.ViewHolder>() {
 
+    private val colors: List<String> = listOf("#FFAD00", "#A860C3", "#72ED77", "#474747", "#FF443C", "#00BBBA")
+
     inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         RecyclerView.ViewHolder(inflater.inflate(R.layout.student_level_item_view, parent, false)) {
         private val levelTv: TextView = itemView.findViewById(R.id.student_level_tv)
@@ -34,7 +36,7 @@ class StudentLevelAdapter constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val color = ColorUtils.getCourseCardColor(position)
+        val color = ColorUtils.getCourseCardColor(colors, position)
         holder.bind(levelsInfo[position], color)
     }
 
