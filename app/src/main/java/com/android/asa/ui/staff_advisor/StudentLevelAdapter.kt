@@ -11,7 +11,8 @@ import com.android.asa.ui.staff_advisor.models.StudentLevelInfo
 import com.android.asa.utils.ColorUtils
 
 class StudentLevelAdapter constructor(
-    private val levelsInfo: List<StudentLevelInfo>
+    private val levelsInfo: List<StudentLevelInfo>,
+    private val onItemClick: (StudentLevelInfo) -> Unit
 ) : RecyclerView.Adapter<StudentLevelAdapter.ViewHolder>() {
 
     private val colors: List<String> = listOf("#FFAD00", "#A860C3", "#72ED77", "#474747", "#FF443C", "#00BBBA")
@@ -27,6 +28,9 @@ class StudentLevelAdapter constructor(
             levelTagTv.text = studentLevelInfo.levelTag
             noOfStudentsTv.text = String.format("%s Students(s)", studentLevelInfo.numberOfStudents)
             cardView.setCardBackgroundColor(Color.parseColor(color))
+            cardView.setOnClickListener {
+                onItemClick.invoke(studentLevelInfo)
+            }
         }
     }
 

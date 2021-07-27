@@ -9,5 +9,18 @@
         android:id="@+id/staffHomeFragment"
         android:name="com.android.asa.ui.staff_advisor.StaffHomeFragment"
         android:label="fragment_staff_home"
-        tools:layout="@layout/fragment_staff_home" />
+        tools:layout="@layout/fragment_staff_home">
+        <action
+            android:id="@+id/action_staffHomeFragment_to_studentListFragment"
+            app:destination="@id/studentListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/studentListFragment"
+        android:name="com.android.asa.ui.staff_advisor.StudentListFragment"
+        android:label="fragment_student_list"
+        tools:layout="@layout/fragment_student_list">
+        <argument
+            android:name="studentLevelInfo"
+            app:argType="com.android.asa.ui.staff_advisor.models.StudentLevelInfo" />
+    </fragment>
 </navigation>
