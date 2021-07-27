@@ -386,8 +386,18 @@ class RemoteDataSourceImpl @Inject constructor(
         return RxFirestore.setDocument(userDocRef, param).andThen(getUser(param.userId))
     }
 
+    override fun getAllStudents(): Single<List<UserDomain>> {
+        val collectionRef = firestore.collection(USERS_COLLECTION_PATH)
+        return RxFirestore.getCollection(collectionRef).toSingle().map {
+            val documents = it.documentChanges
+            documents.map { doc ->
+                doc.document.toObject(UserDomain::class.java)
+            }
+        }
+    }
+
     companion object {
-        private const val USERS_COLLECTION_PATH = "users"
+         const val USERS_COLLECTION_PATH = "users"
         private const val USERS_READING_TIME_COLLECTION_PATH = "users_reading_time"
         private const val SEMESTER_COLLECTION_PATH = "semester_information"
         private const val USER_COURSES_COLLECTION_PATH = "user_courses"

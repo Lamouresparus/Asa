@@ -26,4 +26,5 @@ interface RemoteDataSource {
     fun getReadingPreferences(): Single<ReadingTimePreferencesDomain>
     fun getReadingTimetable(): Single<List<ReadingTimetableDomain>>
     fun updateUserData(param: UserDomain): Single<UserDomain>
+    fun getAllStudents(): Single<List<UserDomain>>
 }

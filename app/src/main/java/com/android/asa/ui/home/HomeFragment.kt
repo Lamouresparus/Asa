@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.asa.R
@@ -16,7 +16,9 @@ import com.android.asa.extensions.makeVisible
 import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
 import com.android.asa.utils.Result
+import com.asa.data.sharedPreference.SharedPreferenceReader
 import com.asa.domain.model.CourseDomain
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -25,15 +27,20 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment() {
+
+
+    @Inject
+    lateinit var prefReader: SharedPreferenceReader
 
     private val viewModel by viewModels<HomeViewModel>()
 
     private lateinit var binding: FragmentHomeBinding
 
-    private lateinit var classesAdapter: TodaysClassesAdapter
+    lateinit var classesAdapter: TodaysClassesAdapter
 
     private val todayClasses = mutableListOf<CourseDomain>()
 
@@ -48,15 +55,12 @@ class HomeFragment : BaseFragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
         setUpViews()
-        setupBarChart()
-        setUpClickListener()
         return binding.root
     }
 
     private fun setUpViews() {
-        setNumberOfAssignment()
-        setNumberOfClasses()
         setUpRv()
+        setupBarChart()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,6 +69,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setUpRv() {
+        setNumberOfAssignment()
         classesAdapter = TodaysClassesAdapter(todayClasses)
         binding.recyclerView.apply {
             adapter = classesAdapter
@@ -85,6 +90,7 @@ class HomeFragment : BaseFragment() {
                     }
                     classesAdapter.notifyDataSetChanged()
                     binding.progressBar.makeInvisible()
+
                 }
                 is Result.Error -> {
                     binding.progressBar.makeInvisible()
@@ -95,13 +101,11 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setNumberOfClasses(numberOfClasses: String = "0") {
-        val classes = "$numberOfClasses classes"
-        binding.numberOfClasses.text = classes
+        binding.numberOfClasses.text = "$numberOfClasses classes"
     }
 
     private fun setNumberOfAssignment(numberOfAssignment: String = "0") {
-        val assignments = "$numberOfAssignment due assignment"
-        binding.numberOfAssignments.text = assignments
+        binding.numberOfAssignments.text = "$numberOfAssignment due assignment"
     }
 
     private fun setUpClickListener() {
@@ -115,29 +119,25 @@ class HomeFragment : BaseFragment() {
         val barChart = binding.readingProgressbarChart
 
         val entries: ArrayList<BarEntry> = ArrayList()
-        entries.apply {
-            add(BarEntry(1f, 0.5f))
-            add(BarEntry(2f, 1f))
-            add(BarEntry(3f, 2f))
-            add(BarEntry(4f, 3f))
-            add(BarEntry(5f, 4f))
-            add(BarEntry(6f, 5f))
-        }
+        entries.add(BarEntry(1f, 0.5f))
+        entries.add(BarEntry(2f, 1f))
+        entries.add(BarEntry(3f, 2f))
+        entries.add(BarEntry(4f, 3f))
+        entries.add(BarEntry(5f, 4f))
+        entries.add(BarEntry(6f, 5f))
 
         val barDataSet = BarDataSet(entries, "Cells")
 
-        val labels = ArrayList<String>().apply {
-            //the first label is ignored.
-            add("CPE 511")
-            add("GRE 312")
-            add("CPE513")
-            add("CPE514")
-            add("CPE518")
-            add("ELE514")
-            add("ELE514")
-        }
 
-
+        val labels = ArrayList<String>()
+        //the first label is ignored.
+        labels.add("CPE 511")
+        labels.add("GRE 312")
+        labels.add("CPE513")
+        labels.add("CPE514")
+        labels.add("CPE518")
+        labels.add("ELE514")
+        labels.add("ELE514")
 
 
         barChart.labelFor
@@ -155,4 +155,6 @@ class HomeFragment : BaseFragment() {
             }
         }
     }
+
+
 }

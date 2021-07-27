@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.android.asa.databinding.FragmentStaffAdviserSignInBinding
 import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
+import com.android.asa.ui.staff_advisor.StaffHomeActivity
 import com.android.asa.utils.Result
 import com.asa.domain.LogInUseCase
 import com.classic.chatapp.utils.EventObserver
@@ -56,6 +57,10 @@ class StaffAdviserSignInFragment : BaseFragment() {
                 is Result.Success -> {
                     progressDialog.dismiss()
                     showToast("login successful...")
+                    requireActivity().apply {
+                        startActivity(StaffHomeActivity.intent(requireContext()))
+                        finish()
+                    }
                 }
                 is Result.Error -> {
                     progressDialog.dismiss()

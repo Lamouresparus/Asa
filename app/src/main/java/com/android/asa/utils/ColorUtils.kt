@@ -12,4 +12,12 @@ object ColorUtils {
         }
         return colors[colorPosition]
     }
+
+    fun getCourseCardColor(colors: List<String>, itemPosition: Int): String {
+        var colorPosition = itemPosition
+        if (colorPosition > colors.size - 1) {
+            colorPosition = (itemPosition - 1) % (colors.size - 1)
+        }
+        return colors[colorPosition]
+    }
 }

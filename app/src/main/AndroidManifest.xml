@@ -12,6 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.staff_advisor.StaffHomeActivity"
+            android:theme="@style/AppFullScreenTheme" />
+
+        <activity
             android:name=".ui.reading_time_set_up.ReadingTimeActivity"
             android:theme="@style/AppFullScreenTheme" />
         <activity
