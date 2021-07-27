@@ -67,8 +67,7 @@ class StaffHomeViewModel @Inject constructor(
 
     private fun mapStudentListToStudentLevelsInfo(list: List<UserDomain>): MutableList<StudentLevelInfo> {
         studentLevelInfoList.forEach { info ->
-            val count = list.count { it.level == info.numberOfStudents }
-            info.numberOfStudents = count
+            info.numberOfStudents = list.count { it.level == info.id }
         }
         return studentLevelInfoList
     }
