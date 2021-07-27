@@ -1,6 +1,5 @@
 package com.android.asa.ui.auth
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +9,12 @@ import androidx.navigation.fragment.findNavController
 import com.android.asa.databinding.FragmentStaffAdviserSignUpBinding
 import com.android.asa.extensions.showToast
 import com.android.asa.ui.common.BaseFragment
+import com.android.asa.ui.staff_advisor.StaffHomeActivity
 import com.android.asa.utils.Result
 import com.asa.domain.RegisterUseCase
 import com.classic.chatapp.utils.EventObserver
 
-
-class fvStaffAdviserSignUpFragment : BaseFragment() {
+class StaffAdviserSignUpFragment : BaseFragment() {
 
     private lateinit var binding: FragmentStaffAdviserSignUpBinding
 
@@ -57,7 +56,10 @@ class fvStaffAdviserSignUpFragment : BaseFragment() {
 
                 is Result.Success -> {
                     progressDialog.dismiss()
-                    // TODO navigate to staff dash board
+                    requireActivity().apply {
+                        startActivity(StaffHomeActivity.intent(requireContext()))
+                        finish()
+                    }
                 }
 
                 is Result.Error -> {
