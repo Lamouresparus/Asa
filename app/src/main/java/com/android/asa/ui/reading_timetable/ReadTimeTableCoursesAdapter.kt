@@ -11,7 +11,10 @@ import com.android.asa.utils.ColorUtils
 import com.asa.domain.model.CourseTotalReadingHoursDomain
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
-class ReadTimeTableCoursesAdapter(private val totalReadingHours: List<CourseTotalReadingHoursDomain>) : RecyclerView.Adapter<ReadTimeTableCoursesAdapter.ViewHolder>() {
+class ReadTimeTableCoursesAdapter(
+    private val totalReadingHours: List<CourseTotalReadingHoursDomain>,
+    private val onClick: ((CourseTotalReadingHoursDomain) -> Unit)? = null
+) : RecyclerView.Adapter<ReadTimeTableCoursesAdapter.ViewHolder>() {
 
     inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) : RecyclerView.ViewHolder(inflater.inflate(R.layout.reading_timetable_courses_item_view, parent, false)) {
         val cardView: CardView = itemView.findViewById(R.id.reading_courses_card)
@@ -25,6 +28,9 @@ class ReadTimeTableCoursesAdapter(private val totalReadingHours: List<CourseTota
             courseCode.text = course
             courseProgress.text = courseReadingHour.totalReadHours.toInt().toString().plus("hrs")
             readingProgress.progress = (courseReadingHour.totalReadHours * 10).toInt()
+            cardView.setOnClickListener {
+                onClick?.invoke(courseReadingHour)
+            }
         }
     }
 

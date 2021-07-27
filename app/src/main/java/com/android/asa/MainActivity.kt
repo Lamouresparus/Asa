@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             val showTimer = bundle?.getBoolean(INTENT_SHOW_TIMER_FRAGMENT) ?: false
 
             val courseBundle = Bundle().apply {
-                putParcelable("userCourses", viewModel.getUserCourse())
+                putSerializable("userCourse", viewModel.getUserCourse())
             }
             if (showTimer) {
                 viewModel.showTimerCountDown = true

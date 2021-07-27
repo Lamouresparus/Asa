@@ -103,7 +103,7 @@ class ProfileFragment : BaseFragment() {
     }
 
     private fun setUpRecycler() {
-        readTimeTableCoursesAdapter = ReadTimeTableCoursesAdapter(readingCourses)
+        readTimeTableCoursesAdapter = ReadTimeTableCoursesAdapter(readingCourses,onCourseItemClickCallBack)
         binding.coursesRecyclerView.apply {
             adapter = readTimeTableCoursesAdapter
 //            addItemDecoration(CoursesItemDecorator(3,40,true))
@@ -111,10 +111,9 @@ class ProfileFragment : BaseFragment() {
         }
     }
 
-    private val onCourseItemClickCallBack: (UserCourses) -> Unit = { course ->
-
+    private val onCourseItemClickCallBack: (CourseTotalReadingHoursDomain) -> Unit = { course ->
         val bundle = Bundle().apply {
-            putParcelable("userCourses", course)
+            putSerializable("userCourse", course)
         }
         findNavController().navigate(
             R.id.action_profileFragment_to_readingTimerFragment,

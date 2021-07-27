@@ -61,6 +61,7 @@ class HomeFragment : BaseFragment() {
     private fun setUpViews() {
         setUpRv()
         setupBarChart()
+        setUpClickListener()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -109,7 +110,6 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setUpClickListener() {
-
         binding.profilePhotoIv.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }

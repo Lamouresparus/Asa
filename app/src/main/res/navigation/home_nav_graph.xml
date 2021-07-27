@@ -124,8 +124,8 @@
             android:id="@+id/action_readingTimerFragment_to_readingCompleteFragment"
             app:destination="@id/readingCompleteFragment" />
         <argument
-            android:name="userCourses"
-            app:argType="com.android.asa.ui.countup_reading_timer_ui.UserCourses" />
+            android:name="userCourse"
+            app:argType="com.asa.domain.model.CourseTotalReadingHoursDomain" />
 
     </fragment>
     <fragment

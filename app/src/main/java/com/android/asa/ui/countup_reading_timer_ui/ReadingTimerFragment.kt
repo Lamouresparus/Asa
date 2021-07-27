@@ -64,8 +64,8 @@ class ReadingTimerFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpOnClickListeners()
 
-        viewModel.saveUserCourse(args.userCourses)
-        binding.courseCode.text = args.userCourses.courseCode
+        viewModel.saveUserCourse(args.userCourse)
+        binding.courseCode.text = args.userCourse.course
 
         //Its set to true if the user wants to open this fragment from the Intent received from the Notification
         //Its set to true in the mainActivity

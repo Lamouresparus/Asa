@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.android.asa.extensions.asLiveData
 import com.android.asa.ui.common.BaseViewModel
 import com.android.asa.ui.countup_reading_timer_ui.UserCourses
-import com.android.asa.ui.reading_progress.ViewContent
-import com.android.asa.utils.Result
 import com.asa.data.sharedPreference.SharedPreferenceReader
 import com.asa.data.sharedPreference.SharedPreferenceWriter
 import com.asa.data.sources.DataSourceFactory
@@ -33,13 +31,13 @@ class ProfileViewModel @Inject constructor(
     private val getReadingTimeTableUseCase: GetReadingTimetableUseCase
 ) : BaseViewModel() {
 
-    fun saveUserCourse(userCourses: UserCourses) {
+    fun saveUserCourse(userCourses: CourseTotalReadingHoursDomain) {
         prefWriter.saveUserCourse(userCourses.toUserCourseDomain())
     }
 
     var showTimerCountDown = false
 
-    fun getUserCourse(): UserCourses = preferenceReader.getCourseDetail()!!.toUserCourse()
+    fun getUserCourse(): CourseTotalReadingHoursDomain = preferenceReader.getCourseDetail()!!.toUserCourse()
 
     private var _viewContent = MutableLiveData<ViewState>()
     val viewState = _viewContent.asLiveData()
@@ -75,14 +73,14 @@ class ProfileViewModel @Inject constructor(
             }).addToContainer()
     }
 
-    fun UserCourses.toUserCourseDomain() = UserCoursesDomain(
-        courseCode = courseCode,
-        CourseProgress = CourseProgress
+    fun CourseTotalReadingHoursDomain.toUserCourseDomain() = UserCoursesDomain(
+        courseCode = course,
+        CourseProgress = totalReadHours.toString()
     )
 
-    private fun UserCoursesDomain.toUserCourse() = UserCourses(
-        courseCode = courseCode,
-        CourseProgress = CourseProgress
+    private fun UserCoursesDomain.toUserCourse() = CourseTotalReadingHoursDomain(
+        course = courseCode,
+        totalReadHours = CourseProgress.toDouble()
     )
 
     sealed class ViewState {
